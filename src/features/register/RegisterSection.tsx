@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { RegisterBanner } from './RegisterBanner';
-import { RegisterForm } from './RegisterForm';
-import { OtpModal } from './OtpModal';
+import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
+import axios from 'axios';
+import { RegisterBanner } from './components/RegisterBanner';
+import { RegisterForm } from './components/RegisterForm';
+import { OtpModal } from './components/OtpModal';
 
-interface RegisterSectionProps {
-  onNavigate?: (page: 'login' | 'home' | 'register' | 'forgot') => void;
-}
+export const RegisterSection: React.FC = () => {
+  const routerNavigate = useNavigate();
 
-export const RegisterSection: React.FC<RegisterSectionProps> = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
     fullName: '',
     dob: '',
@@ -44,39 +45,34 @@ export const RegisterSection: React.FC<RegisterSectionProps> = ({ onNavigate }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.agreed) {
-      alert('Vui lòng đồng ý với Điều khoản sử dụng và Chính sách bảo mật.');
+      message.warning('Vui lòng đồng ý với Điều khoản sử dụng và Chính sách bảo mật.');
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      alert('Mật khẩu và Xác nhận mật khẩu không khớp!');
+      message.error('Mật khẩu và Xác nhận mật khẩu không khớp!');
       return;
     }
     
     setLoading(true);
     try {
-      const response = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber: formData.phone })
+      await axios.post('/api/auth/send-otp', {
+        phoneNumber: formData.phone
       });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Không thể gửi mã OTP.');
-      }
 
       setLoading(false);
       setShowOtpModal(true);
+      message.success('Mã OTP đã được gửi thành công tới số điện thoại của bạn!');
     } catch (err: any) {
       setLoading(false);
-      alert(err.message || 'Có lỗi xảy ra khi kết nối tới server.');
+      const errorMessage = err.response?.data?.message || 'Không thể gửi mã OTP. Vui lòng thử lại sau.';
+      message.error(errorMessage);
     }
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!otpCode.trim()) {
-      alert('Vui lòng nhập mã OTP.');
+      message.warning('Vui lòng nhập mã OTP.');
       return;
     }
 
@@ -91,50 +87,40 @@ export const RegisterSection: React.FC<RegisterSectionProps> = ({ onNavigate }) 
         otpCode: otpCode
       };
 
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      await axios.post('/api/auth/register', payload);
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Xác thực OTP hoặc đăng ký thất bại.');
-      }
-
-      alert('Đăng ký tài khoản thành công!');
+      message.success('Đăng ký tài khoản thành công!');
       setShowOtpModal(false);
-      onNavigate?.('login');
+      routerNavigate('/login');
     } catch (err: any) {
-      alert(err.message || 'Mã OTP không chính xác hoặc đã hết hạn!');
+      const errorMessage = err.response?.data?.message || 'Mã OTP không chính xác hoặc đã hết hạn!';
+      message.error(errorMessage);
     }
   };
 
   return (
     <div className="w-[1440px] h-[900px] relative bg-white overflow-hidden flex select-none">
       {/* Cột Trái */}
-      <RegisterBanner onNavigate={onNavigate} />
+      <RegisterBanner />
 
-      {/* Cột Phải */}
+      {/* Cột Phải (Đã xóa bỏ onNavigate không cần thiết) */}
       <RegisterForm 
         formData={formData}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         isFormComplete={isFormComplete}
         loading={loading}
-        onNavigate={onNavigate}
       />
 
       {/* Modal OTP */}
-      {showOtpModal && (
-        <OtpModal 
-          phone={formData.phone}
-          otpCode={otpCode}
-          onChangeOtp={(e) => setOtpCode(e.target.value)}
-          onSubmit={handleVerifyOtp}
-          onClose={() => setShowOtpModal(false)}
-        />
-      )}
+      <OtpModal 
+        isOpen={showOtpModal}
+        phone={formData.phone}
+        otpCode={otpCode}
+        onChangeOtp={(e) => setOtpCode(e.target.value)}
+        onSubmit={handleVerifyOtp}
+        onClose={() => setShowOtpModal(false)}
+      />
     </div>
   );
 };

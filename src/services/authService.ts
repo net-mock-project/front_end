@@ -1,18 +1,17 @@
+import axios from 'axios';
+
 // Gửi yêu cầu lấy mã OTP
 export const sendOtpApi = async (phoneNumber: string) => {
-  const response = await fetch('/api/auth/send-otp', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ phoneNumber }),
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || 'Không thể gửi mã OTP.');
+  try {
+    const response = await axios.post('/api/auth/send-otp', {
+      phoneNumber,
+    });
+    return response.data; // Axios tự động parse JSON và trả về trong trường data
+  } catch (error: any) {
+    // Axios gom lỗi (kể cả lỗi 4xx, 5xx) vào đây
+    const errorMessage = error.response?.data?.message || 'Không thể gửi mã OTP.';
+    throw new Error(errorMessage);
   }
-  return data;
 };
 
 // Gửi thông tin đăng ký + mã OTP để xác thực và tạo tài khoản
@@ -24,27 +23,20 @@ export const registerApi = async (registerData: {
   address: string;
   otpCode: string;
 }) => {
-  // Map lại tên thuộc tính cho khớp với DTO ở Backend C# của bạn
   const payload = {
     fullName: registerData.fullName,
-    email: `${registerData.phone}@rescuehub.local`, // Nếu DTO của bạn yêu cầu Email mà form chưa có, bạn có thể tạo tạm email theo số điện thoại
+    email: `${registerData.phone}@rescuehub.local`,
     phoneNumber: registerData.phone,
     password: registerData.password,
     address: registerData.address,
-    otpCode: registerData.otpCode
+    otpCode: registerData.otpCode,
   };
 
-  const response = await fetch('/api/auth/register', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || 'Đăng ký thất bại.');
+  try {
+    const response = await axios.post('/api/auth/register', payload);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || 'Đăng ký thất bại.';
+    throw new Error(errorMessage);
   }
-  return data;
 };
