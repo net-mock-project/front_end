@@ -1,125 +1,106 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
-import axios from 'axios';
 import { RegisterBanner } from './components/RegisterBanner';
 import { RegisterForm } from './components/RegisterForm';
 import { OtpModal } from './components/OtpModal';
+import { sendOtpApi, registerApi } from '../../services/authService';
+import type { RegisterPayload } from '../../services/authService';
 
 export const RegisterSection: React.FC = () => {
-  const routerNavigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    fullName: '',
-    dob: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-    address: '',
-    agreed: false
-  });
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
-  const [otpCode, setOtpCode] = useState('');
+  const [pendingData, setPendingData] = useState<RegisterPayload | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const isFormComplete = 
-    formData.fullName.trim() !== '' &&
-    formData.dob.trim() !== '' &&
-    formData.email.trim() !== '' &&
-    formData.phone.trim() !== '' &&
-    formData.password.trim() !== '' &&
-    formData.confirmPassword.trim() !== '' &&
-    formData.address.trim() !== '' &&
-    formData.agreed;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.agreed) {
-      message.warning('Vui lòng đồng ý với Điều khoản sử dụng và Chính sách bảo mật.');
-      return;
-    }
-    if (formData.password !== formData.confirmPassword) {
-      message.error('Mật khẩu và Xác nhận mật khẩu không khớp!');
-      return;
-    }
-    
+  // Gửi OTP khi form đăng ký hợp lệ
+  const handleRegisterSubmit = async (values: RegisterPayload & { agreed: boolean }) => {
     setLoading(true);
     try {
-      await axios.post('/api/auth/send-otp', {
-        phoneNumber: formData.phone
-      });
-
-      setLoading(false);
+      await sendOtpApi(values.phoneNumber);
+      setPendingData(values);
       setShowOtpModal(true);
       message.success('Mã OTP đã được gửi thành công tới số điện thoại của bạn!');
     } catch (err: any) {
+      message.error(err.message || 'Không thể gửi mã OTP. Vui lòng thử lại sau.');
+    } finally {
       setLoading(false);
-      const errorMessage = err.response?.data?.message || 'Không thể gửi mã OTP. Vui lòng thử lại sau.';
-      message.error(errorMessage);
     }
   };
 
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otpCode.trim()) {
-      message.warning('Vui lòng nhập mã OTP.');
-      return;
-    }
+  // Xác thực OTP và hoàn tất đăng ký
+  const handleVerifyOtp = async (otpCode: string) => {
+    if (!pendingData) return;
 
+    setLoading(true);
     try {
-      const payload = {
-        fullName: formData.fullName,
-        dob: formData.dob,
-        email: formData.email,
-        phoneNumber: formData.phone,
-        password: formData.password,
-        address: formData.address,
-        otpCode: otpCode
+      const payload: RegisterPayload = {
+        ...pendingData,
+        otpCode
       };
 
-      await axios.post('/api/auth/register', payload);
+      await registerApi(payload);
 
       message.success('Đăng ký tài khoản thành công!');
       setShowOtpModal(false);
-      routerNavigate('/login');
+      navigate('/login');
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Mã OTP không chính xác hoặc đã hết hạn!';
-      message.error(errorMessage);
+      message.error(err.message || 'Mã OTP không chính xác hoặc đã hết hạn!');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="w-[1440px] h-[900px] relative bg-white overflow-hidden flex select-none">
-      {/* Cột Trái */}
-      <RegisterBanner />
+    <div 
+      style={{
+        display: 'flex',
+        flexDirection: 'row', // Ép hiển thị nằm ngang (Banner bên trái, Form bên phải)
+        height: '100vh',     // Chiếm toàn bộ chiều cao màn hình
+        width: '100vw',      // Chiếm toàn bộ chiều rộng màn hình
+        backgroundColor: '#ffffff',
+        overflow: 'hidden',
+        userSelect: 'none',
+        boxSizing: 'border-box'
+      }}
+    >
+      {/* Banner bên trái (chiếm 50% hoặc tự động co giãn) */}
+      <div 
+        style={{
+          flex: 1,
+          height: '100%',
+          boxSizing: 'border-box',
+          display: 'block' // Đảm bảo luôn hiển thị
+        }}
+      >
+        <RegisterBanner />
+      </div>
 
-      {/* Cột Phải (Đã xóa bỏ onNavigate không cần thiết) */}
-      <RegisterForm 
-        formData={formData}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        isFormComplete={isFormComplete}
-        loading={loading}
-      />
+      {/* Form bên phải (chiếm 50% hoặc tự động co giãn) */}
+      <div 
+        style={{
+          flex: 1,
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          boxSizing: 'border-box',
+          overflowY: 'auto'
+        }}
+      >
+        <RegisterForm 
+          onSubmit={handleRegisterSubmit}
+          loading={loading}
+        />
+      </div>
 
-      {/* Modal OTP */}
       <OtpModal 
         isOpen={showOtpModal}
-        phone={formData.phone}
-        otpCode={otpCode}
-        onChangeOtp={(e) => setOtpCode(e.target.value)}
-        onSubmit={handleVerifyOtp}
+        phone={pendingData?.phoneNumber || ''}
+        onVerify={handleVerifyOtp}
         onClose={() => setShowOtpModal(false)}
+        loading={loading}
       />
     </div>
   );

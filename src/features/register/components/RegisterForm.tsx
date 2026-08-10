@@ -1,6 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Checkbox, Typography } from 'antd';
+import { Link } from 'react-router-dom';
+import { Form, Input, Button, Checkbox, Typography, Row, Col, DatePicker } from 'antd';
 import { 
   UserOutlined, 
   CalendarOutlined, 
@@ -9,189 +9,217 @@ import {
   LockOutlined, 
   EnvironmentOutlined 
 } from '@ant-design/icons';
+import type { RegisterPayload } from '../../../services/authService';
 
-const { Title, Text, Link } = Typography;
+const { Title, Text } = Typography;
 
 interface RegisterFormProps {
-  formData: any;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent) => void;
-  isFormComplete: boolean;
+  onSubmit: (values: RegisterPayload & { confirmPassword?: string; agreed: boolean }) => void;
   loading: boolean;
 }
 
-export const RegisterForm: React.FC<RegisterFormProps> = ({
-  formData,
-  handleChange,
-  handleSubmit,
-  isFormComplete,
-  loading
-}) => {
-  const navigate = useNavigate();
+export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading }) => {
+  const [form] = Form.useForm();
 
   return (
     <div 
-      className="w-[698.40px] h-[900px] relative flex flex-col justify-center px-[99.2px] flex-shrink-0"
       style={{
-        background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%), radial-gradient(ellipse 114.18% 88.60% at 30.00% 30.00%, #FEE2E2 0%, rgba(254, 226, 226, 0) 36%)'
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: '32px 48px',
+        width: '100%',
+        maxWidth: '650px',
+        height: '100%',
+        backgroundColor: '#ffffff',
+        overflowY: 'auto',
+        boxSizing: 'border-box'
       }}
     >
-      <Title level={2} style={{ color: '#172033', fontSize: '34px', fontWeight: 'bold', marginBottom: '8px' }}>
-        Tạo tài khoản
-      </Title>
-      <Text style={{ color: '#667085', fontSize: '15px', marginBottom: '16px', lineHeight: '24px' }}>
-        Nhập thông tin cơ bản. Bạn sẽ xác thực số điện thoại bằng mã OTP.
-      </Text>
+      <div style={{ margin: 'auto 0', width: '100%' }}>
+        <Title level={2} style={{ color: '#172033', fontSize: '30px', fontWeight: 'bold', marginBottom: '4px', marginTop: 0 }}>
+          Tạo tài khoản
+        </Title>
+        <Text style={{ color: '#667085', fontSize: '14px', marginBottom: '24px', display: 'block' }}>
+          Nhập thông tin cơ bản. Bạn sẽ xác thực số điện thoại bằng mã OTP.
+        </Text>
 
-      <form onSubmit={handleSubmit}>
-        {/* Row 1: Họ và tên & Ngày sinh */}
-        <div className="flex gap-[16px] mb-3">
-          <div className="flex-1">
-            <label className="block text-[#344054] text-[13px] font-bold mb-1">Họ và tên</label>
-            <Input 
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="Nhập họ và tên"
-              prefix={<UserOutlined className="text-gray-400 mr-1" />}
-              required
-              style={{ height: '42px', borderRadius: '12px' }}
-            />
-          </div>
-          <div className="flex-1">
-            <label className="block text-[#344054] text-[13px] font-bold mb-1">Ngày sinh</label>
-            <Input 
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              placeholder="DD/MM/YYYY"
-              prefix={<CalendarOutlined className="text-gray-400 mr-1" />}
-              required
-              style={{ height: '42px', borderRadius: '12px' }}
-            />
-          </div>
-        </div>
+        <Form 
+          form={form} 
+          layout="vertical" 
+          onFinish={onSubmit}
+          initialValues={{ agreed: false }}
+        >
+          {/* Row 1: Họ và tên & Ngày sinh */}
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="fullName"
+                label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Họ và tên</span>}
+                rules={[{ required: true, message: 'Vui lòng nhập họ tên!' }]}
+              >
+                <Input 
+                  placeholder="Nhập họ và tên"
+                  prefix={<UserOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
+                  style={{ height: '42px', borderRadius: '12px' }}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="dob"
+                label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Ngày sinh</span>}
+                rules={[{ required: true, message: 'Vui lòng chọn ngày sinh!' }]}
+              >
+                <DatePicker 
+                  placeholder="DD/MM/YYYY"
+                  format="DD/MM/YYYY"
+                  suffixIcon={<CalendarOutlined style={{ color: '#9ca3af' }} />}
+                  style={{ width: '100%', height: '42px', borderRadius: '12px' }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-        {/* Row 2: Email & Số điện thoại */}
-        <div className="flex gap-[16px] mb-3">
-          <div className="flex-1">
-            <label className="block text-[#344054] text-[13px] font-bold mb-1">Email</label>
-            <Input 
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Nhập địa chỉ email"
-              prefix={<MailOutlined className="text-gray-400 mr-1" />}
-              required
-              style={{ height: '42px', borderRadius: '12px' }}
-            />
-          </div>
-          <div className="flex-1">
-            <label className="block text-[#344054] text-[13px] font-bold mb-1">Số điện thoại</label>
-            <Input 
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="Nhập số điện thoại"
-              prefix={<PhoneOutlined className="text-gray-400 mr-1" />}
-              required
-              style={{ height: '42px', borderRadius: '12px' }}
-            />
-          </div>
-        </div>
+          {/* Row 2: Email & Số điện thoại */}
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="email"
+                label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Email</span>}
+                rules={[
+                  { required: true, message: 'Vui lòng nhập email!' },
+                  { type: 'email', message: 'Email không hợp lệ!' }
+                ]}
+              >
+                <Input 
+                  placeholder="Nhập địa chỉ email"
+                  prefix={<MailOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
+                  style={{ height: '42px', borderRadius: '12px' }}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="phoneNumber"
+                label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Số điện thoại</span>}
+                rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
+              >
+                <Input 
+                  placeholder="Nhập số điện thoại"
+                  prefix={<PhoneOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
+                  style={{ height: '42px', borderRadius: '12px' }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-        {/* Row 3: Mật khẩu & Xác nhận mật khẩu */}
-        <div className="flex gap-[16px] mb-3">
-          <div className="flex-1">
-            <label className="block text-[#344054] text-[13px] font-bold mb-1">Mật khẩu</label>
-            <Input.Password 
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Nhập mật khẩu (ít nhất 8 ký tự)"
-              prefix={<LockOutlined className="text-gray-400 mr-1" />}
-              required
-              style={{ height: '42px', borderRadius: '12px' }}
-            />
-          </div>
-          <div className="flex-1">
-            <label className="block text-[#344054] text-[13px] font-bold mb-1">Xác nhận mật khẩu</label>
-            <Input.Password 
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Nhập lại mật khẩu"
-              prefix={<LockOutlined className="text-gray-400 mr-1" />}
-              required
-              style={{ height: '42px', borderRadius: '12px' }}
-            />
-          </div>
-        </div>
+          {/* Row 3: Mật khẩu & Xác nhận mật khẩu */}
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="password"
+                label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Mật khẩu</span>}
+                rules={[
+                  { required: true, message: 'Vui lòng nhập mật khẩu!' },
+                  { min: 8, message: 'Mật khẩu phải có ít nhất 8 ký tự!' }
+                ]}
+              >
+                <Input.Password 
+                  placeholder="Nhập mật khẩu"
+                  prefix={<LockOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
+                  style={{ height: '42px', borderRadius: '12px' }}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="confirmPassword"
+                label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Xác nhận mật khẩu</span>}
+                dependencies={['password']}
+                rules={[
+                  { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'));
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password 
+                  placeholder="Nhập lại mật khẩu"
+                  prefix={<LockOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
+                  style={{ height: '42px', borderRadius: '12px' }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-        {/* Row 4: Địa chỉ hiện tại */}
-        <div className="mb-4">
-          <label className="block text-[#344054] text-[13px] font-bold mb-1">Địa chỉ hiện tại</label>
-          <Input 
+          {/* Row 4: Địa chỉ */}
+          <Form.Item
             name="address"
-            value={formData.address}
-            onChange={handleChange}
-            placeholder="Nhập địa chỉ hiện tại"
-            prefix={<EnvironmentOutlined className="text-gray-400 mr-1" />}
-            required
-            style={{ height: '42px', borderRadius: '12px' }}
-          />
-        </div>
+            label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Địa chỉ hiện tại</span>}
+            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
+          >
+            <Input 
+              placeholder="Nhập địa chỉ hiện tại"
+              prefix={<EnvironmentOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
+              style={{ height: '42px', borderRadius: '12px' }}
+            />
+          </Form.Item>
 
-        {/* Terms checkbox */}
-        <div className="flex items-center gap-2 mb-5">
-          <Checkbox 
-            name="agreed"
-            checked={formData.agreed}
-            onChange={(e) => {
-              const syntheticEvent = {
-                target: { name: 'agreed', value: e.target.checked, type: 'checkbox', checked: e.target.checked }
-              } as unknown as React.ChangeEvent<HTMLInputElement>;
-              handleChange(syntheticEvent);
+          {/* Checkbox Điều khoản */}
+          <Form.Item 
+            name="agreed" 
+            valuePropName="checked"
+            rules={[
+              {
+                validator: (_, value) =>
+                  value ? Promise.resolve() : Promise.reject(new Error('Bạn phải đồng ý với điều khoản sử dụng!')),
+              },
+            ]}
+          >
+            <Checkbox>
+              <span style={{ color: '#667085', fontSize: '12.5px' }}>
+                Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật.
+              </span>
+            </Checkbox>
+          </Form.Item>
+
+          {/* Nút Submit */}
+          <Button 
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            block
+            style={{
+              height: '44px',
+              borderRadius: '12px',
+              backgroundColor: '#E5484D',
+              fontWeight: 800,
+              fontSize: '15px',
+              boxShadow: '0px 10px 22px rgba(229,72,77,0.25)',
+              marginBottom: '16px',
+              border: 'none'
             }}
           >
-            <span className="text-[#667085] text-[12.5px]">Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật.</span>
-          </Checkbox>
+            {loading ? 'Đang xử lý...' : 'Đăng ký và nhận OTP'}
+          </Button>
+        </Form>
+
+        {/* Footer link */}
+        <div style={{ textAlign: 'center' }}>
+          <span style={{ color: '#667085', fontSize: '13px' }}>Đã có tài khoản? </span>
+          <Link 
+            to="/login"
+            style={{ color: '#C9383E', fontSize: '13px', fontWeight: 800, textDecoration: 'none' }}
+          >
+            Đăng nhập
+          </Link>
         </div>
-
-        {/* Submit Button */}
-        <Button 
-          type="primary"
-          htmlType="submit"
-          loading={loading}
-          disabled={!isFormComplete}
-          block
-          style={{
-            height: '44.27px',
-            borderRadius: '12px',
-            backgroundColor: isFormComplete && !loading ? '#E5484D' : undefined,
-            fontWeight: 'extrabold',
-            fontSize: '15px',
-            boxShadow: isFormComplete && !loading ? '0px 10px 22px rgba(229,72,77,0.25)' : 'none',
-            marginBottom: '16px'
-          }}
-        >
-          {loading ? 'Đang xử lý...' : 'Đăng ký và nhận OTP'}
-        </Button>
-      </form>
-
-      {/* Footer Link sử dụng trực tiếp useNavigate */}
-      <div className="text-center">
-        <span className="text-[#667085] text-[13px]">Đã có tài khoản? </span>
-        <Link 
-          onClick={(e) => { 
-            e.preventDefault(); 
-            navigate('/login');
-          }} 
-          style={{ color: '#C9383E', fontSize: '13px', fontWeight: 'extrabold' }}
-        >
-          Đăng nhập
-        </Link>
       </div>
     </div>
   );
