@@ -1,7 +1,7 @@
 import { Avatar, Dropdown, Space, type MenuProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
-import { getProfileMenuItems } from '../../config/navigation'
+import { getProfileMenuItems } from './navigation'
 import type { UserSummary } from '../../types/user'
 
 type ProfileDropdownProps = {

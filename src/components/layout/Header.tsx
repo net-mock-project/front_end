@@ -70,6 +70,10 @@ function Header({ user }: HeaderProps) {
         label: 'Quyên góp',
       },
       {
+        key: 'my-tasks',
+        label: 'Nhiệm vụ của tôi',
+      },
+      {
         key: 'guide',
         label: 'Hướng dẫn',
       },

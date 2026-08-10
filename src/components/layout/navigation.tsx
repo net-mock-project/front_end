@@ -4,12 +4,11 @@ import {
   LockOutlined,
   LogoutOutlined,
   ProfileOutlined,
-  ScheduleOutlined,
   UserOutlined,
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 
-import type { UserRole } from '../types/user'
+import type { UserRole } from '../../types/user'
 
 export type MenuItem = Required<MenuProps>['items'][number]
 
@@ -40,11 +39,6 @@ const profileItemsByRole: Record<UserRole, MenuItem[]> = {
       key: 'volunteer-profile',
       icon: <IdcardOutlined />,
       label: 'Hồ sơ Volunteer',
-    },
-    {
-      key: 'my-tasks',
-      icon: <ScheduleOutlined />,
-      label: 'Nhiệm vụ của tôi',
     },
   ],
 

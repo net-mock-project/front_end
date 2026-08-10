@@ -1,6 +1,6 @@
 import { Avatar, Menu } from 'antd'
 
-import { getProfileMenuItems } from '../../../config/navigation'
+import { getProfileMenuItems } from '../../../components/layout/navigation'
 import type { UserSummary } from '../../../types/user'
 
 type ProfileSidebarProps = {
