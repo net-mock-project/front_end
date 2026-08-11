@@ -16,7 +16,7 @@ import heroImg from '../assets/hero.png'
 import Header from '../components/layout/Header'
 import ProfilePage from '../features/profile/pages/ProfilePage'
 
-import type { UserSummary } from '../types/user'
+import type { User } from '../types/User'
 
 import './App.css'
 
@@ -24,10 +24,19 @@ import './App.css'
 const queryClient = new QueryClient()
 
 // User tạm thời cho Header, sau này thay bằng user từ Auth/Login
-const authUser: UserSummary = {
+const authUser: User = {
+  userId: 1,
   fullName: 'Minh Anh',
   role: 'Volunteer',
-  profileUrl: null,
+  profileUrl: '',
+  email: 'minhanh@example.com',
+  phoneNumber: '0123456789',
+  province: 'Hanoi',
+  status: 'ACTIVE',
+  location: {
+    latitude: 21.0285,
+    longitude: 105.8542,
+  },
 }
 
 function AppContent() {

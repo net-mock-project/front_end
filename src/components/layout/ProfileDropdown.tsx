@@ -2,10 +2,10 @@ import { Avatar, Dropdown, Space, type MenuProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 import { getProfileMenuItems } from './navigation'
-import type { UserSummary } from '../../types/user'
+import type { User } from '../../types/User'
 
 type ProfileDropdownProps = {
-  user: UserSummary
+  user: User
 }
 
 function ProfileDropdown({ user }: ProfileDropdownProps) {
@@ -17,7 +17,7 @@ function ProfileDropdown({ user }: ProfileDropdownProps) {
     .trim()
     .split(/\s+/)
     .slice(-2)
-    .map((word) => word[0])
+    .map((word: string) => word[0])
     .join('')
     .toUpperCase()
 

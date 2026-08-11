@@ -1,10 +1,10 @@
 import { Avatar, Menu } from 'antd'
 
 import { getProfileMenuItems } from '../../../components/layout/navigation'
-import type { UserSummary } from '../../../types/user'
+import type { User } from '../../../types/User'
 
 type ProfileSidebarProps = {
-  user: UserSummary
+  user: User
 }
 
 function ProfileSidebar({ user }: ProfileSidebarProps) {

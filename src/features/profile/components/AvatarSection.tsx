@@ -4,10 +4,10 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Button, Space, Upload } from 'antd'
 
-import type { UserSummary } from '../../../types/user'
+import type { User } from '../../../types/User'
 
 type AvatarSectionProps = {
-  user: UserSummary
+  user: User
 }
 
 function AvatarSection({ user }: AvatarSectionProps) {

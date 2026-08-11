@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 
-import type { UserRole } from '../../types/user'
+import type { User } from '../../types/User'
 
 export type MenuItem = Required<MenuProps>['items'][number]
 
@@ -25,7 +25,7 @@ const commonProfileItems: MenuItem[] = [
   },
 ]
 
-const profileItemsByRole: Record<UserRole, MenuItem[]> = {
+const profileItemsByRole: Record<User['role'], MenuItem[]> = {
   Requester: [
     {
       key: 'volunteer-profile',
@@ -58,7 +58,7 @@ const profileItemsByRole: Record<UserRole, MenuItem[]> = {
   Admin: [],
 }
 
-export function getProfileMenuItems(role: UserRole): MenuItem[] {
+export function getProfileMenuItems(role: User['role']): MenuItem[] {
   return [
     ...commonProfileItems,
     ...profileItemsByRole[role],

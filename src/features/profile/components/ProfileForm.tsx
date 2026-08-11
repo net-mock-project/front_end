@@ -12,10 +12,10 @@ import {
   type UpdateProfileRequest,
 } from '../api/profileApi'
 
-import type { UserProfile } from '../../../types/user'
+import type { User } from '../../../types/User'
 
 type ProfileFormProps = {
-  user: UserProfile
+  user: User
 }
 
 function ProfileForm({ user }: ProfileFormProps) {
@@ -56,7 +56,7 @@ function ProfileForm({ user }: ProfileFormProps) {
         initialValues={{
           fullName: user.fullName,
           email: user.email ?? '',
-          phone: user.phone ?? '',
+          phone: user.phoneNumber ?? '',
           province: user.province ?? '',
         }}
         onFinish={handleSubmit}
@@ -79,7 +79,7 @@ function ProfileForm({ user }: ProfileFormProps) {
               },
             ]}
           >
-            <Input placeholder="Nhập email" />
+            <Input placeholder="Nhập email" disabled />
           </Form.Item>
 
           <Form.Item
@@ -93,7 +93,7 @@ function ProfileForm({ user }: ProfileFormProps) {
             label="Tỉnh / Thành phố"
             name="province"
           >
-            <Input placeholder="Nhập tỉnh / thành phố" />
+            <Input placeholder="Nhập tỉnh / thành phố" disabled />
           </Form.Item>
         </div>
 
