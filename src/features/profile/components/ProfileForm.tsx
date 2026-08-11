@@ -5,7 +5,7 @@ import {
   message,
   Space,
 } from 'antd'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import {
   updateProfile,
@@ -21,12 +21,14 @@ type ProfileFormProps = {
 function ProfileForm({ user }: ProfileFormProps) {
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
+  const queryClient = useQueryClient()
 
   // Gọi API cập nhật hồ sơ
   const updateProfileMutation = useMutation({
     mutationFn: updateProfile,
 
-    onSuccess: () => {
+    onSuccess: (updatedProfile) => {
+      queryClient.setQueryData(['profile'], updatedProfile)
       messageApi.success('Cập nhật hồ sơ thành công')
     },
 
