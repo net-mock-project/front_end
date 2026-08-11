@@ -10,16 +10,13 @@ import {
 } from 'antd'
 import { useLocation } from 'react-router-dom'
 
-import type {
-  UserRole,
-  UserSummary,
-} from '../../types/user'
+import type {User} from '../../types/User'
 
 import ProfileDropdown from './ProfileDropdown'
 import './Header.css'
 
 type HeaderProps = {
-  user: UserSummary
+  user: User
 }
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -28,7 +25,7 @@ function Header({ user }: HeaderProps) {
   const location = useLocation()
 
   /* Menu Header theo từng role */
-  const menuItemsByRole: Record<UserRole, MenuItem[]> = {
+  const menuItemsByRole: Record<User['role'], MenuItem[]> = {
     Requester: [
       {
         key: 'home',

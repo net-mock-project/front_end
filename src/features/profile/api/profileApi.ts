@@ -1,5 +1,5 @@
 import httpClient from '../../../api/httpClient'
-import type { UserProfile } from '../../../types/user'
+import type { UserProfile } from '../../../types/User'
 
 const PROFILE_ENDPOINT = '/api/me/profile'
 
