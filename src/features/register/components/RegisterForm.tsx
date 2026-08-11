@@ -41,7 +41,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading })
           Tạo tài khoản
         </Title>
         <Text style={{ color: '#667085', fontSize: '14px', marginBottom: '24px', display: 'block' }}>
-          Nhập thông tin cơ bản. Bạn sẽ xác thực số điện thoại bằng mã OTP.
+          Nhập thông tin cơ bản. Bạn sẽ xác thực email bằng mã OTP.
         </Text>
 
         <Form 

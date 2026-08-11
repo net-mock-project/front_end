@@ -14,14 +14,14 @@ export const RegisterSection: React.FC = () => {
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [pendingData, setPendingData] = useState<RegisterPayload | null>(null);
 
-  // Gửi OTP khi form đăng ký hợp lệ
+  // Gửi OTP khi form đăng ký hợp lệ (Chuyển sang dùng email)
   const handleRegisterSubmit = async (values: RegisterPayload & { agreed: boolean }) => {
     setLoading(true);
     try {
-      await sendOtpApi(values.phoneNumber);
+      await sendOtpApi(values.email);
       setPendingData(values);
       setShowOtpModal(true);
-      message.success('Mã OTP đã được gửi thành công tới số điện thoại của bạn!');
+      message.success('Mã OTP đã được gửi thành công tới email của bạn!');
     } catch (err: any) {
       message.error(err.message || 'Không thể gửi mã OTP. Vui lòng thử lại sau.');
     } finally {
@@ -56,28 +56,28 @@ export const RegisterSection: React.FC = () => {
     <div 
       style={{
         display: 'flex',
-        flexDirection: 'row', // Ép hiển thị nằm ngang (Banner bên trái, Form bên phải)
-        height: '100vh',     // Chiếm toàn bộ chiều cao màn hình
-        width: '100vw',      // Chiếm toàn bộ chiều rộng màn hình
+        flexDirection: 'row',
+        height: '100vh', 
+        width: '100vw', 
         backgroundColor: '#ffffff',
         overflow: 'hidden',
         userSelect: 'none',
         boxSizing: 'border-box'
       }}
     >
-      {/* Banner bên trái (chiếm 50% hoặc tự động co giãn) */}
+      {/* Banner bên trái */}
       <div 
         style={{
           flex: 1,
           height: '100%',
           boxSizing: 'border-box',
-          display: 'block' // Đảm bảo luôn hiển thị
+          display: 'block'
         }}
       >
         <RegisterBanner />
       </div>
 
-      {/* Form bên phải (chiếm 50% hoặc tự động co giãn) */}
+      {/* Form bên phải */}
       <div 
         style={{
           flex: 1,
@@ -97,7 +97,7 @@ export const RegisterSection: React.FC = () => {
 
       <OtpModal 
         isOpen={showOtpModal}
-        phone={pendingData?.phoneNumber || ''}
+        email={pendingData?.email || ''} 
         onVerify={handleVerifyOtp}
         onClose={() => setShowOtpModal(false)}
         loading={loading}

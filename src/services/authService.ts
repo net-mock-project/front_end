@@ -10,10 +10,10 @@ export interface RegisterPayload {
   otpCode?: string;
 }
 
-// Gửi yêu cầu lấy mã OTP
-export const sendOtpApi = async (phoneNumber: string) => {
+// Gửi yêu cầu lấy mã OTP qua Email
+export const sendOtpApi = async (email: string) => {
   try {
-    const response = await axios.post('/api/auth/send-otp', { phoneNumber });
+    const response = await axios.post('/api/auth/send-otp', { email });
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || 'Không thể gửi mã OTP.';

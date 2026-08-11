@@ -6,7 +6,7 @@ const { Title, Text } = Typography;
 
 interface OtpModalProps {
   isOpen: boolean;
-  phone: string;
+  email: string; // <--- Đổi từ phone thành email
   onVerify: (otpCode: string) => void;
   onClose: () => void;
   loading: boolean;
@@ -14,7 +14,7 @@ interface OtpModalProps {
 
 export const OtpModal: React.FC<OtpModalProps> = ({
   isOpen,
-  phone,
+  email, // <--- Đổi từ phone thành email
   onVerify,
   onClose,
   loading
@@ -71,8 +71,8 @@ export const OtpModal: React.FC<OtpModalProps> = ({
           Xác thực mã OTP
         </Title>
         <Text type="secondary" style={{ fontSize: '13px' }}>
-          Mã xác thực đã được gửi tới số điện thoại{' '}
-          <span style={{ fontWeight: 600, color: '#172033' }}>{phone}</span>
+          Mã xác thực đã được gửi tới email{' '}
+          <span style={{ fontWeight: 600, color: '#172033' }}>{email}</span>
         </Text>
       </div>
 
@@ -86,7 +86,6 @@ export const OtpModal: React.FC<OtpModalProps> = ({
           ]}
           style={{ display: 'flex', justifyContent: 'center' }}
         >
-          {/* Sử dụng Input.OTP chuẩn của Ant Design */}
           <Input.OTP 
             length={6} 
             formatter={(str) => str.toUpperCase()}
