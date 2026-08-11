@@ -1,6 +1,7 @@
 import { AdvancedMarker } from "@vis.gl/react-google-maps";
 import type { Warehouse } from "../../../types/Warehouse";
 import { ShopOutlined } from "@ant-design/icons";
+import "./MapComponents.css";
 
 interface WarehouseMarkerProps {
     warehouse: Warehouse;
@@ -18,26 +19,8 @@ export const WarehouseMarker = ({ warehouse, onClick }: WarehouseMarkerProps) =>
             anchorLeft="-50%"
             anchorTop="-50%"
         >
-            <div
-                style={{
-                    width: 40,
-                    height: 40,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "#FA8C16",
-                    border: "3px solid white",
-                    borderRadius: "50%",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
-                    cursor: "pointer",
-                }}
-            >
-                <ShopOutlined
-                    style={{
-                        color: "white",
-                        fontSize: 21,
-                    }}
-                />
+            <div className="marker-base warehouse-marker">
+                <ShopOutlined className="marker-icon warehouse-icon" />
             </div>
         </AdvancedMarker>
     )

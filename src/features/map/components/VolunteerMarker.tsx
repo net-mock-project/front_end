@@ -1,6 +1,7 @@
 import { AdvancedMarker } from "@vis.gl/react-google-maps";
 import type { Volunteer } from "../../../types/Volunteer";
 import { UserOutlined } from "@ant-design/icons";
+import "./MapComponents.css";
 
 
 interface VolunteerMarkerProps {
@@ -9,6 +10,8 @@ interface VolunteerMarkerProps {
 }
 
 export const VolunteerMarker = ({ volunteer, onClick }: VolunteerMarkerProps) => {
+    const isInactive = volunteer.status?.toLowerCase() === "inactive";
+
     return (
         <>
             <AdvancedMarker
@@ -20,26 +23,8 @@ export const VolunteerMarker = ({ volunteer, onClick }: VolunteerMarkerProps) =>
                 anchorLeft="-50%"
                 anchorTop="-50%"
             >
-                <div
-                    style={{
-                        width: 38,
-                        height: 38,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "#1677FF",
-                        border: "3px solid white",
-                        borderRadius: "50%",
-                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
-                        cursor: "pointer",
-                    }}
-                >
-                    <UserOutlined
-                        style={{
-                            color: "white",
-                            fontSize: 20,
-                        }}
-                    />
+                <div className={`marker-base volunteer-marker ${isInactive ? "marker-inactive" : ""}`}>
+                    <UserOutlined className="marker-icon volunteer-icon" />
                 </div>
             </AdvancedMarker>
 

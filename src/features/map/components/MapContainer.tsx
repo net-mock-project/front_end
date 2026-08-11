@@ -1,5 +1,6 @@
 import { Map } from "@vis.gl/react-google-maps";
 import { env } from "../../../config/env";
+import "./MapComponents.css";
 
 interface MapContainerProps {
     children: React.ReactNode;
@@ -10,7 +11,7 @@ interface MapContainerProps {
 export const MapContainer = ({ children, center, zoom=12 }: MapContainerProps) => {
     return (
         <Map
-            style={{ width: "100%", height: "100%" }}
+            className="map-container"
             defaultCenter={center}
             defaultZoom={zoom}
             mapId={env.googleMapsId}

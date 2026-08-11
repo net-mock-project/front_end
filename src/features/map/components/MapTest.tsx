@@ -306,7 +306,7 @@ const reliefRequests: ReliefRequest[] = [
 
 export const MapTest = () => {
     return (
-        <div style={{height: "500px"}}>
+        <div className="map-test-wrapper">
             <MapContainer
                 center={{ lat: 21.0285, lng: 105.8542 }}
                 zoom={12}

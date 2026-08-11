@@ -1,6 +1,7 @@
 import { AdvancedMarker, Circle } from "@vis.gl/react-google-maps";
 import { AlertFilled } from "@ant-design/icons";
 import type { ReliefRequest } from "../../../types/ReliefRequest";
+import "./MapComponents.css";
 
 interface ReliefRequestMarkerProps {
     reliefRequest: ReliefRequest
@@ -21,26 +22,8 @@ export const ReliefRequestMarker = ({ reliefRequest, onClick }: ReliefRequestMar
                 anchorTop="-50%"
                 
             >
-                <div
-                    style={{
-                        width: 42,
-                        height: 42,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "#EF4444",
-                        border: "3px solid white",
-                        borderRadius: "50%",
-                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.35)",
-                        cursor: "pointer",
-                    }}
-                >
-                    <AlertFilled
-                        style={{
-                            color: "white",
-                            fontSize: 22,
-                        }}
-                    />
+                <div className="marker-base relief-marker">
+                    <AlertFilled className="marker-icon relief-icon" />
                 </div>
             </AdvancedMarker>
             <Circle
