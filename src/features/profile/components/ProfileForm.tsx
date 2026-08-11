@@ -79,7 +79,7 @@ function ProfileForm({ user }: ProfileFormProps) {
               },
             ]}
           >
-            <Input placeholder="Nhập email" />
+            <Input placeholder="Nhập email" disabled />
           </Form.Item>
 
           <Form.Item
@@ -93,7 +93,7 @@ function ProfileForm({ user }: ProfileFormProps) {
             label="Tỉnh / Thành phố"
             name="province"
           >
-            <Input placeholder="Nhập tỉnh / thành phố" />
+            <Input placeholder="Nhập tỉnh / thành phố" disabled />
           </Form.Item>
         </div>
 
