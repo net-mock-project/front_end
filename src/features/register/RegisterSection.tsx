@@ -4,17 +4,18 @@ import { message } from 'antd';
 import { RegisterBanner } from './components/RegisterBanner';
 import { RegisterForm } from './components/RegisterForm';
 import { OtpModal } from './components/OtpModal';
-import { sendOtpApi, registerApi } from '../../services/authService';
+import { sendOtpApi, resendOtpApi, registerApi } from '../../services/authService'; // <-- Đã thêm resendOtpApi
 import type { RegisterPayload } from '../../services/authService';
 
 export const RegisterSection: React.FC = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false); // <-- Thêm state cho nút resend
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [pendingData, setPendingData] = useState<RegisterPayload | null>(null);
 
-  // Gửi OTP khi form đăng ký hợp lệ (Chuyển sang dùng email)
+  // Gửi OTP khi form đăng ký hợp lệ
   const handleRegisterSubmit = async (values: RegisterPayload & { agreed: boolean }) => {
     setLoading(true);
     try {
@@ -26,6 +27,21 @@ export const RegisterSection: React.FC = () => {
       message.error(err.message || 'Không thể gửi mã OTP. Vui lòng thử lại sau.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Hàm xử lý gửi lại mã OTP (dùng API resendOtpApi)
+  const handleResendOtp = async () => {
+    if (!pendingData?.email) return;
+
+    setResendLoading(true);
+    try {
+      await resendOtpApi(pendingData.email);
+      message.success('Mã OTP mới đã được gửi lại!');
+    } catch (err: any) {
+      message.error(err.message || 'Không thể gửi lại mã lúc này.');
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -99,8 +115,10 @@ export const RegisterSection: React.FC = () => {
         isOpen={showOtpModal}
         email={pendingData?.email || ''} 
         onVerify={handleVerifyOtp}
+        onResend={handleResendOtp} // <-- Truyền hàm gửi lại mã
         onClose={() => setShowOtpModal(false)}
         loading={loading}
+        resendLoading={resendLoading} // <-- Truyền trạng thái loading của nút gửi lại
       />
     </div>
   );

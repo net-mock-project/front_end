@@ -21,6 +21,16 @@ export const sendOtpApi = async (email: string) => {
   }
 };
 
+export const resendOtpApi = async (email: string) => {
+  try {
+    const response = await axios.post('/api/auth/resend-otp', { email });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || 'Không thể gửi mã OTP.';
+    throw new Error(errorMessage);
+  }
+};
+
 // Gửi thông tin đăng ký + mã OTP để xác thực và tạo tài khoản
 export const registerApi = async (registerData: RegisterPayload) => {
   try {

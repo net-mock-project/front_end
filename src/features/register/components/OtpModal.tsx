@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button, Typography, Form } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
 
@@ -6,20 +6,69 @@ const { Title, Text } = Typography;
 
 interface OtpModalProps {
   isOpen: boolean;
-  email: string; // <--- Đổi từ phone thành email
+  email: string;
   onVerify: (otpCode: string) => void;
+  onResend: () => void; // Thêm hàm gọi API gửi lại
   onClose: () => void;
   loading: boolean;
+  resendLoading?: boolean; // Trạng thái loading khi ấn gửi lại
 }
 
 export const OtpModal: React.FC<OtpModalProps> = ({
   isOpen,
-  email, // <--- Đổi từ phone thành email
+  email, 
   onVerify,
+  onResend,
   onClose,
-  loading
+  loading,
+  resendLoading = false
 }) => {
   const [form] = Form.useForm();
+  const [timeLeft, setTimeLeft] = useState<number>(60); // Đếm ngược 60 giây
+  const [canResend, setCanResend] = useState<boolean>(false);
+
+  // Kích hoạt bộ đếm ngược mỗi khi modal mở lên
+  useEffect(() => {
+    if (isOpen) {
+      setTimeLeft(60);
+      setCanResend(false);
+      form.resetFields(); // Reset ô nhập OTP mỗi khi mở lại modal
+
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [isOpen, form]);
+
+  // Xử lý khi bấm nút gửi lại mã
+  const handleResendClick = () => {
+    if (!canResend || resendLoading) return;
+    onResend(); // Gọi hàm từ component cha
+
+    // Reset lại đồng hồ 60 giây sau khi bấm gửi lại
+    setTimeLeft(60);
+    setCanResend(false);
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setCanResend(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
 
   const handleFinish = (values: { otpCode: string }) => {
     onVerify(values.otpCode);
@@ -112,6 +161,25 @@ export const OtpModal: React.FC<OtpModalProps> = ({
           Xác nhận
         </Button>
       </Form>
+
+      {/* Phần hiển thị đếm ngược và nút Gửi lại mã */}
+      <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '13px' }}>
+        <Text type="secondary">Không nhận được mã? </Text>
+        {canResend ? (
+          <Button 
+            type="link" 
+            onClick={handleResendClick} 
+            loading={resendLoading}
+            style={{ padding: 0, fontWeight: 'bold', color: '#E5484D', height: 'auto' }}
+          >
+            Gửi lại mã
+          </Button>
+        ) : (
+          <Text type="secondary" style={{ fontWeight: 500 }}>
+            Gửi lại sau <span style={{ color: '#E5484D' }}>{timeLeft}s</span>
+          </Text>
+        )}
+      </div>
     </Modal>
   );
 };
