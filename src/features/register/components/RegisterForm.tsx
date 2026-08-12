@@ -1,20 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Input, Button, Checkbox, Typography, Row, Col, DatePicker } from 'antd';
+import { Form, Input, Button, Checkbox, Typography, Row, Col, DatePicker, Select } from 'antd';
 import { 
   UserOutlined, 
   CalendarOutlined, 
   MailOutlined, 
   PhoneOutlined, 
   LockOutlined, 
-  EnvironmentOutlined 
+  EnvironmentOutlined
 } from '@ant-design/icons';
-import type { RegisterPayload } from '../../../services/authService';
 
 const { Title, Text } = Typography;
 
 interface RegisterFormProps {
-  onSubmit: (values: RegisterPayload & { confirmPassword?: string; agreed: boolean }) => void;
+  onSubmit: (values: any) => void;
   loading: boolean;
 }
 
@@ -48,9 +47,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading })
           form={form} 
           layout="vertical" 
           onFinish={onSubmit}
-          initialValues={{ agreed: false }}
+          initialValues={{ isAgreeTerms: false }}
         >
-          {/* Row 1: Họ và tên & Ngày sinh */}
+          {/* Row 1: Họ và tên & Giới tính */}
           <Row gutter={16}>
             <Col xs={24} md={12}>
               <Form.Item
@@ -67,7 +66,28 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading })
             </Col>
             <Col xs={24} md={12}>
               <Form.Item
-                name="dob"
+                name="gender"
+                label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Giới tính</span>}
+                rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}
+              >
+                <Select
+                  placeholder="Chọn giới tính"
+                  style={{ height: '42px' }}
+                  options={[
+                    { value: 1, label: 'Nam' },
+                    { value: 2, label: 'Nữ' },
+                    { value: 3, label: 'Khác' },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* Row 2: Ngày sinh & Số điện thoại */}
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="dateOfBirth"
                 label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Ngày sinh</span>}
                 rules={[{ required: true, message: 'Vui lòng chọn ngày sinh!' }]}
               >
@@ -79,29 +99,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading })
                 />
               </Form.Item>
             </Col>
-          </Row>
-
-          {/* Row 2: Email & Số điện thoại */}
-          <Row gutter={16}>
             <Col xs={24} md={12}>
               <Form.Item
-                name="email"
-                label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Email</span>}
-                rules={[
-                  { required: true, message: 'Vui lòng nhập email!' },
-                  { type: 'email', message: 'Email không hợp lệ!' }
-                ]}
-              >
-                <Input 
-                  placeholder="Nhập địa chỉ email"
-                  prefix={<MailOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
-                  style={{ height: '42px', borderRadius: '12px' }}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item
-                name="phoneNumber"
+                name="phone"
                 label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Số điện thoại</span>}
                 rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
               >
@@ -114,7 +114,23 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading })
             </Col>
           </Row>
 
-          {/* Row 3: Mật khẩu & Xác nhận mật khẩu */}
+          {/* Row 3: Email */}
+          <Form.Item
+            name="email"
+            label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Email</span>}
+            rules={[
+              { required: true, message: 'Vui lòng nhập email!' },
+              { type: 'email', message: 'Email không hợp lệ!' }
+            ]}
+          >
+            <Input 
+              placeholder="Nhập địa chỉ email"
+              prefix={<MailOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
+              style={{ height: '42px', borderRadius: '12px' }}
+            />
+          </Form.Item>
+
+          {/* Row 4: Mật khẩu & Xác nhận mật khẩu */}
           <Row gutter={16}>
             <Col xs={24} md={12}>
               <Form.Item
@@ -158,7 +174,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading })
             </Col>
           </Row>
 
-          {/* Row 4: Địa chỉ */}
+          {/* Row 5: Địa chỉ */}
           <Form.Item
             name="address"
             label={<span style={{ color: '#344054', fontSize: '13px', fontWeight: 'bold' }}>Địa chỉ hiện tại</span>}
@@ -173,7 +189,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading })
 
           {/* Checkbox Điều khoản */}
           <Form.Item 
-            name="agreed" 
+            name="isAgreeTerms" 
             valuePropName="checked"
             rules={[
               {

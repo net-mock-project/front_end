@@ -4,23 +4,29 @@ import { message } from 'antd';
 import { RegisterBanner } from './components/RegisterBanner';
 import { RegisterForm } from './components/RegisterForm';
 import { OtpModal } from './components/OtpModal';
-import { sendOtpApi, resendOtpApi, registerApi } from '../../services/authService'; // <-- Đã thêm resendOtpApi
+import { sendOtpApi, resendOtpApi, registerApi } from '../../services/authService';
 import type { RegisterPayload } from '../../services/authService';
 
 export const RegisterSection: React.FC = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-  const [resendLoading, setResendLoading] = useState(false); // <-- Thêm state cho nút resend
+  const [resendLoading, setResendLoading] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [pendingData, setPendingData] = useState<RegisterPayload | null>(null);
 
   // Gửi OTP khi form đăng ký hợp lệ
-  const handleRegisterSubmit = async (values: RegisterPayload & { agreed: boolean }) => {
+  const handleRegisterSubmit = async (values: any) => {
     setLoading(true);
     try {
-      await sendOtpApi(values.email);
-      setPendingData(values);
+      // Format lại dob từ Dayjs/Moment object thành chuỗi 'YYYY-MM-DD' để gửi lên Backend chính xác
+      const formattedData: RegisterPayload = {
+        ...values,
+        dob: values.dob ? values.dob.format('YYYY-MM-DD') : '',
+      };
+
+      await sendOtpApi(formattedData);
+      setPendingData(formattedData); // Lưu lại payload đã format chuẩn vào state chờ nhập OTP
       setShowOtpModal(true);
       message.success('Mã OTP đã được gửi thành công tới email của bạn!');
     } catch (err: any) {
@@ -30,7 +36,7 @@ export const RegisterSection: React.FC = () => {
     }
   };
 
-  // Hàm xử lý gửi lại mã OTP (dùng API resendOtpApi)
+  // Hàm xử lý gửi lại mã OTP
   const handleResendOtp = async () => {
     if (!pendingData?.email) return;
 
@@ -115,10 +121,10 @@ export const RegisterSection: React.FC = () => {
         isOpen={showOtpModal}
         email={pendingData?.email || ''} 
         onVerify={handleVerifyOtp}
-        onResend={handleResendOtp} // <-- Truyền hàm gửi lại mã
+        onResend={handleResendOtp}
         onClose={() => setShowOtpModal(false)}
         loading={loading}
-        resendLoading={resendLoading} // <-- Truyền trạng thái loading của nút gửi lại
+        resendLoading={resendLoading}
       />
     </div>
   );
