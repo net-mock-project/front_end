@@ -8,7 +8,7 @@ import {
   Menu,
   type MenuProps,
 } from 'antd'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import type {User} from '../../types/User'
 
@@ -28,107 +28,102 @@ function Header({ user }: HeaderProps) {
   const menuItemsByRole: Record<User['role'], MenuItem[]> = {
     Requester: [
       {
-        key: 'home',
-        label: 'Trang chủ',
+        key: '/',
+        label: <Link to="/">Trang chủ</Link>,
       },
       {
-        key: 'map',
-        label: 'Bản đồ',
+        key: '/map',
+        label: <Link to="/map">Bản đồ</Link>,
       },
       {
-        key: 'relief-report',
-        label: 'Báo cáo cứu trợ',
+        key: '/relief-report',
+        label: <Link to="/relief-report">Báo cáo cứu trợ</Link>,
       },
       {
-        key: 'donation',
-        label: 'Quyên góp',
+        key: '/donation',
+        label: <Link to="/donation">Quyên góp</Link>,
       },
       {
-        key: 'guide',
-        label: 'Hướng dẫn',
+        key: '/guide',
+        label: <Link to="/guide">Hướng dẫn</Link>,
       },
     ],
 
     Volunteer: [
       {
-        key: 'home',
-        label: 'Trang chủ',
+        key: '/',
+        label: <Link to="/">Trang chủ</Link>,
       },
       {
-        key: 'map',
-        label: 'Bản đồ',
+        key: '/map',
+        label: <Link to="/map">Bản đồ</Link>,
       },
       {
-        key: 'relief-report',
-        label: 'Báo cáo cứu trợ',
+        key: '/relief-report',
+        label: <Link to="/relief-report">Báo cáo cứu trợ</Link>,
       },
       {
-        key: 'donation',
-        label: 'Quyên góp',
+        key: '/donation',
+        label: <Link to="/donation">Quyên góp</Link>,
       },
       {
-        key: 'my-tasks',
-        label: 'Nhiệm vụ của tôi',
+        key: '/my-tasks',
+        label: <Link to="/my-tasks">Nhiệm vụ của tôi</Link>,
       },
       {
-        key: 'guide',
-        label: 'Hướng dẫn',
+        key: '/guide',
+        label: <Link to="/guide">Hướng dẫn</Link>,
       },
     ],
 
     Coordinator: [
       {
-        key: 'home',
-        label: 'Trang chủ',
+        key: '/',
+        label: <Link to="/">Trang chủ</Link>,
       },
       {
-        key: 'map',
-        label: 'Bản đồ',
+        key: '/map',
+        label: <Link to="/map">Bản đồ</Link>,
       },
       {
-        key: 'volunteer-management',
-        label: 'Quản lý volunteer',
+        key: '/volunteer-management',
+        label: <Link to="/volunteer-management">Quản lý volunteer</Link>,
       },
       {
-        key: 'regional-relief-request',
-        label: 'Yêu cầu cứu trợ khu vực',
+        key: '/regional-relief-request',
+        label: <Link to="/regional-relief-request">Yêu cầu cứu trợ khu vực</Link>,
       },
       {
-        key: 'warehouse-management',
-        label: 'Quản lý khu vật tư',
+        key: '/warehouse-management',
+        label: <Link to="/warehouse-management">Quản lý khu vật tư</Link>,
       },
     ],
 
     Admin: [
       {
-        key: 'home',
-        label: 'Trang chủ',
+        key: '/',
+        label: <Link to="/">Trang chủ</Link>,
       },
       {
-        key: 'map',
-        label: 'Bản đồ',
+        key: '/map',
+        label: <Link to="/map">Bản đồ</Link>,
       },
       {
-        key: 'dashboard',
-        label: 'Dashboard',
+        key: '/dashboard',
+        label: <Link to="/dashboard">Dashboard</Link>,
       },
       {
-        key: 'user-management',
-        label: 'Quản lý user',
+        key: '/user-management',
+        label: <Link to="/user-management">Quản lý user</Link>,
       },
       {
-        key: 'audit-log',
-        label: 'Audit log',
+        key: '/audit-log',
+        label: <Link to="/audit-log">Audit log</Link>,
       },
     ],
   }
 
-  const selectedKey =
-    location.pathname === '/'
-      ? 'home'
-      : location.pathname.startsWith('/map')
-        ? 'map'
-        : ''
+
 
   return (
     <header className="app-header">
@@ -142,7 +137,8 @@ function Header({ user }: HeaderProps) {
 
       <Menu
         mode="horizontal"
-        selectedKeys={selectedKey ? [selectedKey] : []}
+        selectedKeys={[location.pathname]}
+        defaultSelectedKeys={['/']}
         className="app-header__menu"
         items={menuItemsByRole[user.role]}
       />
