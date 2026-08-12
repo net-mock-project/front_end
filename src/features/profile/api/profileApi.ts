@@ -1,5 +1,5 @@
 import httpClient from '../../../api/httpClient'
-import type { UserProfile } from '../../../types/User'
+import type { User } from '../../../types/User'
 
 const PROFILE_ENDPOINT = '/api/me/profile'
 
@@ -11,14 +11,20 @@ export type UpdateProfileRequest = {
 }
 
 /* Tạm thời dùng dữ liệu test vì BE chưa có GET Profile */
-export async function getProfile(): Promise<UserProfile> {
+export async function getProfile(): Promise<User> {
   return {
+    userId: 1,
     fullName: 'Minh Anh',
     role: 'Volunteer',
-    profileUrl: null,
+    profileUrl: "",
     email: 'minhanh@example.com',
-    phone: '0901234567',
+    phoneNumber: '0901234567',
     province: 'Hồ Chí Minh',
+    status: 'ACTIVE',
+    location: {
+      latitude: 10.762622,
+      longitude: 106.660172,
+    },
   }
 }
 
@@ -26,7 +32,7 @@ export async function getProfile(): Promise<UserProfile> {
 export async function updateProfile(
   data: UpdateProfileRequest,
 ) {
-  const response = await httpClient.patch<UserProfile>(
+  const response = await httpClient.patch<User>(
     PROFILE_ENDPOINT,
     data,
   )
