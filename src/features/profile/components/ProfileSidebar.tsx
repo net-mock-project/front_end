@@ -8,7 +8,7 @@ type ProfileSidebarProps = {
 }
 
 function ProfileSidebar({ user }: ProfileSidebarProps) {
-  const items = getProfileMenuItems(user.role)
+  const items = getProfileMenuItems(user.roleName)
 
   // Tạo chữ viết tắt từ họ tên
   const initials = user.fullName
@@ -31,7 +31,7 @@ function ProfileSidebar({ user }: ProfileSidebarProps) {
 
         <div>
           <strong>{user.fullName}</strong>
-          <div>{user.role}</div>
+          <div>{user.roleName}</div>
         </div>
       </div>
 

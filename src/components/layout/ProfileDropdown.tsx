@@ -11,7 +11,7 @@ type ProfileDropdownProps = {
 function ProfileDropdown({ user }: ProfileDropdownProps) {
   const navigate = useNavigate()
 
-  const items = getProfileMenuItems(user.role)
+  const items = getProfileMenuItems(user.roleName)
 
   const initials = user.fullName
     .trim()
@@ -45,7 +45,7 @@ function ProfileDropdown({ user }: ProfileDropdownProps) {
 
         <div className="profile-dropdown__info">
           <strong>{user.fullName}</strong>
-          <div>{user.role}</div>
+          <div>{user.roleName}</div>
         </div>
       </Space>
     </Dropdown>

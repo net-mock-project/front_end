@@ -24,15 +24,15 @@
 
 .app-header__logo {
   display: flex;
+  height: 42px;
+  width: 42px;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  margin: 0;
-  border-radius: 9px;
-  background: #fff0f1;
-  color: #e5484d;
+  border-radius: 14px;
+  background: linear-gradient(to bottom right, #EF4444, #FB7185);
   font-size: 18px;
+  color: #ffffff;
+  box-shadow: 0px 10px 22px rgba(229,72,77,0.28);
 }
 
 /* Menu chính */

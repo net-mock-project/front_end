@@ -1,0 +1,129 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 48px;
+  width: 100%;
+  max-width: 650px;
+  height: 100%;
+  background-color: #ffffff;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.login-form-inner {
+  margin: auto 0;
+  width: 100%;
+  text-align: left;
+}
+
+.login-form-title {
+  color: #172033 !important;
+  font-size: 30px !important;
+  font-weight: bold !important;
+  margin-bottom: 4px !important;
+  margin-top: 0 !important;
+  text-align: left !important;
+}
+
+.login-form-subtitle {
+  color: #667085 !important;
+  font-size: 14px !important;
+  margin-bottom: 24px !important;
+  display: block !important;
+  text-align: left !important;
+}
+
+
+.login-form-input,
+.login-form-select,
+.login-form-password {
+  height: 42px !important;
+  border-radius: 12px !important;
+}
+
+.login-form-password .ant-input,
+.login-form-input,
+.login-form-select .ant-select-selector,
+.login-form-date-picker .ant-picker-input {
+  border-radius: 12px !important;
+}
+
+.login-form-submit {
+  display: block !important;
+  width: 100% !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background-color: #e5484d !important;
+  font-weight: 800 !important;
+  font-size: 15px !important;
+  box-shadow: 0px 10px 22px rgba(229, 72, 77, 0.25) !important;
+  margin-bottom: 16px !important;
+  border: none !important;
+}
+
+.login-form-submit:hover,
+.login-form-submit:focus,
+.login-form-submit:active {
+  background-color: #d83c40 !important;
+  border: none !important;
+}
+
+.login-form-link {
+  color: #c9383e !important;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-form-label {
+  color: #344054 !important;
+  font-size: 13px !important;
+  font-weight: bold !important;
+}
+
+.login-form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.login-form-remember {
+  margin-bottom: 0 !important;
+}
+
+.login-form-checkbox-text {
+  color: #667085 !important;
+  font-size: 12.5px !important;
+}
+
+.login-form-link:hover {
+  text-decoration: underline;
+}
+
+.login-form-signup-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #667085;
+  text-align: center;
+}
+
+.login-form-signup-text {
+  color: #667085;
+}
+
+.login-form-footer {
+  text-align: center;
+}
+
+.login-form-footer-text {
+  color: #667085 !important;
+  font-size: 13px !important;
+}

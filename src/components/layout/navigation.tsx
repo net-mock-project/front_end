@@ -25,7 +25,7 @@ const commonProfileItems: MenuItem[] = [
   },
 ]
 
-const profileItemsByRole: Record<User['role'], MenuItem[]> = {
+const profileItemsByRole: Record<User['roleName'], MenuItem[]> = {
   Requester: [
     {
       key: 'volunteer-profile',
@@ -58,10 +58,10 @@ const profileItemsByRole: Record<User['role'], MenuItem[]> = {
   Admin: [],
 }
 
-export function getProfileMenuItems(role: User['role']): MenuItem[] {
+export function getProfileMenuItems(roleName: User['roleName']): MenuItem[] {
   return [
     ...commonProfileItems,
-    ...profileItemsByRole[role],
+    ...(profileItemsByRole[roleName] ),
     {
       key: 'logout',
       icon: <LogoutOutlined />,

@@ -5,8 +5,8 @@ export interface User {
     status: string;
     province: string;
     profileUrl: string;
-    role: string;
-    phoneNumber: string;
+    roleName: string;
+    phone: string;
     location: {
         latitude: number;
         longitude: number;

@@ -10,22 +10,10 @@ export type UpdateProfileRequest = {
   province?: string
 }
 
-/* Tạm thời dùng dữ liệu test vì BE chưa có GET Profile */
+
 export async function getProfile(): Promise<User> {
-  return {
-    userId: 1,
-    fullName: 'Minh Anh',
-    role: 'Volunteer',
-    profileUrl: "",
-    email: 'minhanh@example.com',
-    phoneNumber: '0901234567',
-    province: 'Hồ Chí Minh',
-    status: 'ACTIVE',
-    location: {
-      latitude: 10.762622,
-      longitude: 106.660172,
-    },
-  }
+  const response= await httpClient.get(PROFILE_ENDPOINT);
+  return response.data.result;
 }
 
 /* API update thật */

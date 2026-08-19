@@ -56,7 +56,7 @@ function ProfileForm({ user }: ProfileFormProps) {
         initialValues={{
           fullName: user.fullName,
           email: user.email ?? '',
-          phone: user.phoneNumber ?? '',
+          phone: user.phone ?? '',
           province: user.province ?? '',
         }}
         onFinish={handleSubmit}

@@ -6,6 +6,7 @@ import {
   Badge,
   Button,
   Menu,
+  Spin,
   type MenuProps,
 } from 'antd'
 import { Link, useLocation } from 'react-router-dom'
@@ -14,18 +15,40 @@ import type {User} from '../../types/User'
 
 import ProfileDropdown from './ProfileDropdown'
 import './Header.css'
+import { useCurrentUser } from '../../features/auth/hooks/useCurrentUser'
 
-type HeaderProps = {
-  user: User
-}
+// const authUser: User = {
+//   userId: 1,
+//   fullName: 'Minh Anh',
+//   role: 'Volunteer',
+//   profileUrl: '',
+//   email: 'minhanh@example.com',
+//   phone: '0123456789',
+//   province: 'Hanoi',
+//   status: 'ACTIVE',
+//   location: {
+//     latitude: 21.0285,
+//     longitude: 105.8542,
+//   },
+// }
+
 
 type MenuItem = Required<MenuProps>['items'][number]
 
-function Header({ user }: HeaderProps) {
+function Header() {
+  const {data: user, isLoading, isError}= useCurrentUser();
+  
+  if(isLoading){
+    return <Spin fullscreen/>
+  }
+  if(!user|| isError){
+    return null;
+  }
+
   const location = useLocation()
 
   /* Menu Header theo từng role */
-  const menuItemsByRole: Record<User['role'], MenuItem[]> = {
+  const menuItemsByRole: Record<User['roleName'], MenuItem[]> = {
     Requester: [
       {
         key: '/',
@@ -140,7 +163,7 @@ function Header({ user }: HeaderProps) {
         selectedKeys={[location.pathname]}
         defaultSelectedKeys={['/']}
         className="app-header__menu"
-        items={menuItemsByRole[user.role]}
+        items={menuItemsByRole[user.roleName]}
       />
 
       <div className="app-header__actions">
