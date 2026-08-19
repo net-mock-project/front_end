@@ -1,10 +1,15 @@
+import { useEffect, useRef } from "react";
 import type { ReliefRequest } from "../../../types/ReliefRequest";
 import type { Volunteer } from "../../../types/Volunteer";
 import type { Warehouse } from "../../../types/Warehouse";
+import { useGeoLocation } from "../../location/hooks/useGeoLocation";
 import { MapContainer } from "./MapContainer"
+import { MyLocationMarker } from "./MyLocationMarker";
 import { ReliefRequestMarker } from "./ReliefRequestMarker";
 import { VolunteerMarker } from "./VolunteerMarker";
 import { WarehouseMarker } from "./WarehouseMarker";
+import { useMap } from "@vis.gl/react-google-maps";
+import { useLocationHub } from "../../location/hooks/useLocationHub";
 
 
 const volunteers: Volunteer[] = [
@@ -15,8 +20,8 @@ const volunteers: Volunteer[] = [
         status: "ACTIVE",
         province: "Hà Nội",
         profileUrl: "/profiles/minh-anh.jpg",
-        role: "VOLUNTEER",
-        phoneNumber: "0901234567",
+        roleName: "VOLUNTEER",
+        phone: "0901234567",
         location: {
             latitude: 21.0285,
             longitude: 105.8542,
@@ -31,8 +36,8 @@ const volunteers: Volunteer[] = [
         status: "ACTIVE",
         province: "Hải Phòng",
         profileUrl: "/profiles/quoc-huy.jpg",
-        role: "VOLUNTEER",
-        phoneNumber: "0912345678",
+        roleName: "VOLUNTEER",
+        phone: "0912345678",
         location: {
             latitude: 20.8449,
             longitude: 106.6881,
@@ -47,8 +52,8 @@ const volunteers: Volunteer[] = [
         status: "ACTIVE",
         province: "Đà Nẵng",
         profileUrl: "/profiles/thao-nguyen.jpg",
-        role: "VOLUNTEER",
-        phoneNumber: "0923456789",
+        roleName: "VOLUNTEER",
+        phone: "0923456789",
         location: {
             latitude: 16.0544,
             longitude: 108.2022,
@@ -63,8 +68,8 @@ const volunteers: Volunteer[] = [
         status: "ACTIVE",
         province: "Thừa Thiên Huế",
         profileUrl: "/profiles/hoang-nam.jpg",
-        role: "VOLUNTEER",
-        phoneNumber: "0934567890",
+        roleName: "VOLUNTEER",
+        phone: "0934567890",
         location: {
             latitude: 16.4637,
             longitude: 107.5909,
@@ -79,8 +84,8 @@ const volunteers: Volunteer[] = [
         status: "ACTIVE",
         province: "Khánh Hòa",
         profileUrl: "/profiles/ngoc-mai.jpg",
-        role: "VOLUNTEER",
-        phoneNumber: "0945678901",
+        roleName: "VOLUNTEER",
+        phone: "0945678901",
         location: {
             latitude: 12.2388,
             longitude: 109.1967,
@@ -95,8 +100,8 @@ const volunteers: Volunteer[] = [
         status: "ACTIVE",
         province: "TP. Hồ Chí Minh",
         profileUrl: "/profiles/duc-long.jpg",
-        role: "VOLUNTEER",
-        phoneNumber: "0956789012",
+        roleName: "VOLUNTEER",
+        phone: "0956789012",
         location: {
             latitude: 10.7769,
             longitude: 106.7009,
@@ -111,8 +116,8 @@ const volunteers: Volunteer[] = [
         status: "ACTIVE",
         province: "Cần Thơ",
         profileUrl: "/profiles/thi-lan.jpg",
-        role: "VOLUNTEER",
-        phoneNumber: "0967890123",
+        roleName: "VOLUNTEER",
+        phone: "0967890123",
         location: {
             latitude: 10.0452,
             longitude: 105.7469,
@@ -127,8 +132,8 @@ const volunteers: Volunteer[] = [
         status: "INACTIVE",
         province: "Quảng Ninh",
         profileUrl: "/profiles/van-binh.jpg",
-        role: "VOLUNTEER",
-        phoneNumber: "0978901234",
+        roleName: "VOLUNTEER",
+        phone: "0978901234",
         location: {
             latitude: 20.9505,
             longitude: 107.0734,
@@ -305,6 +310,37 @@ const reliefRequests: ReliefRequest[] = [
 
 
 export const MapTest = () => {
+    const {location,error}= useGeoLocation();
+    console.log(location,error);
+    const {sendLocation}=  useLocationHub();
+    const hasCentered = useRef(false);
+    const map= useMap()
+    useEffect(() => {
+        if (!location || hasCentered.current||!map) {
+            return;
+        }
+
+        map.panTo({
+            lat: location.latitude,
+            lng: location.longitude,
+        });
+        map.setZoom(12);
+        hasCentered.current = true;
+
+        
+    }, [map,location]);
+
+    useEffect(() => {
+        if (!location) {
+            return;
+        }
+
+        sendLocation(
+            location.latitude,
+            location.longitude
+        );
+    }, [location]);
+
     return (
         <div className="map-test-wrapper">
             <MapContainer
@@ -312,6 +348,11 @@ export const MapTest = () => {
                 zoom={12}
 
             >
+                {
+                    location ? <MyLocationMarker location={location}/>:
+                    null
+                }
+
                 {volunteers.map((volunteer) => (
                     <VolunteerMarker
                         key={volunteer.userId}

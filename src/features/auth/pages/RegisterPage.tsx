@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { useMutation } from '@tanstack/react-query';
-import { RegisterBanner } from '../components/RegisterBanner';
+import { AuthBanner } from '../components/AuthBanner';
 import { RegisterForm } from '../components/RegisterForm';
 import { OtpModal } from '../components/OtpModal';
 import { sendOtpApi, resendOtpApi, registerApi } from '../api/authApi';
 import type { RegisterPayload } from '../../../types/register';
+import './RegisterPage.css';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,38 +17,49 @@ export const RegisterPage: React.FC = () => {
 
   // 1. Mutation gửi yêu cầu nhận mã OTP
   const sendOtpMutation = useMutation({
-    mutationFn: (formattedData: RegisterPayload) => sendOtpApi(formattedData),
+    mutationFn: (formattedData: RegisterPayload) => sendOtpApi(formattedData)
+    ,
     onSuccess: (_, formattedData) => {
       setPendingData(formattedData);
       setShowOtpModal(true);
       message.success('Mã OTP đã được gửi thành công tới email của bạn!');
     },
+
     onError: (err: any) => {
-      message.error(err.response?.data?.message || err.message || 'Không thể gửi mã OTP. Vui lòng thử lại sau.');
+      const messageText = err?.response?.data?.message || err?.message || 'Không thể gửi mã OTP. Vui lòng thử lại sau.';
+      message.error(messageText);
     },
   });
 
   // 2. Mutation gửi lại mã OTP
   const resendOtpMutation = useMutation({
-    mutationFn: (email: string) => resendOtpApi(email),
+    mutationFn: (email: string) => resendOtpApi(email)
+    ,
+
     onSuccess: () => {
       message.success('Mã OTP mới đã được gửi lại!');
     },
+
     onError: (err: any) => {
-      message.error(err.response?.data?.message || err.message || 'Không thể gửi lại mã lúc này.');
+      const messageText = err?.response?.data?.message || err?.message || 'Không thể gửi lại mã lúc này.';
+      message.error(messageText);
     },
   });
 
   // 3. Mutation xác thực OTP và hoàn tất đăng ký tài khoản
   const registerMutation = useMutation({
-    mutationFn: (payload: RegisterPayload) => registerApi(payload),
+    mutationFn: (payload: RegisterPayload) => registerApi(payload)
+    ,
+
     onSuccess: () => {
       message.success('Đăng ký tài khoản thành công!');
       setShowOtpModal(false);
       navigate('/login');
     },
+
     onError: (err: any) => {
-      message.error(err.response?.data?.message || err.message || 'Mã OTP không chính xác hoặc đã hết hạn!');
+      const messageText = err?.response?.data?.message || err?.message || 'Mã OTP không chính xác hoặc đã hết hạn!';
+      message.error(messageText);
     },
   });
 
@@ -55,7 +67,7 @@ export const RegisterPage: React.FC = () => {
   const handleRegisterSubmit = (values: any) => {
     const formattedData: RegisterPayload = {
       ...values,
-      dob: values.dob ? values.dob.format('YYYY-MM-DD') : '',
+      dateOfBirth: values.dateOfBirth ? values.dateOfBirth.format('YYYY-MM-DD') : '',
     };
     sendOtpMutation.mutate(formattedData);
   };
@@ -77,42 +89,14 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div 
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        height: '100vh', 
-        width: '100vw', 
-        backgroundColor: '#ffffff',
-        overflow: 'hidden',
-        userSelect: 'none',
-        boxSizing: 'border-box'
-      }}
-    >
+    <div className="register-page">
       {/* Banner bên trái */}
-      <div 
-        style={{
-          flex: 1,
-          height: '100%',
-          boxSizing: 'border-box',
-          display: 'block'
-        }}
-      >
-        <RegisterBanner />
+      <div className="register-page-banner">
+        <AuthBanner />
       </div>
 
       {/* Form bên phải */}
-      <div 
-        style={{
-          flex: 1,
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          boxSizing: 'border-box',
-          overflowY: 'auto'
-        }}
-      >
+      <div className="register-page-content">
         <RegisterForm 
           onSubmit={handleRegisterSubmit}
           loading={sendOtpMutation.isPending}
@@ -124,7 +108,10 @@ export const RegisterPage: React.FC = () => {
         email={pendingData?.email || ''} 
         onVerify={handleVerifyOtp}
         onResend={handleResendOtp}
-        onClose={() => setShowOtpModal(false)}
+        onClose={() => {
+          setShowOtpModal(false)
+          setPendingData(null)
+        }}
         loading={registerMutation.isPending}
         resendLoading={resendOtpMutation.isPending}
       />

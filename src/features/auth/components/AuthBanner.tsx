@@ -21,7 +21,7 @@ const MARKERS_DATA = [
   { left: '35%', top: '25%', bg: '#16A34A', val: '6' },
 ];
 
-export const RegisterBanner: React.FC = () => {
+export const AuthBanner: React.FC = () => {
   return (
     <div 
       style={{
