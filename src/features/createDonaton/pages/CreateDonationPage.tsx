@@ -19,7 +19,6 @@ export function CreateDonationPage() {
     donationDate: '', 
   });
 
-  // Sử dụng useMutation để gọi API tạo đơn quyên góp
   const mutation = useMutation({
     mutationFn: createDonation,
     onSuccess: () => {
@@ -51,7 +50,6 @@ export function CreateDonationPage() {
     <div style={{ background: '#F6F8FB', minHeight: 'calc(100vh - 68px)', padding: '24px 42px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         
-        {/* Breadcrumb & Header */}
         <div style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -81,7 +79,6 @@ export function CreateDonationPage() {
           </Button>
         </div>
 
-        {/* Main Form Layout */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <DonationItemsCard
             items={formData.items}
@@ -93,7 +90,6 @@ export function CreateDonationPage() {
             onChange={handleFieldChange}
           />
 
-          {/* Action Card Bottom */}
           <Card bordered={false} style={{ borderRadius: 18, boxShadow: '0px 10px 28px rgba(31, 41, 55, 0.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
               <Button 
