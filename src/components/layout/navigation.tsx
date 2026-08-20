@@ -61,7 +61,7 @@ const profileItemsByRole: Record<User['roleName'], MenuItem[]> = {
 export function getProfileMenuItems(roleName: User['roleName']): MenuItem[] {
   return [
     ...commonProfileItems,
-    ...(profileItemsByRole[roleName] ),
+    ...(profileItemsByRole[roleName] || []),
     {
       key: 'logout',
       icon: <LogoutOutlined />,
