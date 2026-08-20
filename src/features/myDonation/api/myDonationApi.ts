@@ -1,7 +1,6 @@
 import httpClient from '../../../api/httpClient';
 import type { MyDonationRecord } from '../../../types/donation';
 
-// Lấy danh sách quyên góp
 export async function getMyDonations(filters: { status?: string; search?: string }) {
   const response = await httpClient.get<MyDonationRecord[]>('/api/me/donations', {
     params: {

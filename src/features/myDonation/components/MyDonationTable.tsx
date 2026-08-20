@@ -60,10 +60,10 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
   };
 
   const handleSaveEdit = () => {
-    if (!modalState.record?.donationId) {
+    const donationId = modalState.record?.donationId;
+    if (!donationId) {
       return message.error('Không tìm thấy định danh đơn quyên góp!');
     }
-    const donationId = modalState.record.donationId;
     
     updateMutation.mutate({ 
       donationId, 
@@ -72,8 +72,8 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
   };
 
   const handleCancelDonation = () => {
-    if (!modalState.record?.donationId) return;
-    const donationId = modalState.record.donationId;
+    const donationId = modalState.record?.donationId;
+    if (!donationId) return;
     
     Modal.confirm({
       title: 'Xác nhận hủy đơn',
@@ -93,7 +93,7 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
       <Table
         columns={columns}
         dataSource={dataSource}
-        rowKey={(row) => row.donationId }
+        rowKey={(row) => row.donationId}
         loading={loading}
         pagination={{ pageSize: 10, hideOnSinglePage: true }}
         scroll={{ x: 800 }} 
@@ -133,8 +133,8 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
       >
         {record && (
           <Descriptions bordered column={1} size="middle" className="modal-descriptions">
-            <Descriptions.Item label="Mã đơn">{record.donationId }</Descriptions.Item>
-            <Descriptions.Item label="Kho tiếp nhận">{record.warehouseName }</Descriptions.Item>
+            <Descriptions.Item label="Mã đơn">{record.donationId}</Descriptions.Item>
+            <Descriptions.Item label="Kho tiếp nhận">{record.warehouseName}</Descriptions.Item>
             <Descriptions.Item label="Trạng thái">{record.status}</Descriptions.Item>
             <Descriptions.Item label="Người ủng hộ">{record.donatorName}</Descriptions.Item>
             <Descriptions.Item label="Số điện thoại">{record.donatorPhone}</Descriptions.Item>
