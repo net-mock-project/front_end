@@ -26,7 +26,6 @@ function privateRoute(){
 }
 
 function adminRoute() {
-
     const {
         data: user,
         isLoading,
@@ -57,7 +56,6 @@ export const router= createBrowserRouter([
                 index: true,
                 Component: MapTest,
             },
-
             {
                 Component: privateRoute,
                 children: [
@@ -65,7 +63,6 @@ export const router= createBrowserRouter([
                         path: "/profile",
                         Component: ProfilePage
                     },
-
                     {
                         path: "/my-tasks",
                         Component: VolunteerTasksPage,
@@ -81,10 +78,9 @@ export const router= createBrowserRouter([
                     {
                         path: "/donation/create",
                         Component: CreateDonationPage
-                    }    
+                    }
                 ]
             },
-
             {
                 Component: adminRoute,
                 children: [
@@ -95,10 +91,7 @@ export const router= createBrowserRouter([
                     {
                         path: "/admin/audit-logs",
                         Component: AuditLogsPage
-                    },
-
-                       
-
+                    }
                 ]
             }
         ]
@@ -111,5 +104,4 @@ export const router= createBrowserRouter([
         path: "/register",
         Component: RegisterPage,
     }
-
-])
+]);

@@ -10,11 +10,11 @@ export type DonationFormValues = {
 };
 
 export type MyDonationRecord = {
-  code: string;
+  donationId: string;     
   donatorName: string;
   donatorPhone: string;
-  items: string;      
-  WarehouseName: string;    
+  items: DonationItem[]; 
+  warehouseName: string;  
   donationDate: string;  
-  status: 'PENDING' | 'REJECTED' | 'COMPLETED' | 'CANCELLED';
+  status: string;         
 };

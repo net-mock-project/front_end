@@ -19,7 +19,6 @@ interface Props {
 export default function MyDonationTable({ data, loading, onRefresh }: Props) {
   const dataSource = Array.isArray(data) ? data : [];
   
-  // Gom state modal và form lại cho gọn
   const [modalState, setModalState] = useState<{
     visible: boolean;
     record: MyDonationRecord | null;
@@ -28,7 +27,6 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
 
   const [editForm, setEditForm] = useState({ items: '', donationDate: '' });
 
-  // Mutations
   const updateMutation = useMutation({
     mutationFn: updateMyDonation,
     onSuccess: () => {
@@ -55,16 +53,27 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
 
   const handleOpenDetail = (record: MyDonationRecord) => {
     setModalState({ visible: true, record, isEditing: false });
-    setEditForm({ items: record.items || '', donationDate: record.donationDate || '' });
+    setEditForm({ 
+      items: typeof record.items === 'string' ? record.items : JSON.stringify(record.items || ''), 
+      donationDate: record.donationDate || '' 
+    });
   };
 
   const handleSaveEdit = () => {
-    if (!modalState.record?.code) return message.error('Không tìm thấy định danh đơn quyên góp!');
-    updateMutation.mutate({ donationId: modalState.record.code, data: editForm });
+    if (!modalState.record?.donationId) {
+      return message.error('Không tìm thấy định danh đơn quyên góp!');
+    }
+    const donationId = modalState.record.donationId;
+    
+    updateMutation.mutate({ 
+      donationId, 
+      data: editForm as any 
+    });
   };
 
   const handleCancelDonation = () => {
-    if (!modalState.record?.code) return;
+    if (!modalState.record?.donationId) return;
+    const donationId = modalState.record.donationId;
     
     Modal.confirm({
       title: 'Xác nhận hủy đơn',
@@ -72,7 +81,7 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
       okText: 'Xác nhận hủy',
       okType: 'danger',
       cancelText: 'Đóng',
-      onOk: () => cancelMutation.mutate(modalState.record!.code),
+      onOk: () => cancelMutation.mutate(donationId),
     });
   };
 
@@ -84,7 +93,7 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
       <Table
         columns={columns}
         dataSource={dataSource}
-        rowKey="code"
+        rowKey={(row) => row.donationId }
         loading={loading}
         pagination={{ pageSize: 10, hideOnSinglePage: true }}
         scroll={{ x: 800 }} 
@@ -98,7 +107,7 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
               {isEditing ? 'Chỉnh sửa đơn ủng hộ' : 'Chi tiết đơn ủng hộ'}
             </Title>
             
-            {record?.status === 'PENDING' && !isEditing && (
+            {record?.status?.toUpperCase() === 'PENDING' && !isEditing && (
               <Space size="small">
                 <Button danger onClick={handleCancelDonation} loading={cancelMutation.isPending} className="modal-action-btn">
                   Hủy đơn
@@ -124,8 +133,8 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
       >
         {record && (
           <Descriptions bordered column={1} size="middle" className="modal-descriptions">
-            <Descriptions.Item label="Mã đơn">{record.code}</Descriptions.Item>
-            <Descriptions.Item label="Kho tiếp nhận">{record.WarehouseName}</Descriptions.Item>
+            <Descriptions.Item label="Mã đơn">{record.donationId }</Descriptions.Item>
+            <Descriptions.Item label="Kho tiếp nhận">{record.warehouseName }</Descriptions.Item>
             <Descriptions.Item label="Trạng thái">{record.status}</Descriptions.Item>
             <Descriptions.Item label="Người ủng hộ">{record.donatorName}</Descriptions.Item>
             <Descriptions.Item label="Số điện thoại">{record.donatorPhone}</Descriptions.Item>
@@ -134,11 +143,16 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
               {isEditing ? (
                 <DatePicker 
                   value={editForm.donationDate ? dayjs(editForm.donationDate) : null}
-                  onChange={(_, dateString) => setModalState(prev => ({ ...prev }))} // update form state
-                  // ... (giữ nguyên logic datepicker của bạn)
+                  onChange={(_, dateString) => {
+                    const val = Array.isArray(dateString) ? dateString[0] : (dateString || '');
+                    setEditForm({ ...editForm, donationDate: val });
+                  }}
+                  format="YYYY-MM-DD"
                   style={{ width: '100%' }}
                 />
-              ) : record.donationDate}
+              ) : (
+                record.donationDate ? dayjs(record.donationDate).format('YYYY-MM-DD HH:mm') : ''
+              )}
             </Descriptions.Item>
 
             <Descriptions.Item label="Danh sách vật tư">
@@ -148,7 +162,11 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
                   value={editForm.items} 
                   onChange={(e) => setEditForm({ ...editForm, items: e.target.value })} 
                 />
-              ) : <div className="text-pre-line">{record.items}</div>}
+              ) : (
+                <div style={{ whiteSpace: 'pre-line' }}>
+                  {typeof record.items === 'string' ? record.items : JSON.stringify(record.items)}
+                </div>
+              )}
             </Descriptions.Item>
           </Descriptions>
         )}

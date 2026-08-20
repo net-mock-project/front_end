@@ -13,7 +13,6 @@ export function CreateDonationPage() {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState<DonationFormValues>({
-    // Khởi tạo một dòng vật tư mặc định trống hoặc gọi API xong tự điền sau
     items: [
       { supplyName: '', quantity: 1, unit: 'Thùng' },
     ],
@@ -25,7 +24,7 @@ export function CreateDonationPage() {
     mutationFn: createDonation,
     onSuccess: () => {
       message.success('Gửi đơn quyên góp thành công!');
-      navigate('/me/donations'); 
+      navigate('/donation'); 
     },
     onError: (error: any) => {
       message.error(error?.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại!');
@@ -41,7 +40,7 @@ export function CreateDonationPage() {
   };
 
   const handleSubmit = () => {
-    // Validate cơ bản trước khi gửi nếu cần
+    // Validate kiểm tra ngày ủng hộ trước khi gửi
     if (!formData.donationDate) {
       return message.warning('Vui lòng chọn ngày ủng hộ!');
     }

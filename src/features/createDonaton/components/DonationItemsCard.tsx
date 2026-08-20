@@ -3,7 +3,7 @@ import { Button, Card, InputNumber, Select, Typography } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import type { DonationItem } from '../../../types/donation';
-import { getSupplies } from '../api/createDonationApi'; // Import hàm gọi api vừa tạo (đường dẫn tùy chỉnh theo project của bạn)
+import { getSupplies } from '../api/createDonationApi';
 
 const { Title, Text } = Typography;
 
@@ -39,7 +39,7 @@ export function DonationItemsCard({ items, onChange }: Props) {
     const newItem: DonationItem = {
       supplyName: supplyNames[0] || '', 
       quantity: 1,
-      unit: '',
+      unit: 'Thùng',
     };
     onChange([...items, newItem]);
   };
@@ -74,7 +74,7 @@ export function DonationItemsCard({ items, onChange }: Props) {
               onChange={(val) => handleItemChange(index, 'supplyName', val)}
               style={{ flex: '2 1 200px' }}
               options={supplyOptions}
-              loading={isSupplyLoading} // Hiệu ứng loading khi đang fetch API
+              loading={isSupplyLoading}
               notFoundContent={isSupplyLoading ? 'Đang tải...' : 'Không có vật tư nào'}
             />
             <InputNumber
