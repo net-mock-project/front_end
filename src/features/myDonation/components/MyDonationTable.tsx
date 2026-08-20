@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Tag, Button, Typography, Modal, Descriptions, Input, DatePicker, message } from 'antd';
+import { Table, Tag, Button, Typography, Modal, Descriptions, Input, DatePicker, message, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import type { MyDonationRecord } from '../../../types/donation';
@@ -20,7 +20,6 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
   const [selectedRecord, setSelectedRecord] = useState<MyDonationRecord | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   
-
   const [editForm, setEditForm] = useState({
     items: '',
     donationDate: '',
@@ -65,6 +64,30 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
     }
   };
 
+  // Hàm xử lý Hủy đơn quyên góp
+  const handleCancelDonation = () => {
+    if (!selectedRecord) return;
+    const donationId = selectedRecord.code;
+
+    Modal.confirm({
+      title: 'Xác nhận hủy đơn',
+      content: 'Bạn có chắc chắn muốn hủy đơn quyên góp này không? Thao tác này không thể hoàn tác.',
+      okText: 'Xác nhận hủy',
+      okType: 'danger',
+      cancelText: 'Đóng',
+      onOk: async () => {
+        try {
+          await httpClient.delete(`/api/me/donations/${donationId}`);
+          message.success('Đã hủy đơn quyên góp thành công.');
+          setIsModalVisible(false);
+          setSelectedRecord(null);
+          if (onRefresh) onRefresh();
+        } catch (error: any) {
+          message.error(error?.response?.data?.message || 'Có lỗi khi hủy đơn!');
+        }
+      },
+    });
+  };
 
   const columns: ColumnsType<MyDonationRecord> = [
     {
@@ -168,10 +191,25 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
             <Title level={4} style={{ margin: 0 }}>
               {isEditing ? 'Chỉnh sửa đơn ủng hộ' : 'Chi tiết đơn ủng hộ'}
             </Title>
+            
+            {/* Nút Hủy đơn & Chỉnh sửa thông tin chỉ hiện khi đơn đang PENDING và không ở chế độ edit */}
             {selectedRecord?.status === 'PENDING' && !isEditing && (
-              <Button type="dashed" onClick={() => setIsEditing(true)} style={{ borderRadius: 8, fontWeight: 600 }}>
-                Chỉnh sửa thông tin
-              </Button>
+              <Space size="small">
+                <Button 
+                  danger 
+                  onClick={handleCancelDonation} 
+                  style={{ borderRadius: 8, fontWeight: 600 }}
+                >
+                  Hủy đơn
+                </Button>
+                <Button 
+                  type="dashed" 
+                  onClick={() => setIsEditing(true)} 
+                  style={{ borderRadius: 8, fontWeight: 600 }}
+                >
+                  Chỉnh sửa thông tin
+                </Button>
+              </Space>
             )}
           </div>
         }
@@ -181,7 +219,7 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
           isEditing ? (
             <React.Fragment key="edit-actions">
               <Button key="cancel" onClick={() => setIsEditing(false)} style={{ borderRadius: 8 }}>
-                Hủy
+                Quay lại
               </Button>
               <Button key="save" type="primary" onClick={handleSaveEdit} style={{ borderRadius: 8, background: '#E5484D' }}>
                 Lưu thay đổi
@@ -201,7 +239,6 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
             <Descriptions.Item label="Kho tiếp nhận">{selectedRecord.WarehouseName}</Descriptions.Item>
             <Descriptions.Item label="Trạng thái">{selectedRecord.status}</Descriptions.Item>
 
-            {/* Các trường chỉ hiện khi ấn chi tiết*/}
             <Descriptions.Item label="Người ủng hộ">{selectedRecord.donatorName}</Descriptions.Item>
             <Descriptions.Item label="Số điện thoại">{selectedRecord.donatorPhone}</Descriptions.Item>
             
