@@ -14,8 +14,8 @@ export const ReliefRequestMarker = ({ reliefRequest, onClick }: ReliefRequestMar
         <>
             <AdvancedMarker
                 position={{
-                    lat: reliefRequest.location.latitude,
-                    lng: reliefRequest.location.longitude,
+                    lat: reliefRequest.latitude,
+                    lng: reliefRequest.longitude,
                 }}
                 onClick={() => onClick(reliefRequest)}
                 anchorLeft="-50%"
@@ -28,8 +28,8 @@ export const ReliefRequestMarker = ({ reliefRequest, onClick }: ReliefRequestMar
             </AdvancedMarker>
             <Circle
                 center={{
-                    lat: reliefRequest.location.latitude,
-                    lng: reliefRequest.location.longitude
+                    lat: reliefRequest.latitude,
+                    lng: reliefRequest.longitude
                 }}
                 radius={reliefRequest.estimatedAffectedRadiusKm * 1000}
 

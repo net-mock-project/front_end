@@ -7,4 +7,11 @@ const httpClient = axios.create({
   withCredentials: true,
 })
 
+httpClient.interceptors.response.use(function (response) {
+
+    console.log("Check axios: ", response);
+    
+    return response;
+  });
+
 export default httpClient

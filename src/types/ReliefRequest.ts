@@ -1,10 +1,19 @@
 export interface ReliefRequest {
-    requestId: number;
+    id: string;
+    requesterId: string;
+    coordinatorId: string;
+    reliefImageUrl: string;
+    requestedResource:string;
     title: string;
     description: string;
-    location: {
-        latitude: number;
-        longitude: number;
-    };
+    latitude: number;
+    longitude: number;
+    startTime: string;
+    endTime: string;
+    urgencyLevel: number;
     estimatedAffectedRadiusKm: number;
+    estimatedAffectedPeople: number;
+    status: string;
+    completedAt: string;
+    createdAt: string;
 }

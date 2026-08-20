@@ -10,21 +10,18 @@ import type {
 
 // User chung của hệ thống
 export interface User {
-  userId: number
-  fullName: string
-  email: string
-  status: UserStatus
-  province: string | null
-  profileUrl: string | null
-  roleName: string
-  phone: string | null
-  dateOfBirth?: string | null
-  gender?: Gender | null
-
-  location: {
-    latitude: number
-    longitude: number
-  }
+    id: string;
+    fullName: string;
+    email: string;
+    status: string;
+    province: string;
+    profileUrl: string;
+    roleName: string;
+    phone: string;
+    gender?: Gender | null;
+    dateOfBirth?: string | null;
+    latitude: number;
+    longitude: number;
 }
 
 

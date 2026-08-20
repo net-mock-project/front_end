@@ -37,7 +37,7 @@ type MenuItem = Required<MenuProps>['items'][number]
 
 function Header() {
   const {data: user, isLoading, isError}= useCurrentUser();
-  
+  const location = useLocation();
   if(isLoading){
     return <Spin fullscreen/>
   }
@@ -45,7 +45,7 @@ function Header() {
     return <Navigate to="/login"/>;
   }
 
-  const location = useLocation()
+  
 
   /* Menu Header theo từng role */
   const menuItemsByRole: Record<User['roleName'], MenuItem[]> = {

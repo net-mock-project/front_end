@@ -1,5 +1,6 @@
 import httpClient from '../../../api/httpClient'
-import type { Gender, User } from '../../../types/User'
+import type { Gender } from '../../../types/Enums'
+import type { User } from '../../../types/User'
 
 const PROFILE_ENDPOINT = '/api/me/profile'
 const AVATAR_ENDPOINT = '/api/me/profile/avatar'
