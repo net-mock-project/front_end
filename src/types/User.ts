@@ -18,6 +18,10 @@ export interface User {
     profileUrl: string;
     roleName: string;
     phone: string;
+    gender?: Gender | null;
+    dateOfBirth?: string | null;
+    latitude: number;
+    longitude: number;
 }
 
 

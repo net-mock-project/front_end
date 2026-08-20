@@ -15,7 +15,8 @@ import {
   type UpdateProfileRequest,
 } from '../api/profileApi'
 
-import type { Gender, User } from '../../../types/User'
+import type { User } from '../../../types/User'
+import type { Gender } from '../../../types/Enums'
 
 type ProfileFormProps = {
   user: User
