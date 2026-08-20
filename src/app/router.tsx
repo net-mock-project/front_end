@@ -1,5 +1,3 @@
-
-
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import App from "./App";
 import ProfilePage from "../features/profile/pages/ProfilePage";
@@ -10,8 +8,8 @@ import { RegisterPage } from "../features/auth/pages/RegisterPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
 import { useCurrentUser } from "../features/auth/hooks/useCurrentUser";
 import { Spin } from "antd";
-
-
+import { MyDonationPage } from "../features/myDonation/pages/MyDonationPage";
+import { CreateDonationPage } from "../features/createDonaton/pages/CreateDonationPage";
 
 function privateRoute(){
     const {data: user, isLoading, isError} = useCurrentUser();
@@ -65,6 +63,7 @@ export const router= createBrowserRouter([
                         path: "/profile",
                         Component: ProfilePage
                     },
+<<<<<<< HEAD
                 ]
             },
 
@@ -79,6 +78,16 @@ export const router= createBrowserRouter([
                         path: "/admin/audit-logs",
                         Component: AuditLogsPage
                     }
+=======
+                    {
+                        path: "/me/donations",
+                        Component: MyDonationPage
+                    },
+                    {
+                        path: "/me/donations/create",
+                        Component: CreateDonationPage
+                    }       
+>>>>>>> 5087724 (nhánh donation)
                 ]
             }
         ]
