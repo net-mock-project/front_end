@@ -54,11 +54,15 @@ export const router = createBrowserRouter([
     Component: App,
     children: [
       {
+        index: true,
+        Component: HomePage,
+      },
+      {
         path: "map",
         Component: MapTest,
       },
 
-      // User & Volunteer Routes (Private)
+      // User & Volunteer & Coordinator Routes (Private)
       {
         Component: PrivateRoute,
         children: [
