@@ -9,7 +9,6 @@ import MyDonationTable from '../components/MyDonationTable';
 
 const { Title, Text } = Typography;
 
-// Các Tab trạng thái
 const STATUS_TABS = [
   { key: 'ALL', label: 'Tất cả' },
   { key: 'PENDING', label: 'Chờ tiếp nhận' },
@@ -25,7 +24,7 @@ export function MyDonationPage() {
 
   // Fetch dữ liệu bằng React Query và lấy thêm hàm refetch
   const { data: donations = [], isLoading, refetch } = useQuery({
-    queryKey: ['/donation', activeTab, searchText],
+    queryKey: ['me/donations', activeTab, searchText],
     queryFn: () => getMyDonations({ 
       status: activeTab === 'ALL' ? undefined : activeTab, 
       search: searchText 
@@ -36,7 +35,7 @@ export function MyDonationPage() {
     <div style={{ background: '#F6F8FB', minHeight: 'calc(100vh - 68px)', padding: '24px 5%' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         
-        {/* Hàng Header: Tiêu đề & Nút Tạo mới */}
+        {/* Header */}
         <Row justify="space-between" align="middle" style={{ marginBottom: 24, gap: 16 }}>
           <Col xs={24} md={16}>
             <Breadcrumb
@@ -75,7 +74,7 @@ export function MyDonationPage() {
           </Col>
         </Row>
 
-        {/* Hàng Filter: Tabs & Ô Tìm kiếm */}
+        {/* Filter & Search */}
         <Row justify="space-between" align="middle" style={{ marginBottom: 20, gap: 16 }}>
           <Col xs={24} lg={14}>
             <Space size="small" style={{ flexWrap: 'wrap' }}>
