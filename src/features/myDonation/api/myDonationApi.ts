@@ -11,7 +11,8 @@ export async function getMyDonations(filters: { status?: string; search?: string
   return response.data;
 }
 
-export async function updateMyDonation(donationId: string, data: Partial<MyDonationRecord>) {
+export async function updateMyDonation(params: { donationId: string; data: Partial<MyDonationRecord> }) {
+  const { donationId, data } = params;
   const response = await httpClient.patch(`/api/me/donations/${donationId}`, data);
   return response.data;
 }
