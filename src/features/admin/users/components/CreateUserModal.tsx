@@ -37,7 +37,7 @@ type CreateUserModalProps = {
 
 
 type CreateUserFormValues = {
-  roleId: string
+  roleName: string
   province?: string
   fullName: string
   email: string
@@ -57,28 +57,20 @@ type ApiErrorResponse = {
 // Role hiện được seed cố định trong BE
 const roleOptions = [
   {
-    value:
-      '10000000-0000-0000-0000-000000000001',
-    label:
-      'Requester',
+    value: 'Requester',
+    label: 'Requester',
   },
   {
-    value:
-      '10000000-0000-0000-0000-000000000002',
-    label:
-      'Volunteer',
+    value: 'Volunteer',
+    label: 'Volunteer',
   },
   {
-    value:
-      '10000000-0000-0000-0000-000000000003',
-    label:
-      'Coordinator',
+    value: 'Coordinator',
+    label: 'Coordinator',
   },
   {
-    value:
-      '10000000-0000-0000-0000-000000000004',
-    label:
-      'Admin',
+    value: 'Admin',
+    label: 'Admin',
   },
 ]
 
@@ -172,8 +164,8 @@ function CreateUserModal({
     const payload:
       CreateUserRequest = {
 
-      roleId:
-        values.roleId,
+      roleName:
+        values.roleName,
 
       province:
         values.province
@@ -237,7 +229,7 @@ function CreateUserModal({
 
           <Form.Item
             label="Vai trò"
-            name="roleId"
+            name="roleName"
             rules={[
               {
                 required: true,

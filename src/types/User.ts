@@ -62,7 +62,7 @@ export interface AdminUserDetail {
 
 // Payload Admin tạo User
 export interface CreateUserRequest {
-  roleId: string
+  roleName: string
   province?: string
   fullName: string
   email: string
