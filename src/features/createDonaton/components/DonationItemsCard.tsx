@@ -13,13 +13,11 @@ type Props = {
 };
 
 export function DonationItemsCard({ items, onChange }: Props) {
-  // Gọi API lấy danh sách tên vật tư động từ backend
   const { data: supplyNames = [], isLoading: isSupplyLoading } = useQuery({
     queryKey: ['supplies-name-list'],
     queryFn: getSupplies,
   });
 
-  // Chuyển đổi mảng string từ API thành format option của Ant Design Select
   const supplyOptions = supplyNames.map((name) => ({
     value: name,
     label: name,
@@ -39,7 +37,7 @@ export function DonationItemsCard({ items, onChange }: Props) {
     const newItem: DonationItem = {
       supplyName: supplyNames[0] || '', 
       quantity: 1,
-      unit: 'Thùng',
+      unit: '',
     };
     onChange([...items, newItem]);
   };
