@@ -24,8 +24,11 @@ import dayjs from 'dayjs'
 
 import type {
   AdminUserListItem,
-  UserStatus,
 } from '../../../../types/User'
+
+import type {
+  UserStatus,
+} from '../../../../types/Enums'
 
 import {
   lockUser,

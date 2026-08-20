@@ -12,7 +12,7 @@ import dayjs from 'dayjs'
 import type {
   Gender,
   UserStatus,
-} from '../../../../types/User'
+} from '../../../../types/Enums'
 
 import {
   getUserDetail,

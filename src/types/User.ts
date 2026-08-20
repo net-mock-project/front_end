@@ -1,26 +1,42 @@
-export type Gender = 'Male' | 'Female' | 'Other'
+import type {
+  Gender,
+  UserStatus,
+} from './Enums'
 
-export type UserStatus =
-  | 'Active'
-  | 'Inactive'
-  | 'Suspended'
+import type {
+  PaginationParams,
+} from './Pagination'
 
+
+// User chung của hệ thống
 export interface User {
-    userId: number;
-    fullName: string;
-    email: string;
-    status: string;
-    province: string | null;
-    profileUrl: string | null;
-    roleName: string;
-    phone: string | null;
-    dateOfBirth?: string | null;
-    gender?: Gender | null;
-    location: {
-        latitude: number;
-        longitude: number;
-    };
+  userId: number
+  fullName: string
+  email: string
+  status: UserStatus
+  province: string | null
+  profileUrl: string | null
+  roleName: string
+  phone: string | null
+  dateOfBirth?: string | null
+  gender?: Gender | null
+
+  location: {
+    latitude: number
+    longitude: number
+  }
 }
+
+
+// Params lấy danh sách User phía Admin
+export interface GetAdminUsersParams
+  extends PaginationParams {
+
+  search?: string
+  roleName?: string
+  status?: UserStatus
+}
+
 
 // User hiển thị trong danh sách Admin
 export interface AdminUserListItem {
@@ -84,16 +100,4 @@ export interface UserStatusResponse {
   id: string
   status: UserStatus
   updatedAt: string | null
-}
-
-
-// Kết quả phân trang từ BE
-export interface PaginationResult<T> {
-  items: T[]
-  pageNumber: number
-  pageSize: number
-  totalCount: number
-  totalPages: number
-  hasPrevious: boolean
-  hasNext: boolean
 }

@@ -5,10 +5,12 @@ import type {
   AdminUserListItem,
   CreateUserRequest,
   CreateUserResponse,
-  PaginationResult,
   UserStatusResponse,
 } from '../../../../types/User'
 
+import type {
+  PaginationResult,
+} from '../../../../types/Pagination'
 
 const USERS_ENDPOINT = '/api/users'
 

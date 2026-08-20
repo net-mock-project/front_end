@@ -7,7 +7,7 @@ import type {
 
 import type {
   PaginationResult,
-} from '../../../../types/User'
+} from '../../../../types/Pagination'
 
 
 const AUDIT_LOGS_ENDPOINT = '/api/audit-logs'

@@ -1,3 +1,8 @@
+import type {
+  PaginationParams,
+} from './Pagination'
+
+
 export interface AuditLog {
   id: string
   userId: string
@@ -10,8 +15,9 @@ export interface AuditLog {
 }
 
 
-export interface GetAuditLogsParams {
-  pageNumber: number
-  pageSize: number
+// Params lấy danh sách Audit Log
+export interface GetAuditLogsParams
+  extends PaginationParams {
+
   search?: string
 }

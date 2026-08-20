@@ -22,8 +22,11 @@ import dayjs, {
 
 import type {
   CreateUserRequest,
-  Gender,
 } from '../../../../types/User'
+
+import type {
+  Gender,
+} from '../../../../types/Enums'
 
 import {
   createUser,
