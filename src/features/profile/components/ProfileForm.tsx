@@ -1,25 +1,35 @@
 import {
   Button,
+  DatePicker,
   Form,
   Input,
   message,
+  Select,
   Space,
 } from 'antd'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import dayjs, { type Dayjs } from 'dayjs'
 
 import {
   updateProfile,
   type UpdateProfileRequest,
 } from '../api/profileApi'
 
-import type { User } from '../../../types/User'
+import type { Gender, User } from '../../../types/User'
 
 type ProfileFormProps = {
   user: User
 }
 
+type ProfileFormValues = {
+  fullName?: string
+  phone?: string
+  dateOfBirth?: Dayjs | null
+  gender?: Gender
+}
+
 function ProfileForm({ user }: ProfileFormProps) {
-  const [form] = Form.useForm()
+  const [form] = Form.useForm<ProfileFormValues>()
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
 
@@ -27,8 +37,15 @@ function ProfileForm({ user }: ProfileFormProps) {
   const updateProfileMutation = useMutation({
     mutationFn: updateProfile,
 
-    onSuccess: (updatedProfile) => {
-      queryClient.setQueryData(['profile'], updatedProfile)
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['profile'],
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: ['me'],
+      })
+
       messageApi.success('Cập nhật hồ sơ thành công')
     },
 
@@ -38,10 +55,19 @@ function ProfileForm({ user }: ProfileFormProps) {
   })
 
   // Xử lý khi bấm Lưu thay đổi
-  const handleSubmit = (values: UpdateProfileRequest) => {
-    console.log('Dữ liệu gửi lên:', values)
+  const handleSubmit = (values: ProfileFormValues) => {
+    const payload: UpdateProfileRequest = {
+      fullName: values.fullName,
+      phone: values.phone,
 
-    updateProfileMutation.mutate(values)
+      dateOfBirth: values.dateOfBirth
+        ? values.dateOfBirth.format('YYYY-MM-DD')
+        : undefined,
+
+      gender: values.gender,
+    }
+
+    updateProfileMutation.mutate(payload)
   }
 
   return (
@@ -55,47 +81,141 @@ function ProfileForm({ user }: ProfileFormProps) {
         layout="vertical"
         initialValues={{
           fullName: user.fullName,
-          email: user.email ?? '',
           phone: user.phone ?? '',
-          province: user.province ?? '',
+
+          dateOfBirth: user.dateOfBirth
+            ? dayjs(user.dateOfBirth)
+            : null,
+
+          gender: user.gender ?? undefined,
         }}
         onFinish={handleSubmit}
       >
         <div className="profile-form__grid">
+
           <Form.Item
             label="Họ và tên"
             name="fullName"
+            rules={[
+              {
+                required: true,
+                whitespace: true,
+                message: 'Vui lòng nhập họ và tên',
+              },
+              {
+                max: 100,
+                message: 'Họ và tên không được vượt quá 100 ký tự',
+              },
+            ]}
           >
             <Input placeholder="Nhập họ và tên" />
           </Form.Item>
 
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                type: 'email',
-                message: 'Email không đúng định dạng',
-              },
-            ]}
-          >
-            <Input placeholder="Nhập email" disabled />
+
+          <Form.Item label="Email">
+            <Input
+              value={user.email}
+              disabled
+            />
           </Form.Item>
+
 
           <Form.Item
             label="Số điện thoại"
             name="phone"
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng nhập số điện thoại',
+              },
+              {
+                pattern: /^(0|\+84)[0-9]{9,10}$/,
+                message: 'Số điện thoại không hợp lệ',
+              },
+            ]}
           >
             <Input placeholder="Nhập số điện thoại" />
           </Form.Item>
 
-          <Form.Item
-            label="Tỉnh / Thành phố"
-            name="province"
-          >
-            <Input placeholder="Nhập tỉnh / thành phố" disabled />
+
+          <Form.Item label="Tỉnh / Thành phố">
+            <Input
+              value={user.province ?? ''}
+              disabled
+            />
           </Form.Item>
+
+
+          <Form.Item
+            label="Ngày sinh"
+            name="dateOfBirth"
+            validateTrigger={['onChange', 'onBlur']}
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng chọn ngày sinh',
+              },
+              {
+                validator: (_, value: Dayjs | null) => {
+                  if (!value) {
+                    return Promise.resolve()
+                  }
+
+                  // Kiểm tra ngày hợp lệ
+                  if (!dayjs.isDayjs(value) || !value.isValid()) {
+                    return Promise.reject(
+                      new Error('Ngày sinh không hợp lệ'),
+                    )
+                  }
+
+                  // Không cho ngày sinh lớn hơn ngày hiện tại
+                  if (value.isAfter(dayjs(), 'day')) {
+                    return Promise.reject(
+                      new Error(
+                        'Ngày sinh không được lớn hơn ngày hiện tại',
+                      ),
+                    )
+                  }
+
+                  return Promise.resolve()
+                },
+              },
+            ]}
+          >
+            <DatePicker
+              style={{ width: '100%' }}
+              format="DD/MM/YYYY"
+              placeholder="Chọn ngày sinh"
+            />
+          </Form.Item>
+
+
+          <Form.Item
+            label="Giới tính"
+            name="gender"
+          >
+            <Select
+              placeholder="Chọn giới tính"
+
+              options={[
+                {
+                  value: 'Male',
+                  label: 'Nam',
+                },
+                {
+                  value: 'Female',
+                  label: 'Nữ',
+                },
+                {
+                  value: 'Other',
+                  label: 'Khác',
+                },
+              ]}
+            />
+          </Form.Item>
+
         </div>
+
 
         {/* Địa chỉ được xử lý bằng API riêng */}
         <Form.Item label="Địa chỉ hiện tại">
@@ -106,24 +226,35 @@ function ProfileForm({ user }: ProfileFormProps) {
           />
         </Form.Item>
 
+
         <div className="profile-form__actions">
           <Space>
+
             <Button
-              onClick={() => form.resetFields()}
-              disabled={updateProfileMutation.isPending}
+              onClick={() =>
+                form.resetFields()
+              }
+              disabled={
+                updateProfileMutation.isPending
+              }
             >
               Hủy
             </Button>
 
+
             <Button
               type="primary"
               htmlType="submit"
-              loading={updateProfileMutation.isPending}
+              loading={
+                updateProfileMutation.isPending
+              }
             >
               Lưu thay đổi
             </Button>
+
           </Space>
         </div>
+
       </Form>
     </section>
   )

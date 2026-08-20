@@ -42,7 +42,7 @@ function Header() {
     return <Spin fullscreen/>
   }
   if(!user|| isError){
-    return <Navigate to="/login"/>
+    return <Navigate to="/login"/>;
   }
 
   
@@ -136,12 +136,20 @@ function Header() {
         label: <Link to="/dashboard">Dashboard</Link>,
       },
       {
-        key: '/user-management',
-        label: <Link to="/user-management">Quản lý user</Link>,
+        key: '/admin/users',
+        label: (
+          <Link to="/admin/users">
+            Quản lý người dùng
+          </Link>
+        ),
       },
       {
-        key: '/audit-log',
-        label: <Link to="/audit-log">Audit log</Link>,
+        key: '/admin/audit-logs',
+        label: (
+          <Link to="/admin/audit-logs">
+            Audit log
+          </Link>
+        ),
       },
     ],
   }

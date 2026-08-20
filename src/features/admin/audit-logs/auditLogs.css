@@ -1,0 +1,139 @@
+.audit-logs-page {
+  min-height: calc(100vh - 64px);
+  padding: 28px 24px 48px;
+  background: #f5f7fa;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+
+/* Header */
+.audit-logs-page__header {
+  max-width: 1280px;
+  margin: 0 auto 20px;
+}
+
+.audit-logs-page__breadcrumb {
+  margin-bottom: 6px;
+  color: #98a2b3;
+  font-size: 13px;
+}
+
+.audit-logs-page__header h1 {
+  margin: 0 0 5px;
+  color: #101828;
+  font-size: 27px;
+}
+
+.audit-logs-page__header p {
+  margin: 0;
+  color: #667085;
+  font-size: 14px;
+}
+
+
+/* Table */
+.audit-logs-card {
+  max-width: 1280px;
+  margin: 0 auto;
+
+  background: #fff;
+  border: 1px solid #eaecf0;
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+.audit-logs-toolbar {
+  padding: 15px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  border-bottom: 1px solid #eaecf0;
+}
+
+.audit-logs-toolbar .ant-input-search {
+  width: 420px;
+}
+
+.audit-logs-card .ant-table-wrapper {
+  padding: 0 18px 18px;
+}
+
+.audit-logs-card .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.audit-logs-card .ant-table-tbody > tr > td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  vertical-align: middle;
+}
+
+
+/* Detail */
+.audit-log-detail-modal .ant-modal-content {
+  border-radius: 12px;
+}
+
+.audit-log-detail-loading {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+}
+
+.audit-log-detail__changes {
+  margin-top: 20px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.audit-log-detail__changes h4 {
+  margin: 0 0 8px;
+  color: #344054;
+}
+
+.audit-log-detail__changes pre {
+  min-height: 160px;
+  max-height: 300px;
+  margin: 0;
+  padding: 14px;
+
+  overflow: auto;
+
+  background: #f8f9fa;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+
+  color: #344054;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .audit-logs-page {
+    padding: 20px 14px 32px;
+  }
+
+  .audit-logs-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .audit-logs-toolbar .ant-input-search {
+    width: 100%;
+  }
+
+  .audit-log-detail__changes {
+    grid-template-columns: 1fr;
+  }
+}
