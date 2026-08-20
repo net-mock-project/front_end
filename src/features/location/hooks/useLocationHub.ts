@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { locationHub } from "../services/locationHub";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Volunteer } from "../../../types/Volunteer";
@@ -12,6 +12,7 @@ interface LocationUpdated {
 
 export const useLocationHub = () => {
     const queryClient = useQueryClient();
+    const connectionPromiseRef = useRef<Promise<void> | null>(null);
 
     useEffect(() => {
         const startConnection = async () => {
@@ -55,7 +56,7 @@ export const useLocationHub = () => {
             );
         };
 
-        startConnection();
+        connectionPromiseRef.current = startConnection();
 
         locationHub.on(
             "UserLocationUpdated",
@@ -70,13 +71,18 @@ export const useLocationHub = () => {
         };
     }, [queryClient]);
 
-    const sendLocation = async (latitude: number,longitude: number) => {
-        if (locationHub.state !== "Connected") {
-            console.warn("Location Hub is not connected");
-            return;
-        }
-
+    const sendLocation = useCallback(async (latitude: number, longitude: number) => {
         try {
+            if (locationHub.state === "Disconnected") {
+                await locationHub.start();
+            } else if (locationHub.state === "Connecting") {
+                await connectionPromiseRef.current;
+            }
+
+            if (locationHub.state !== "Connected") {
+                return;
+            }
+
             await locationHub.invoke(
                 "UpdateLocation",
                 latitude,
@@ -90,7 +96,7 @@ export const useLocationHub = () => {
         } catch (error) {
             console.error("Failed to send location:", error);
         }
-    };
+    }, []);
 
     return {
         sendLocation,

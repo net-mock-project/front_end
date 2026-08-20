@@ -10,8 +10,9 @@ import { useCurrentUser } from "../features/auth/hooks/useCurrentUser";
 import { Spin } from "antd";
 import { MyDonationPage } from "../features/myDonation/pages/MyDonationPage";
 import { CreateDonationPage } from "../features/createDonaton/pages/CreateDonationPage";
+import ReliefRequestsPage from "../features/reliefRequest/pages/ReliefRequestsPage";
 
-function privateRoute(){
+function PrivateRoute(){
     const {data: user, isLoading, isError} = useCurrentUser();
     if(isLoading){
         return <Spin fullscreen/>
@@ -23,7 +24,7 @@ function privateRoute(){
     return <Outlet/>
 }
 
-function adminRoute() {
+function AdminRoute() {
 
     const {
         data: user,
@@ -57,18 +58,29 @@ export const router= createBrowserRouter([
             },
 
             {
-                Component: privateRoute,
+                Component: PrivateRoute,
                 children: [
                     {
                         path: "/profile",
                         Component: ProfilePage
                     },
-<<<<<<< HEAD
+                    {
+                        path: "/me/relief-requests",
+                        Component: ReliefRequestsPage
+                    },
+                    {
+                        path: "/me/donations",
+                        Component: MyDonationPage
+                    },
+                    {
+                        path: "/me/donations/create",
+                        Component: CreateDonationPage
+                    }
                 ]
             },
 
             {
-                Component: adminRoute,
+                Component: AdminRoute,
                 children: [
                     {
                         path: "/admin/users",
@@ -77,17 +89,7 @@ export const router= createBrowserRouter([
                     {
                         path: "/admin/audit-logs",
                         Component: AuditLogsPage
-                    }
-=======
-                    {
-                        path: "/me/donations",
-                        Component: MyDonationPage
                     },
-                    {
-                        path: "/me/donations/create",
-                        Component: CreateDonationPage
-                    }       
->>>>>>> 5087724 (nhánh donation)
                 ]
             }
         ]
