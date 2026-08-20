@@ -1,23 +1,11 @@
 import React from 'react';
 import { Button, Card, InputNumber, Select, Typography } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
 import type { DonationItem } from '../../../types/donation';
+import { getSupplies } from '../api/createDonationApi'; // Import hàm gọi api vừa tạo (đường dẫn tùy chỉnh theo project của bạn)
 
 const { Title, Text } = Typography;
-
-// Danh sách vật phẩm
-const SUPPLY_OPTIONS = [
-  { value: 'Rice', label: 'Rice (Gạo)' },
-  { value: 'Drinking Water', label: 'Drinking Water (Nước uống)' },
-  { value: 'Blanket', label: 'Blanket (Chăn mền)' },
-  { value: 'Medicine', label: 'Medicine (Thuốc men)' },
-  { value: 'First Aid Kit', label: 'First Aid Kit (Bộ sơ cứu)' },
-  { value: 'Canned Food', label: 'Canned Food (Đồ hộp)' },
-  { value: 'Flashlight', label: 'Flashlight (Đèn pin)' },
-  { value: 'Life Jacket', label: 'Life Jacket (Áo phao)' },
-  { value: 'Hygiene Kit', label: 'Hygiene Kit (Bộ vệ sinh)' },
-  { value: 'Baby Food', label: 'Baby Food (Thức ăn trẻ em)' },
-];
 
 type Props = {
   items: DonationItem[];
@@ -25,6 +13,18 @@ type Props = {
 };
 
 export function DonationItemsCard({ items, onChange }: Props) {
+  // Gọi API lấy danh sách tên vật tư động từ backend
+  const { data: supplyNames = [], isLoading: isSupplyLoading } = useQuery({
+    queryKey: ['supplies-name-list'],
+    queryFn: getSupplies,
+  });
+
+  // Chuyển đổi mảng string từ API thành format option của Ant Design Select
+  const supplyOptions = supplyNames.map((name) => ({
+    value: name,
+    label: name,
+  }));
+
   const handleItemChange = (index: number, field: keyof DonationItem, value: any) => {
     const updated = [...items];
     updated[index] = { ...updated[index], [field]: value };
@@ -37,9 +37,9 @@ export function DonationItemsCard({ items, onChange }: Props) {
 
   const handleAdd = () => {
     const newItem: DonationItem = {
-      supplyName: 'Rice',
+      supplyName: supplyNames[0] || '', 
       quantity: 1,
-      unit: 'Thùng',
+      unit: '',
     };
     onChange([...items, newItem]);
   };
@@ -73,7 +73,9 @@ export function DonationItemsCard({ items, onChange }: Props) {
               value={item.supplyName}
               onChange={(val) => handleItemChange(index, 'supplyName', val)}
               style={{ flex: '2 1 200px' }}
-              options={SUPPLY_OPTIONS}
+              options={supplyOptions}
+              loading={isSupplyLoading} // Hiệu ứng loading khi đang fetch API
+              notFoundContent={isSupplyLoading ? 'Đang tải...' : 'Không có vật tư nào'}
             />
             <InputNumber
               min={1}
