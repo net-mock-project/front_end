@@ -74,6 +74,14 @@ export const router= createBrowserRouter([
                         path: "/my-tasks/:taskId",
                         Component: VolunteerTaskDetailPage,
                     },
+                    {
+                        path: "/me/donations",
+                        Component: MyDonationPage
+                    },
+                    {
+                        path: "/me/donations/create",
+                        Component: CreateDonationPage
+                    }    
                 ]
             },
 
@@ -89,14 +97,7 @@ export const router= createBrowserRouter([
                         Component: AuditLogsPage
                     },
 
-                    {
-                        path: "/me/donations",
-                        Component: MyDonationPage
-                    },
-                    {
-                        path: "/me/donations/create",
-                        Component: CreateDonationPage
-                    }       
+                       
 
                 ]
             }
