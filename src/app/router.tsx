@@ -9,6 +9,8 @@ import { MapTest } from "../features/map/components/MapTest";
 import { RegisterPage } from "../features/auth/pages/RegisterPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
 import { useCurrentUser } from "../features/auth/hooks/useCurrentUser";
+import VolunteerTasksPage from "../features/volunteer/pages/VolunteerTasksPage";
+import VolunteerTaskDetailPage from "../features/volunteer/pages/VolunteerTaskDetailPage";
 import { Spin } from "antd";
 
 
@@ -64,6 +66,14 @@ export const router= createBrowserRouter([
                     {
                         path: "/profile",
                         Component: ProfilePage
+                    },
+                    {
+                        path: "/my-tasks",
+                        Component: VolunteerTasksPage,
+                    },
+                    {
+                        path: "/my-tasks/:taskId",
+                        Component: VolunteerTaskDetailPage,
                     },
                 ]
             },
