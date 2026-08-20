@@ -75,11 +75,11 @@ export const router= createBrowserRouter([
                         Component: VolunteerTaskDetailPage,
                     },
                     {
-                        path: "/me/donations",
+                        path: "/donation",
                         Component: MyDonationPage
                     },
                     {
-                        path: "/me/donations/create",
+                        path: "/donation/create",
                         Component: CreateDonationPage
                     }    
                 ]

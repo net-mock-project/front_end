@@ -1,7 +1,7 @@
-import { ArrowLeftOutlined, EnvironmentOutlined, TeamOutlined } from '@ant-design/icons'
-import { Button, Tag } from 'antd'
+import { EnvironmentOutlined, TeamOutlined } from '@ant-design/icons'
+import { Tag } from 'antd'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import {  useParams } from 'react-router-dom'
 import { AdvancedMarker } from '@vis.gl/react-google-maps'
 
 import { getVolunteerTaskDetail } from '../api/volunteerTaskApi'
@@ -16,7 +16,6 @@ const statusLabels: Record<string, string> = {
 
 function VolunteerTaskDetailPage() {
   const { taskId } = useParams<{ taskId: string }>()
-  const navigate = useNavigate()
   const taskQuery = useQuery({
     queryKey: ['volunteer-task', taskId],
     queryFn: () => getVolunteerTaskDetail(taskId as string),
