@@ -9,7 +9,7 @@ import {
   Spin,
   type MenuProps,
 } from 'antd'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 
 import type {User} from '../../types/User'
 
@@ -37,15 +37,15 @@ type MenuItem = Required<MenuProps>['items'][number]
 
 function Header() {
   const {data: user, isLoading, isError}= useCurrentUser();
-  
+  const location = useLocation();
   if(isLoading){
     return <Spin fullscreen/>
   }
   if(!user|| isError){
-    return null;
+    return <Navigate to="/login"/>
   }
 
-  const location = useLocation()
+  
 
   /* Menu Header theo từng role */
   const menuItemsByRole: Record<User['roleName'], MenuItem[]> = {

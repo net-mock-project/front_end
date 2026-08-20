@@ -16,8 +16,8 @@ export const VolunteerMarker = ({ volunteer, onClick }: VolunteerMarkerProps) =>
         <>
             <AdvancedMarker
                 position={{
-                    lat: volunteer.location.latitude,
-                    lng: volunteer.location.longitude,
+                    lat: volunteer.latitude,
+                    lng: volunteer.longitude,
                 }}
                 onClick={() => onClick(volunteer)}
                 anchorLeft="-50%"
