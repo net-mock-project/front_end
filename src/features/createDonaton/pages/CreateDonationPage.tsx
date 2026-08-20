@@ -13,10 +13,9 @@ export function CreateDonationPage() {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState<DonationFormValues>({
+    // Khởi tạo một dòng vật tư mặc định trống hoặc gọi API xong tự điền sau
     items: [
-      { supplyName: 'Drinking Water', quantity: 20, unit: 'Thùng' },
-      { supplyName: 'Rice', quantity: 15, unit: 'Thùng' },
-      { supplyName: 'Blanket', quantity: 30, unit: 'Cái' },
+      { supplyName: '', quantity: 1, unit: 'Thùng' },
     ],
     donationDate: '', 
   });
@@ -42,6 +41,10 @@ export function CreateDonationPage() {
   };
 
   const handleSubmit = () => {
+    // Validate cơ bản trước khi gửi nếu cần
+    if (!formData.donationDate) {
+      return message.warning('Vui lòng chọn ngày ủng hộ!');
+    }
     mutation.mutate(formData);
   };
 
