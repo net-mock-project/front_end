@@ -1,0 +1,287 @@
+.admin-users-page {
+  min-height: calc(100vh - 64px);
+  padding: 28px 24px 48px;
+  background: #f5f7fa;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+
+/* Header */
+.admin-users-page__header {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto 22px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+
+  text-align: left;
+}
+
+.admin-users-page__header > div {
+  text-align: left;
+}
+
+.admin-users-page__breadcrumb {
+  margin-bottom: 6px;
+
+  color: #98a2b3;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.admin-users-page__header h1 {
+  margin: 0 0 5px;
+
+  color: #101828;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 36px;
+
+  text-align: left;
+}
+
+.admin-users-page__header p {
+  margin: 0;
+
+  color: #667085;
+  font-size: 14px;
+  line-height: 22px;
+
+  text-align: left;
+}
+
+
+/* List User */
+.admin-users-card {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  background: #fff;
+  border: 1px solid #eaecf0;
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+.admin-users-toolbar {
+  padding: 15px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  border-bottom: 1px solid #eaecf0;
+}
+
+.admin-users-toolbar .ant-input-search {
+  width: 380px;
+}
+
+.admin-users-card .ant-table-wrapper {
+  padding: 0 18px 18px;
+}
+
+.admin-users-card .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.admin-users-card .ant-table-tbody > tr > td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  vertical-align: middle;
+}
+
+
+/* User */
+.admin-users__user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-users__user-cell .ant-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #d9d9d9;
+  color: #667085;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+}
+
+
+/* Căn chữ initials chính giữa Avatar */
+.admin-users__user-cell
+.ant-avatar
+.ant-avatar-string {
+  position: static !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  line-height: 1;
+
+  transform: none !important;
+}
+
+
+/* Tên + email */
+.admin-users__user-cell > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.admin-users__user-cell strong {
+  margin: 0;
+
+  color: #101828;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.admin-users__user-cell span {
+  margin-top: 2px;
+
+  color: #667085;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+
+/* Create User */
+.admin-users-create-modal .ant-modal-content,
+.admin-users-detail-modal .ant-modal-content {
+  border-radius: 12px;
+}
+
+.admin-users-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+
+.admin-users-form-grid .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.admin-users-form-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  padding-top: 16px;
+
+  border-top: 1px solid #eaecf0;
+}
+
+
+/* Detail User */
+.admin-users-detail-loading {
+  display: flex;
+  justify-content: center;
+
+  padding: 48px;
+}
+
+.admin-users-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid #eaecf0;
+}
+
+.admin-users-detail-header .ant-avatar {
+  flex: 0 0 auto;
+}
+
+.admin-users-detail-header > div:last-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.admin-users-detail-header h3 {
+  margin: 0 0 3px;
+
+  color: #101828;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.admin-users-detail-header span {
+  color: #667085;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.admin-users-detail-modal .ant-descriptions {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-users-detail-modal
+.ant-descriptions-item-label {
+  width: 160px;
+
+  background: #fafafa !important;
+  color: #667085;
+}
+
+
+/* ID chỉ hiển thị ở Detail */
+.admin-users-detail__id {
+  color: #475467;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-users-page {
+    padding: 20px 14px 32px;
+  }
+
+  .admin-users-page__header,
+  .admin-users-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-users-toolbar .ant-input-search {
+    width: 100%;
+  }
+
+  .admin-users-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
