@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="Relief request placeholder">
+  <rect width="1200" height="360" fill="#eaf3f6"/>
+  <path d="M0 280 210 150l150 86 170-130 230 154 190-115 250 160v55H0z" fill="#c8e0e4"/>
+  <circle cx="900" cy="112" r="52" fill="#f8d89b"/>
+  <path d="M548 258c0-54 44-98 98-98s98 44 98 98" fill="#6ba8a8"/>
+  <path d="M598 196h96v78h-96z" fill="#f7fbfc"/>
+  <path d="M582 196 646 146l64 50" fill="#3f7d80"/>
+  <text x="600" y="326" fill="#426b72" font-family="Arial, sans-serif" font-size="26" text-anchor="middle">Relief request</text>
+</svg>

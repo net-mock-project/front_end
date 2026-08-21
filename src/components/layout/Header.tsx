@@ -60,7 +60,7 @@ function Header() {
       },
       {
         key: '/relief-report',
-        label: <Link to="/relief-report">Báo cáo cứu trợ</Link>,
+        label: <Link to="/me/relief-requests">Yêu cầu cứu trợ của tôi</Link>,
       },
       {
         key: '/donation',

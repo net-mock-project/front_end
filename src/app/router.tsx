@@ -12,8 +12,9 @@ import VolunteerTaskDetailPage from "../features/volunteer/pages/VolunteerTaskDe
 import { Spin } from "antd";
 import { MyDonationPage } from "../features/myDonation/pages/MyDonationPage";
 import { CreateDonationPage } from "../features/createDonaton/pages/CreateDonationPage";
+import ReliefRequestsPage from "../features/reliefRequest/pages/ReliefRequestsPage";
 
-function privateRoute(){
+function PrivateRoute(){
     const {data: user, isLoading, isError} = useCurrentUser();
     if(isLoading){
         return <Spin fullscreen/>
@@ -25,7 +26,7 @@ function privateRoute(){
     return <Outlet/>
 }
 
-function adminRoute() {
+function AdminRoute() {
 
     const {
         data: user,
@@ -59,12 +60,28 @@ export const router= createBrowserRouter([
             },
 
             {
-                Component: privateRoute,
+                Component: PrivateRoute,
                 children: [
                     {
                         path: "/profile",
                         Component: ProfilePage
                     },
+                    {
+                        path: "/me/relief-requests",
+                        Component: ReliefRequestsPage
+                    },
+                    {
+                        path: "/regional-relief-request",
+                        Component: ReliefRequestsPage
+                    },
+                    {
+                        path: "/me/donations",
+                        Component: MyDonationPage
+                    },
+                    {
+                        path: "/me/donations/create",
+                        Component: CreateDonationPage
+                    }
 
                     {
                         path: "/my-tasks",
@@ -86,7 +103,7 @@ export const router= createBrowserRouter([
             },
 
             {
-                Component: adminRoute,
+                Component: AdminRoute,
                 children: [
                     {
                         path: "/admin/users",
