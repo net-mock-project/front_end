@@ -3,7 +3,7 @@ import App from "./App";
 import ProfilePage from "../features/profile/pages/ProfilePage";
 import AdminUsersPage from "../features/admin/users/pages/AdminUsersPage";
 import AuditLogsPage from "../features/admin/audit-logs/pages/AuditLogsPage";
-import { MapTest } from "../features/map/components/MapTest";
+import MapPage from "../features/map/pages/MapPage";
 import { RegisterPage } from "../features/auth/pages/RegisterPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
 import { useCurrentUser } from "../features/auth/hooks/useCurrentUser";
@@ -55,7 +55,7 @@ export const router= createBrowserRouter([
         children: [
             {
                 index: true,
-                Component: MapTest,
+                Component: MapPage,
             },
 
             {
@@ -81,7 +81,11 @@ export const router= createBrowserRouter([
                     {
                         path: "/donation/create",
                         Component: CreateDonationPage
-                    }    
+                    },
+                    {
+                        path: "/map",
+                        Component: MapPage,
+                    },
                 ]
             },
 
