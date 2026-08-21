@@ -14,6 +14,8 @@ import {
   getReliefTask,
   getSuitableVolunteers,
   assignVolunteer,
+  approveReliefRequest,
+  completeReliefRequest,
   updateReliefTask,
 } from '../api/reliefRequestApi'
 import ReliefTaskForm from './ReliefTaskForm'
@@ -67,6 +69,26 @@ function ReliefRequestDetailModal({ request, loading, open, cancelling, isCoordi
   const [editingTask, setEditingTask] = useState<ReliefTask | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const [volunteersOpen, setVolunteersOpen] = useState(false)
+
+  const approveMutation = useMutation({
+    mutationFn: () => approveReliefRequest(request!.id),
+    onSuccess: () => {
+      messageApi.success('Duyệt yêu cầu cứu trợ thành công')
+      queryClient.invalidateQueries({ queryKey: ['relief-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['relief-request', request?.id] })
+    },
+    onError: (error) => messageApi.error(getErrorMessage(error, 'Không thể duyệt yêu cầu cứu trợ')),
+  })
+  const completeRequestMutation = useMutation({
+    mutationFn: () => completeReliefRequest(request!.id),
+    onSuccess: () => {
+      messageApi.success('Hoàn thành yêu cầu cứu trợ thành công')
+      queryClient.invalidateQueries({ queryKey: ['relief-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['relief-request', request?.id] })
+      onClose()
+    },
+    onError: (error) => messageApi.error(getErrorMessage(error, 'Không thể hoàn thành yêu cầu cứu trợ')),
+  })
 
   const tasksQuery = useQuery({
     queryKey: ['relief-tasks', request?.id],
@@ -122,9 +144,19 @@ function ReliefRequestDetailModal({ request, loading, open, cancelling, isCoordi
 
   const tasks = tasksQuery.data ?? []
   const selectedTask = taskDetailQuery.data
+  const allTasksCompleted = tasks.length > 0 && tasks.every((task) => task.status.toLowerCase() === 'completed')
   const canManageTasks = isCoordinator && (
     request?.status === 'Approved' || request?.status === 'InProgress'
   )
+
+  const handleCompleteRequest = () => {
+    if (!allTasksCompleted) {
+      messageApi.warning('Cần hoàn thành tất cả relief task trước')
+      return
+    }
+
+    completeRequestMutation.mutate()
+  }
 
   return (
     <>
@@ -133,10 +165,28 @@ function ReliefRequestDetailModal({ request, loading, open, cancelling, isCoordi
         title={request?.title ?? 'Chi tiết yêu cầu cứu trợ'}
         open={open}
         onCancel={onClose}
-        footer={request?.status === 'Pending' && !isCoordinator ? (
+        footer={request?.status === 'Pending' ? (
           <Space>
-            <Button danger loading={cancelling} onClick={() => onCancel(request.id)}>Hủy yêu cầu</Button>
-            <Button type="primary" onClick={() => onEdit(request)}>Chỉnh sửa</Button>
+            {!isCoordinator && <>
+              <Button danger loading={cancelling} onClick={() => onCancel(request.id)}>Hủy yêu cầu</Button>
+              <Button type="primary" onClick={() => onEdit(request)}>Chỉnh sửa</Button>
+            </>}
+            {isCoordinator && <Button type="primary" loading={approveMutation.isPending} onClick={() => approveMutation.mutate()}>Duyệt yêu cầu</Button>}
+            <Button onClick={onClose}>Đóng</Button>
+          </Space>
+        ) : request?.status === 'Approved' && isCoordinator ? (
+          <Space>
+            <Button
+              type="primary"
+              icon={<CheckCircleOutlined />}
+              loading={completeRequestMutation.isPending}
+              disabled={tasksQuery.isPending || !allTasksCompleted}
+              onClick={handleCompleteRequest}
+              title={tasksQuery.isPending ? 'Đang tải danh sách task' : !tasks.length ? 'Cần tạo ít nhất một task' : !allTasksCompleted ? 'Cần hoàn thành tất cả task trước' : undefined}
+            >
+              Hoàn thành yêu cầu
+            </Button>
+            <Button onClick={onClose}>Đóng</Button>
           </Space>
         ) : <Button onClick={onClose}>Đóng</Button>}
         width={820}
@@ -204,27 +254,29 @@ function ReliefRequestDetailModal({ request, loading, open, cancelling, isCoordi
 
       <Modal title="Volunteer phù hợp" open={volunteersOpen} onCancel={() => setVolunteersOpen(false)} footer={null}>
         {volunteersQuery.isPending ? <Spin /> : volunteersQuery.data?.length ? <List dataSource={volunteersQuery.data} renderItem={(volunteer: SuitableVolunteer) => (
-          <List.Item actions={[<Button key="assign" type="primary" loading={assignMutation.isPending} onClick={() => assignMutation.mutate(volunteer.id)}>Giao task</Button>]}> 
-            <List.Item.Meta title={volunteer.fullName ?? volunteer.id} description={volunteer.email ?? volunteer.phone ?? 'Volunteer'} />
+          <List.Item actions={[<Button key="assign" type="primary" loading={assignMutation.isPending} onClick={() => assignMutation.mutate(volunteer.volunteerId)}>Giao task</Button>]}> 
+            <List.Item.Meta title={volunteer.fullName ?? volunteer.volunteerId} description={volunteer.email ?? volunteer.phone ?? 'Volunteer'} />
           </List.Item>
         )} /> : <Empty description="Không có volunteer phù hợp" />}
       </Modal>
 
       <Modal title={editingTask ? 'Chỉnh sửa relief task' : 'Thêm relief task'} open={taskFormOpen} footer={null} onCancel={() => { setTaskFormOpen(false); setEditingTask(null) }} destroyOnClose>
-        <ReliefTaskForm
-          initialValues={editingTask ? {
-            title: editingTask.title,
-            description: editingTask.description,
-            requiredVolunteers: editingTask.requiredVolunteers,
-            priority: editingTask.priority,
-            latitude: editingTask.latitude,
-            longitude: editingTask.longitude,
-            taskSkills: editingTask.taskSkills,
-          } : undefined}
-          loading={taskMutation.isPending}
-          onCancel={() => { setTaskFormOpen(false); setEditingTask(null) }}
-          onSubmit={(payload) => taskMutation.mutate({ task: editingTask, payload })}
-        />
+        {request && <ReliefTaskForm
+          reliefRequest={request}
+            initialValues={editingTask ? {
+              title: editingTask.title,
+              description: editingTask.description,
+              requiredVolunteers: editingTask.requiredVolunteers,
+              priority: editingTask.priority,
+              latitude: editingTask.latitude,
+              longitude: editingTask.longitude,
+              taskSkills: editingTask.taskSkills,
+            } : undefined}
+            requestLocation={{ lat: request.latitude, lng: request.longitude }}
+            loading={taskMutation.isPending}
+            onCancel={() => { setTaskFormOpen(false); setEditingTask(null) }}
+            onSubmit={(payload) => taskMutation.mutate({ task: editingTask, payload })}
+          />}
       </Modal>
     </>
   )

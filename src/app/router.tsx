@@ -81,7 +81,7 @@ export const router= createBrowserRouter([
                     {
                         path: "/me/donations/create",
                         Component: CreateDonationPage
-                    }
+                    },
 
                     {
                         path: "/my-tasks",

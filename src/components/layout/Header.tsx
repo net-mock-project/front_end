@@ -54,10 +54,7 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
-      {
-        key: '/map',
-        label: <Link to="/map">Bản đồ</Link>,
-      },
+    
       {
         key: '/relief-report',
         label: <Link to="/me/relief-requests">Yêu cầu cứu trợ của tôi</Link>,
@@ -77,14 +74,7 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
-      {
-        key: '/map',
-        label: <Link to="/map">Bản đồ</Link>,
-      },
-      {
-        key: '/relief-report',
-        label: <Link to="/relief-report">Báo cáo cứu trợ</Link>,
-      },
+  
       {
         key: '/donation',
         label: <Link to="/donation">Quyên góp</Link>,
@@ -104,10 +94,7 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
-      {
-        key: '/map',
-        label: <Link to="/map">Bản đồ</Link>,
-      },
+ 
       {
         key: '/volunteer-management',
         label: <Link to="/volunteer-management">Quản lý volunteer</Link>,
@@ -127,10 +114,7 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
-      {
-        key: '/map',
-        label: <Link to="/map">Bản đồ</Link>,
-      },
+ 
       {
         key: '/dashboard',
         label: <Link to="/dashboard">Dashboard</Link>,

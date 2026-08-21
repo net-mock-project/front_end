@@ -38,6 +38,16 @@ export const cancelReliefRequest = async (requestId: string) => {
     await httpClient.delete(`${RELIEF_REQUEST_ENDPOINT}/${requestId}`)
 }
 
+export const approveReliefRequest = async (requestId: string): Promise<ReliefRequest> => {
+    const response = await httpClient.put(`${RELIEF_REQUEST_ENDPOINT}/${requestId}/approve`)
+    return response.data.result as ReliefRequest
+}
+
+export const completeReliefRequest = async (requestId: string): Promise<ReliefRequest> => {
+    const response = await httpClient.put(`${RELIEF_REQUEST_ENDPOINT}/${requestId}/complete`)
+    return response.data.result as ReliefRequest
+}
+
 const taskEndpoint = (requestId: string, taskId?: string) => (
     `${RELIEF_REQUEST_ENDPOINT}/${requestId}/tasks${taskId ? `/${taskId}` : ''}`
 )

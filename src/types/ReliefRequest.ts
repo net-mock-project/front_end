@@ -8,8 +8,8 @@ export interface ReliefRequest {
     description: string;
     latitude: number;
     longitude: number;
-    startTime: string | null;
-    endTime: string | null;
+    startTime: string;
+    endTime: string ;
     urgencyLevel: number;
     estimatedAffectedRadiusKm: number;
     estimatedAffectedPeople: number;
@@ -45,7 +45,7 @@ export interface ReliefTaskPayload {
 }
 
 export interface SuitableVolunteer {
-    id: string;
+    volunteerId: string;
     fullName?: string;
     email?: string;
     phone?: string;
