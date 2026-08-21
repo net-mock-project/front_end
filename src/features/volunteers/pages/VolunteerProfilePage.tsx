@@ -5,25 +5,26 @@ import ProfileSidebar from '../../profile/components/ProfileSidebar'
 import { VolunteerProfileSection } from '../components/VolunteerProfileSection'
 import { useMyVolunteerProfile } from '../hooks/useVolunteerQueries'
 import { VolunteerApprovalStatus } from '../../../types/Volunteer'
+import { Spin } from 'antd'
 import '../../profile/profile.css'
 
 export const VolunteerProfilePage = () => {
-  const { data: user, isPending, isError } = useQuery({
+  const { data: user, isPending: isUserPending, isError: isUserError } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
   })
 
-  const { data: volunteerProfile } = useMyVolunteerProfile()
+  const { data: volunteerProfile, isPending: isVolunteerPending } = useMyVolunteerProfile()
 
-  if (isPending) {
+  if (isUserPending || isVolunteerPending) {
     return (
       <main className="profile-page">
-        <div>Đang tải thông tin hồ sơ...</div>
+        <Spin fullscreen tip="Đang tải thông tin hồ sơ..." />
       </main>
     )
   }
 
-  if (isError || !user) {
+  if (isUserError || !user) {
     return (
       <main className="profile-page">
         <div>Không thể tải thông tin hồ sơ.</div>
@@ -51,11 +52,14 @@ export const VolunteerProfilePage = () => {
       </header>
 
       <div className="profile-page__layout">
-        {/* Giữ nguyên Sidebar bên trái */}
+        {/* Sidebar bên trái */}
         <ProfileSidebar user={user} />
 
-        {/* Thay thế nội dung bên phải bằng VolunteerProfileSection */}
-        <div className="profile-page__content" style={{ padding: 0, background: 'transparent', boxShadow: 'none' }}>
+        {/* Nội dung hồ sơ tình nguyện viên */}
+        <div
+          className="profile-page__content"
+          style={{ padding: 0, background: 'transparent', boxShadow: 'none' }}
+        >
           <VolunteerProfileSection user={user} />
         </div>
       </div>

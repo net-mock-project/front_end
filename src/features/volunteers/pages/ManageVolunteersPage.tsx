@@ -7,21 +7,18 @@ import {
   Col,
   Modal,
   Form,
-  InputNumber,
-  Select,
   Space,
   Typography,
+  Tag,
 } from "antd";
 import {
-  UserAddOutlined,
+  UserOutlined,
   CheckOutlined,
   CompassOutlined,
   CalendarOutlined,
   SearchOutlined,
-  PlusOutlined,
   FilePdfOutlined,
   ExportOutlined,
-  MinusCircleOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 
@@ -30,9 +27,7 @@ import {
   useApprovedVolunteers,
   useApproveVolunteerMutation,
   useRejectVolunteerMutation,
-  useCreateVolunteerMutation,
 } from "../hooks/useVolunteerQueries";
-import { SYSTEM_SKILLS } from "../constants/skills";
 import { VolunteerApprovalStatus, type Volunteer } from "../../../types/Volunteer";
 import "./ManageVolunteersPage.css";
 
@@ -43,16 +38,15 @@ export const ManageVolunteersPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedVolunteer, setSelectedVolunteer] = useState<Volunteer | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
 
-  const [createForm] = Form.useForm();
+  const [rejectForm] = Form.useForm();
 
   const { data: pendingData, isLoading: isPendingLoading } = usePendingVolunteers();
   const { data: approvedData, isLoading: isApprovedLoading } = useApprovedVolunteers();
 
   const approveMutation = useApproveVolunteerMutation();
   const rejectMutation = useRejectVolunteerMutation();
-  const createMutation = useCreateVolunteerMutation();
 
   const allVolunteers = useMemo(() => {
     const pending = pendingData?.items || [];
@@ -60,7 +54,6 @@ export const ManageVolunteersPage: React.FC = () => {
     return [...pending, ...approved];
   }, [pendingData, approvedData]);
 
-  // Bộ lọc 4 trạng thái: Tất cả | Pending | Approved | Suspended
   const filteredVolunteers = useMemo(() => {
     let list = allVolunteers;
 
@@ -89,7 +82,6 @@ export const ManageVolunteersPage: React.FC = () => {
     return list;
   }, [allVolunteers, activeTab, searchTerm]);
 
-  // Thống kê KPI
   const totalCount = allVolunteers.length || 126;
   const approvedCount = approvedData?.totalCount || 98;
   const availableCount = Math.round(approvedCount * 0.75) || 74;
@@ -101,27 +93,19 @@ export const ManageVolunteersPage: React.FC = () => {
     setIsDetailModalOpen(false);
   };
 
-  const handleReject = async () => {
+  const handleOpenRejectModal = () => {
+    rejectForm.resetFields();
+    setIsRejectModalOpen(true);
+  };
+
+  const handleConfirmReject = async (values: { reason: string }) => {
     if (!selectedVolunteer) return;
     await rejectMutation.mutateAsync({
       id: selectedVolunteer.volunteerId,
-      req: { reason: "Chưa đạt yêu cầu kinh nghiệm" }, 
+      req: { reason: values.reason?.trim() || "Chưa đạt yêu cầu năng lực/kinh nghiệm" },
     });
+    setIsRejectModalOpen(false);
     setIsDetailModalOpen(false);
-  };
-
-  const handleCreateSubmit = async (values: any) => {
-    await createMutation.mutateAsync({
-      userId: values.userId || "20000000-0000-0000-0000-000000000001",
-      experienceYears: Number(values.experienceYears) || 1,
-      cvUrl: values.cvUrl || null,
-      skills: (values.skills || []).map((s: any) => ({
-        skillId: s.skillId,
-        level: Number(s.level) || 1,
-      })),
-    });
-    setIsCreateModalOpen(false);
-    createForm.resetFields();
   };
 
   const columns: ColumnsType<Volunteer> = [
@@ -215,33 +199,17 @@ export const ManageVolunteersPage: React.FC = () => {
   return (
     <div className="manage-volunteers-page">
       <div className="manage-volunteers-container">
-        {/* Header căn lề trái khớp mẫu */}
+        {/* Header */}
         <div className="manage-volunteers-header">
           <div className="header-text">
-            <div className="header-breadcrumb">Admin / Volunteer</div>
+            <div className="header-breadcrumb">Coordinator / Volunteer</div>
             <Title level={2} className="header-title">
-              Quản lý Volunteer
+              Quản lý Volunteer khu vực
             </Title>
             <Text className="header-subtitle">
-              Xét duyệt, lọc kỹ năng và quản lý tình nguyện viên theo khu vực phụ trách.
+              Xét duyệt hồ sơ, đánh giá năng lực và quản lý tình nguyện viên.
             </Text>
           </div>
-
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            className="btn-create-volunteer"
-            onClick={() => {
-              createForm.resetFields();
-              createForm.setFieldsValue({
-                experienceYears: 1,
-                skills: [{ skillId: SYSTEM_SKILLS[0].id, level: 3 }],
-              });
-              setIsCreateModalOpen(true);
-            }}
-          >
-            Tạo Volunteer
-          </Button>
         </div>
 
         {/* 4 Thẻ KPI */}
@@ -249,7 +217,7 @@ export const ManageVolunteersPage: React.FC = () => {
           <Col span={6}>
             <div className="kpi-card">
               <div className="kpi-icon kpi-icon--red">
-                <UserAddOutlined />
+                <UserOutlined />
               </div>
               <div className="kpi-value">{totalCount}</div>
               <div className="kpi-label">Tổng Volunteer</div>
@@ -291,7 +259,7 @@ export const ManageVolunteersPage: React.FC = () => {
           </Col>
         </Row>
 
-        {/* Thanh lọc 4 Tabs & Ô tìm kiếm */}
+        {/* Bộ lọc Tabs & Ô tìm kiếm */}
         <div className="filter-bar">
           <div className="pill-tabs">
             {[
@@ -319,7 +287,7 @@ export const ManageVolunteersPage: React.FC = () => {
           />
         </div>
 
-        {/* Bảng danh sách */}
+        {/* Table */}
         <div className="table-card">
           <Table
             columns={columns}
@@ -335,7 +303,7 @@ export const ManageVolunteersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal Chi tiết & Duyệt */}
+      {/* Modal Chi tiết & Phê duyệt / Từ chối */}
       <Modal
         title={<span style={{ fontWeight: 800, fontSize: 18 }}>Chi tiết hồ sơ Volunteer</span>}
         open={isDetailModalOpen}
@@ -344,14 +312,23 @@ export const ManageVolunteersPage: React.FC = () => {
         footer={
           selectedVolunteer?.approvalStatus === VolunteerApprovalStatus.Pending ? (
             <Space size={12}>
-              <Button danger onClick={handleReject} loading={rejectMutation.isPending} style={{ borderRadius: 10 }}>
+              <Button
+                danger
+                onClick={handleOpenRejectModal}
+                style={{ borderRadius: 10, height: 38 }}
+              >
                 Từ chối
               </Button>
               <Button
                 type="primary"
                 onClick={handleApprove}
                 loading={approveMutation.isPending}
-                style={{ backgroundColor: "#16A34A", borderColor: "#16A34A", borderRadius: 10 }}
+                style={{
+                  backgroundColor: "#16A34A",
+                  borderColor: "#16A34A",
+                  borderRadius: 10,
+                  height: 38,
+                }}
               >
                 Phê duyệt
               </Button>
@@ -395,23 +372,19 @@ export const ManageVolunteersPage: React.FC = () => {
             </Row>
 
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 6 }}>Kỹ năng chuyên môn</div>
+              <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 6 }}>
+                Kỹ năng chuyên môn
+              </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 {selectedVolunteer.skills?.length ? (
                   selectedVolunteer.skills.map((s, idx) => (
-                    <span
+                    <Tag
                       key={idx}
-                      style={{
-                        backgroundColor: "#EFF6FF",
-                        color: "#2563EB",
-                        padding: "2px 10px",
-                        borderRadius: 999,
-                        fontSize: 12,
-                        fontWeight: 500,
-                      }}
+                      color="blue"
+                      style={{ borderRadius: 999, padding: "2px 10px" }}
                     >
                       {s.skillName || "Kỹ năng"} • Level {s.level}
-                    </span>
+                    </Tag>
                   ))
                 ) : (
                   <span style={{ fontSize: 12, color: "#9CA3AF" }}>Chưa có thông tin</span>
@@ -438,7 +411,14 @@ export const ManageVolunteersPage: React.FC = () => {
                     href={selectedVolunteer.cvUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ fontWeight: 700, color: "#1E3A8A", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}
+                    style={{
+                      fontWeight: 700,
+                      color: "#1E3A8A",
+                      textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
                   >
                     Xem CV ứng viên <ExportOutlined style={{ fontSize: 12 }} />
                   </a>
@@ -449,92 +429,31 @@ export const ManageVolunteersPage: React.FC = () => {
         )}
       </Modal>
 
-      {/* Modal Tạo Volunteer */}
+      {/* Modal Nhập lý do Từ chối */}
       <Modal
-        title={<span style={{ fontWeight: 800, fontSize: 18 }}>Tạo Volunteer mới</span>}
-        open={isCreateModalOpen}
-        onCancel={() => setIsCreateModalOpen(false)}
-        onOk={() => createForm.submit()}
-        confirmLoading={createMutation.isPending}
-        okText="Tạo mới"
+        title={<span style={{ fontWeight: 700, fontSize: 16, color: "#DC2626" }}>Từ chối hồ sơ tình nguyện viên</span>}
+        open={isRejectModalOpen}
+        onCancel={() => setIsRejectModalOpen(false)}
+        onOk={() => rejectForm.submit()}
+        confirmLoading={rejectMutation.isPending}
+        okText="Xác nhận từ chối"
+        okButtonProps={{ danger: true, style: { borderRadius: 8 } }}
         cancelText="Hủy"
-        width={560}
-        okButtonProps={{ style: { backgroundColor: "#EB5757", borderColor: "#EB5757", borderRadius: 8 } }}
+        width={480}
       >
-        <Form form={createForm} layout="vertical" onFinish={handleCreateSubmit} style={{ paddingTop: 12 }}>
+        <Form form={rejectForm} layout="vertical" onFinish={handleConfirmReject} style={{ paddingTop: 8 }}>
           <Form.Item
-            name="userId"
-            label="User ID"
-            rules={[{ required: true, message: "Vui lòng nhập User ID" }]}
-            initialValue="20000000-0000-0000-0000-000000000001"
+            name="reason"
+            label="Lý do từ chối"
+            rules={[{ required: true, message: "Vui lòng nhập lý do từ chối hồ sơ" }]}
+            initialValue="Chưa đáp ứng đủ yêu cầu kinh nghiệm cứu trợ"
           >
-            <Input placeholder="Guid của User" style={{ borderRadius: 8 }} />
+            <Input.TextArea
+              rows={3}
+              placeholder="Nhập lý do gửi phản hồi cho tình nguyện viên..."
+              style={{ borderRadius: 8 }}
+            />
           </Form.Item>
-
-          <Form.Item
-            name="experienceYears"
-            label="Số năm kinh nghiệm"
-            rules={[{ required: true, message: "Vui lòng nhập số năm kinh nghiệm" }]}
-          >
-            <InputNumber min={0} max={50} style={{ width: "100%", borderRadius: 8 }} />
-          </Form.Item>
-
-          <Form.Item name="cvUrl" label="Đường dẫn CV (Tùy chọn)">
-            <Input placeholder="https://example.com/cv.pdf" style={{ borderRadius: 8 }} />
-          </Form.Item>
-
-          <div style={{ marginBottom: 8, fontWeight: 600, fontSize: 13 }}>Kỹ năng chuyên môn</div>
-          <Form.List name="skills">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
-                    <Form.Item
-                      {...restField}
-                      name={[name, "skillId"]}
-                      rules={[{ required: true, message: "Chọn kỹ năng" }]}
-                      style={{ width: 280, marginBottom: 0 }}
-                    >
-                      <Select placeholder="Chọn kỹ năng">
-                        {SYSTEM_SKILLS.map((sk) => (
-                          <Select.Option key={sk.id} value={sk.id}>
-                            {sk.name}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-
-                    <Form.Item
-                      {...restField}
-                      name={[name, "level"]}
-                      rules={[{ required: true, message: "Cấp độ" }]}
-                      style={{ width: 140, marginBottom: 0 }}
-                    >
-                      <Select placeholder="Cấp độ">
-                        <Select.Option value={1}>Level 1</Select.Option>
-                        <Select.Option value={2}>Level 2</Select.Option>
-                        <Select.Option value={3}>Level 3</Select.Option>
-                        <Select.Option value={4}>Level 4</Select.Option>
-                        <Select.Option value={5}>Level 5</Select.Option>
-                      </Select>
-                    </Form.Item>
-
-                    <MinusCircleOutlined onClick={() => remove(name)} style={{ color: "#EF4444", cursor: "pointer" }} />
-                  </Space>
-                ))}
-
-                <Button
-                  type="dashed"
-                  onClick={() => add({ skillId: SYSTEM_SKILLS[0].id, level: 3 })}
-                  block
-                  icon={<PlusOutlined />}
-                  style={{ borderRadius: 8, marginTop: 4 }}
-                >
-                  Thêm kỹ năng
-                </Button>
-              </>
-            )}
-          </Form.List>
         </Form>
       </Modal>
     </div>

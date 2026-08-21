@@ -11,6 +11,7 @@ import {
   Col,
   Space,
   Empty,
+  Spin,
 } from "antd";
 import {
   UserOutlined,
@@ -19,7 +20,13 @@ import {
   MinusCircleOutlined,
   ExportOutlined,
   EditOutlined,
+  CloseCircleOutlined,
+  RedoOutlined,
+  CheckCircleFilled,
+  ClockCircleFilled,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 import {
@@ -27,6 +34,7 @@ import {
   useSubmitProfileMutation,
   useUpdateProfileMutation,
 } from "../hooks/useVolunteerQueries";
+import { getMyVolunteerTasks } from "../../volunteer/api/volunteerTaskApi";
 import { SYSTEM_SKILLS } from "../constants/skills";
 import type { User } from "../../../types/User";
 import { VolunteerApprovalStatus } from "../../../types/Volunteer";
@@ -36,12 +44,20 @@ interface Props {
 }
 
 export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: profile, isLoading } = useMyVolunteerProfile();
   const submitMutation = useSubmitProfileMutation();
   const updateMutation = useUpdateProfileMutation();
+
+  // Đọc danh sách nhiệm vụ thực tế của Volunteer từ Database
+  const { data: myTasks = [], isLoading: isLoadingTasks } = useQuery({
+    queryKey: ["my-volunteer-tasks"],
+    queryFn: getMyVolunteerTasks,
+    enabled: profile?.approvalStatus === VolunteerApprovalStatus.Approved,
+  });
 
   const handleOpenModal = () => {
     const initialSkills = profile?.skills?.length
@@ -83,7 +99,8 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
     : null;
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", textAlign: "left" }}>
+      {/* 1. CHƯA CÓ HỒ SƠ */}
       {(!profile || !profile.approvalStatus) && (
         <div
           style={{
@@ -139,18 +156,83 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
         </div>
       )}
 
+      {/* 2. REJECTED (BỊ TỪ CHỐI) */}
+      {profile?.approvalStatus === VolunteerApprovalStatus.Rejected && (
+        <div
+          style={{
+            minHeight: 420,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            padding: "48px 24px",
+            backgroundColor: "#ffffff",
+            borderRadius: 16,
+            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+          }}
+        >
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 16,
+              backgroundColor: "#FEE2E2",
+              color: "#DC2626",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 26,
+              marginBottom: 16,
+            }}
+          >
+            <CloseCircleOutlined />
+          </div>
+          <div
+            style={{
+              backgroundColor: "#FEE2E2",
+              color: "#DC2626",
+              padding: "4px 14px",
+              borderRadius: 999,
+              fontSize: 12,
+              fontWeight: 700,
+              marginBottom: 12,
+            }}
+          >
+            Hồ sơ chưa được phê duyệt
+          </div>
+          <h3 style={{ fontSize: 20, fontWeight: 700, margin: "0 0 8px", color: "#111827" }}>
+            Hồ sơ Volunteer của bạn đã bị từ chối
+          </h3>
+          <p style={{ color: "#6B7280", fontSize: 14, maxWidth: 460, marginBottom: 24 }}>
+            Hồ sơ trước đó chưa đạt yêu cầu. Bạn có thể cập nhật lại thông tin kinh nghiệm, bổ sung CV và kỹ năng để gửi lại xét duyệt.
+          </p>
+          <Button
+            type="primary"
+            size="large"
+            icon={<RedoOutlined />}
+            onClick={handleOpenModal}
+            style={{
+              backgroundColor: "#EB5757",
+              borderColor: "#EB5757",
+              height: 44,
+              borderRadius: 12,
+              fontWeight: 600,
+              padding: "0 28px",
+            }}
+          >
+            Nộp lại hồ sơ Volunteer
+          </Button>
+        </div>
+      )}
+
+      {/* 3. PENDING (ĐANG XÉT DUYỆT) */}
       {profile?.approvalStatus === VolunteerApprovalStatus.Pending && (
         <Row gutter={20}>
           <Col span={14}>
-            <div style={{ backgroundColor: "#ffffff", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#111827" }}>{user.fullName}</h3>
-                  <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-                    UserId: {user.id || profile?.volunteerId || "—"}
-                  </div>
-                </div>
-
+            <div style={{ backgroundColor: "#ffffff", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.05)", textAlign: "left" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#111827", textAlign: "left" }}>{user.fullName}</h3>
                 <Space size={8}>
                   <Button
                     icon={<EditOutlined />}
@@ -168,25 +250,25 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
 
               <Row gutter={[10, 10]} style={{ marginBottom: 20 }}>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>ExperienceYears</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>{profile.experienceYears} năm</div>
                   </div>
                 </Col>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>ApprovalStatus</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>Pending</div>
                   </div>
                 </Col>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>ApprovedBy</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>{profile.approvedBy || "—"}</div>
                   </div>
                 </Col>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>ApprovedAt</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>
                       {profile.approvedAt ? dayjs(profile.approvedAt).format("DD/MM/YYYY HH:mm") : "—"}
@@ -194,7 +276,7 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
                   </div>
                 </Col>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>UpdatedAt</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>
                       {profile.updatedAt ? dayjs(profile.updatedAt).format("DD/MM/YYYY") : "—"}
@@ -203,7 +285,7 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
                 </Col>
               </Row>
 
-              <div>
+              <div style={{ marginBottom: 20, textAlign: "left" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: "#374151" }}>VolunteerSkill</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {profile.skills && profile.skills.length > 0 ? (
@@ -217,40 +299,47 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
                   )}
                 </div>
               </div>
+
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: "#374151" }}>CV đính kèm</div>
+                {profile.cvUrl ? (
+                  <div style={{ backgroundColor: "#EFF6FF", border: "1px solid #DBEAFE", borderRadius: 14, padding: 12, display: "flex", gap: 12, alignItems: "center" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", color: "#EF4444", fontSize: 18 }}>
+                      <FilePdfOutlined />
+                    </div>
+                    <div style={{ overflow: "hidden", textAlign: "left" }}>
+                      <a
+                        href={profile.cvUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: 13, fontWeight: 700, color: "#1E3A8A", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
+                      >
+                        {cvFileName} <ExportOutlined style={{ fontSize: 11 }} />
+                      </a>
+                      <div style={{ fontSize: 11, color: "#6B7280" }}>
+                        Tải lên: {profile.createdAt ? dayjs(profile.createdAt).format("DD/MM/YYYY") : "—"}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ padding: 12, backgroundColor: "#F9FAFB", borderRadius: 12, color: "#9CA3AF", fontSize: 12, textAlign: "center" }}>
+                    Chưa cung cấp liên kết CV
+                  </div>
+                )}
+              </div>
             </div>
           </Col>
 
           <Col span={10}>
-            <div style={{ backgroundColor: "#ffffff", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-              <div style={{ fontWeight: 700, fontSize: 14, color: "#111827" }}>CV đính kèm</div>
-              <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 16 }}>Trường bổ sung đề xuất: CvUrl</div>
+            <div style={{ backgroundColor: "#ffffff", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.05)", textAlign: "left" }}>
+              <div style={{ fontWeight: 700, fontSize: 14, color: "#111827", marginBottom: 16 }}>Tiểu sử cứu trợ</div>
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={<span style={{ fontSize: 12, color: "#9CA3AF" }}>Hồ sơ đang chờ duyệt để nhận nhiệm vụ</span>}
+                style={{ margin: "24px 0" }}
+              />
 
-              {profile.cvUrl ? (
-                <div style={{ backgroundColor: "#EFF6FF", border: "1px solid #DBEAFE", borderRadius: 14, padding: 14, display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", color: "#EF4444", fontSize: 18 }}>
-                    <FilePdfOutlined />
-                  </div>
-                  <div style={{ overflow: "hidden" }}>
-                    <a
-                      href={profile.cvUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: 13, fontWeight: 700, color: "#1E3A8A", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
-                    >
-                      {cvFileName} <ExportOutlined style={{ fontSize: 11 }} />
-                    </a>
-                    <div style={{ fontSize: 11, color: "#6B7280" }}>
-                      Tải lên: {profile.createdAt ? dayjs(profile.createdAt).format("DD/MM/YYYY") : "—"}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div style={{ padding: 16, backgroundColor: "#F9FAFB", borderRadius: 12, color: "#9CA3AF", fontSize: 12, marginBottom: 16, textAlign: "center" }}>
-                  Chưa cung cấp liên kết CV
-                </div>
-              )}
-
-              <div style={{ backgroundColor: "#FEF3C7", border: "1px solid #FDE68A", padding: 12, borderRadius: 12, color: "#92400E", fontSize: 12 }}>
+              <div style={{ backgroundColor: "#FEF3C7", border: "1px solid #FDE68A", padding: 12, borderRadius: 12, color: "#92400E", fontSize: 12, textAlign: "left" }}>
                 Coordinator sẽ phản hồi trong 24–48 giờ.
               </div>
             </div>
@@ -258,17 +347,13 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
         </Row>
       )}
 
+      {/* 4. APPROVED (ĐÃ DUYỆT) */}
       {profile?.approvalStatus === VolunteerApprovalStatus.Approved && (
         <Row gutter={20}>
           <Col span={14}>
-            <div style={{ backgroundColor: "#ffffff", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#111827" }}>{user.fullName}</h3>
-                  <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-                    VolunteerId #{String(profile.volunteerId || "").slice(0, 6).toUpperCase()}
-                  </div>
-                </div>
+            <div style={{ backgroundColor: "#ffffff", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.05)", textAlign: "left" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#111827", textAlign: "left" }}>{user.fullName}</h3>
                 <div style={{ backgroundColor: "#DCFCE7", padding: "4px 16px", borderRadius: 999, color: "#16A34A", fontSize: 12, fontWeight: 700 }}>
                   Approved
                 </div>
@@ -276,19 +361,19 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
 
               <Row gutter={[10, 10]} style={{ marginBottom: 20 }}>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>ExperienceYears</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>{profile.experienceYears} năm</div>
                   </div>
                 </Col>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>ApprovedBy</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>{profile.approvedBy || "—"}</div>
                   </div>
                 </Col>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>ApprovedAt</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>
                       {profile.approvedAt ? dayjs(profile.approvedAt).format("DD/MM/YYYY HH:mm") : "—"}
@@ -296,7 +381,7 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
                   </div>
                 </Col>
                 <Col span={12}>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12 }}>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: 12, borderRadius: 12, textAlign: "left" }}>
                     <div style={{ fontSize: 11, color: "#9CA3AF" }}>UpdatedAt</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>
                       {profile.updatedAt ? dayjs(profile.updatedAt).format("DD/MM/YYYY") : "—"}
@@ -305,7 +390,7 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
                 </Col>
               </Row>
 
-              <div>
+              <div style={{ marginBottom: 20, textAlign: "left" }}>
                 <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: "#374151" }}>VolunteerSkill</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {profile.skills && profile.skills.length > 0 ? (
@@ -319,45 +404,103 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
                   )}
                 </div>
               </div>
+
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: "#374151" }}>CV đính kèm</div>
+                {profile.cvUrl ? (
+                  <div style={{ backgroundColor: "#EFF6FF", border: "1px solid #DBEAFE", borderRadius: 14, padding: 12, display: "flex", gap: 10, alignItems: "center" }}>
+                    <FilePdfOutlined style={{ color: "#EF4444", fontSize: 16 }} />
+                    <a
+                      href={profile.cvUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: 12, fontWeight: 600, color: "#1E3A8A", textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                    >
+                      {cvFileName}
+                    </a>
+                  </div>
+                ) : (
+                  <div style={{ padding: 12, backgroundColor: "#F9FAFB", borderRadius: 12, color: "#9CA3AF", fontSize: 12, textAlign: "center" }}>
+                    Chưa cung cấp liên kết CV
+                  </div>
+                )}
+              </div>
             </div>
           </Col>
 
+          {/* CỘT TIỂU SỬ CỨU TRỢ (ĐỌC DỮ LIỆU THẬT) */}
           <Col span={10}>
-            <div style={{ backgroundColor: "#ffffff", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+            <div style={{ backgroundColor: "#ffffff", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.05)", textAlign: "left" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: "#111827" }}>Tiểu sử cứu trợ</div>
-                  <div style={{ fontSize: 12, color: "#9CA3AF" }}>Từ TaskAssignment.CompletedAt</div>
-                </div>
-                <Button size="small" onClick={handleOpenModal} style={{ borderRadius: 8 }}>
-                  Cập nhật CV
-                </Button>
+                <div style={{ fontWeight: 700, fontSize: 14, color: "#111827" }}>Tiểu sử cứu trợ</div>
+                {myTasks.length > 0 && (
+                  <Tag color="blue" style={{ borderRadius: 999 }}>
+                    {myTasks.length} nhiệm vụ
+                  </Tag>
+                )}
               </div>
 
-              {profile.cvUrl && (
-                <div style={{ backgroundColor: "#EFF6FF", border: "1px solid #DBEAFE", borderRadius: 14, padding: 12, display: "flex", gap: 10, alignItems: "center", marginBottom: 16 }}>
-                  <FilePdfOutlined style={{ color: "#EF4444", fontSize: 16 }} />
-                  <a
-                    href={profile.cvUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ fontSize: 12, fontWeight: 600, color: "#1E3A8A", textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-                  >
-                    {cvFileName}
-                  </a>
+              {isLoadingTasks ? (
+                <div style={{ padding: "32px 0", textAlign: "center" }}>
+                  <Spin tip="Đang tải lịch sử nhiệm vụ..." />
+                </div>
+              ) : myTasks.length === 0 ? (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description={<span style={{ fontSize: 12, color: "#9CA3AF" }}>Chưa có lịch sử nhiệm vụ cứu trợ được ghi nhận</span>}
+                  style={{ margin: "24px 0" }}
+                />
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, maxHeight: 420, overflowY: "auto", paddingRight: 4 }}>
+                  {myTasks.map((task: any) => {
+                    const isCompleted = task.status === "Completed" || task.status === 2;
+                    return (
+                      <div
+                        key={task.id || task.taskId}
+                        onClick={() => navigate(`/my-tasks/${task.id || task.taskId}`)}
+                        style={{
+                          backgroundColor: "#F9FAFB",
+                          border: "1px solid #F3F4F6",
+                          borderRadius: 12,
+                          padding: 12,
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          textAlign: "left",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "#111827", lineHeight: 1.3 }}>
+                            {task.title || task.description || "Nhiệm vụ cứu trợ"}
+                          </span>
+                          <Tag
+                            color={isCompleted ? "green" : "orange"}
+                            style={{ borderRadius: 999, fontSize: 10, margin: 0 }}
+                          >
+                            {isCompleted ? "Hoàn thành" : "Đang thực hiện"}
+                          </Tag>
+                        </div>
+
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#6B7280", marginTop: 6 }}>
+                          {isCompleted ? (
+                            <CheckCircleFilled style={{ color: "#16A34A" }} />
+                          ) : (
+                            <ClockCircleFilled style={{ color: "#D97706" }} />
+                          )}
+                          <span>
+                            {task.createdAt ? dayjs(task.createdAt).format("DD/MM/YYYY HH:mm") : "Gần đây"}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
-
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={<span style={{ fontSize: 12, color: "#9CA3AF" }}>Chưa có lịch sử nhiệm vụ cứu trợ được ghi nhận</span>}
-                style={{ margin: "24px 0" }}
-              />
             </div>
           </Col>
         </Row>
       )}
 
+      {/* Modal nộp / cập nhật lại hồ sơ */}
       <Modal
         title={<span style={{ fontWeight: 700, fontSize: 16 }}>Đăng ký / Cập nhật hồ sơ Volunteer</span>}
         open={isModalOpen}
@@ -369,7 +512,7 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
         width={560}
         okButtonProps={{ style: { backgroundColor: "#EB5757", borderColor: "#EB5757", borderRadius: 8 } }}
       >
-        <Form form={form} layout="vertical" onFinish={handleFormSubmit} style={{ paddingTop: 8 }}>
+        <Form form={form} layout="vertical" onFinish={handleFormSubmit} style={{ paddingTop: 8, textAlign: "left" }}>
           <Form.Item
             name="experienceYears"
             label="Số năm kinh nghiệm cứu trợ"
@@ -386,7 +529,7 @@ export const VolunteerProfileSection: React.FC<Props> = ({ user }) => {
             <Input placeholder="https://drive.google.com/..." style={{ borderRadius: 8 }} />
           </Form.Item>
 
-          <div style={{ marginBottom: 8, fontWeight: 600, fontSize: 13 }}>Danh sách kỹ năng chuyên môn</div>
+          <div style={{ marginBottom: 8, fontWeight: 600, fontSize: 13, textAlign: "left" }}>Danh sách kỹ năng chuyên môn</div>
           <Form.List name="skills">
             {(fields, { add, remove }) => (
               <>
