@@ -95,6 +95,10 @@ function Header() {
         key: '/regional-relief-request',
         label: <Link to="/regional-relief-request">Yêu cầu cứu trợ khu vực</Link>,
       },
+      {
+        key: '/coordinator-donation',
+        label: <Link to="/coordinator-donation">Quản lý quyên góp</Link>,
+      },
     ],
 
     Admin: [

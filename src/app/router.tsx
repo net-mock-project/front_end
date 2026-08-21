@@ -95,11 +95,7 @@ export const router = createBrowserRouter([
             Component: VolunteerTaskDetailPage,
           },
           {
-            path: "coordinator/donations",
-            Component: CoordinatorDonationPage,
-          },
-          {
-            path: "donation",
+            path: "coordinator-donation",
             Component: MyDonationPage,
           },
           {
