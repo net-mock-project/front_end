@@ -26,6 +26,10 @@ function ProfileDropdown({ user }: ProfileDropdownProps) {
       navigate('/profile')
     }
 
+    if (key === 'volunteer-profile') {
+      navigate('/volunteer-profile')
+    }
+
     // Các chức năng khác sẽ nối route/API khi triển khai tương ứng
   }
 

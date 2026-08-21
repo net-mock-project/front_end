@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { locationHub } from "../services/locationHub";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Volunteer } from "../../../types/Volunteer";
@@ -12,6 +12,7 @@ interface LocationUpdated {
 
 export const useLocationHub = () => {
     const queryClient = useQueryClient();
+    const lastSentLocation = useRef<{ latitude: number; longitude: number; sentAt: number } | null>(null);
 
     useEffect(() => {
         const startConnection = async () => {
@@ -76,12 +77,28 @@ export const useLocationHub = () => {
             return;
         }
 
+        const previous = lastSentLocation.current;
+        const now = Date.now();
+        const hasSmallMovement = previous &&
+            Math.abs(previous.latitude - latitude) < 0.0001 &&
+            Math.abs(previous.longitude - longitude) < 0.0001;
+
+        if (previous && (now - previous.sentAt < 10000 || hasSmallMovement)) {
+            return;
+        }
+
         try {
             await locationHub.invoke(
                 "UpdateLocation",
                 latitude,
                 longitude
             );
+
+            lastSentLocation.current = {
+                latitude,
+                longitude,
+                sentAt: now,
+            };
 
             console.log("Location sent:", {
                 latitude,

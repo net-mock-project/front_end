@@ -1,0 +1,173 @@
+.volunteer-profile-page {
+  width: 100%;
+  min-height: calc(100vh - 68px);
+  padding: 28px 24px 48px;
+  background: #f5f7fa;
+}
+
+.volunteer-profile-page__header,
+.volunteer-profile-page__content {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.volunteer-profile-page__header {
+  margin-bottom: 22px;
+}
+
+.volunteer-profile-page__breadcrumb {
+  margin-bottom: 6px;
+  color: #98a2b3;
+  font-size: 13px;
+}
+
+.volunteer-profile-page__header h1 {
+  margin: 0 0 6px;
+  color: #101828;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.volunteer-profile-page__header p {
+  margin: 0;
+  color: #667085;
+  font-size: 14px;
+}
+
+.volunteer-profile-page__content {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #eaecf0;
+  border-radius: 12px;
+}
+
+.volunteer-profile-page__state,
+.volunteer-profile-page__empty {
+  padding: 64px 32px;
+  text-align: center;
+}
+
+.volunteer-profile-page__state p,
+.volunteer-profile-page__empty p {
+  color: #667085;
+}
+
+.volunteer-profile-view {
+  padding: 28px 32px;
+  text-align: left;
+}
+
+.volunteer-profile-view__heading,
+.volunteer-profile-view__actions,
+.volunteer-profile-form__section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.volunteer-profile-view__heading {
+  margin-bottom: 22px;
+}
+
+.volunteer-profile-view__heading h2 {
+  margin: 0 0 6px;
+  color: #101828;
+  font-size: 20px;
+}
+
+.volunteer-profile-view__skills {
+  margin-top: 28px;
+}
+
+.volunteer-profile-view__skills h4 {
+  margin-bottom: 14px;
+  color: #101828;
+}
+
+.volunteer-profile-view__skill-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.volunteer-profile-view__skill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+}
+
+.volunteer-profile-view__skill strong {
+  overflow: hidden;
+  color: #344054;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.volunteer-profile-view__skill span {
+  color: #667085;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.volunteer-profile-view__actions {
+  justify-content: flex-end;
+  margin-top: 28px;
+}
+
+.volunteer-profile-form {
+  text-align: left;
+}
+
+.volunteer-profile-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+}
+
+.volunteer-profile-form__section-title {
+  margin: 8px 0 16px;
+}
+
+.volunteer-profile-form__skill-row {
+  display: flex;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.volunteer-profile-form__skill-row .ant-form-item:first-child {
+  flex: 1;
+}
+
+.volunteer-profile-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+}
+
+@media (max-width: 768px) {
+  .volunteer-profile-page {
+    padding: 20px 16px 32px;
+  }
+
+  .volunteer-profile-view {
+    padding: 24px;
+  }
+
+  .volunteer-profile-view__skill-list,
+  .volunteer-profile-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .volunteer-profile-view__heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
