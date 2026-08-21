@@ -95,12 +95,16 @@ export const router = createBrowserRouter([
             Component: VolunteerTaskDetailPage,
           },
           {
-            path: "coordinator-donation",
+            path: "donation",
             Component: MyDonationPage,
           },
           {
             path: "donation/create",
             Component: CreateDonationPage,
+          },
+          {
+            path: "coordinator-donation",
+            Component: CoordinatorDonationPage,
           },
 
           // Admin routes
