@@ -1,0 +1,216 @@
+.manage-volunteers-page {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 32px 48px;
+}
+
+.manage-volunteers-container {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* Header căn lề trái chuẩn */
+.manage-volunteers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.header-text {
+  text-align: left;
+}
+
+.header-breadcrumb {
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.header-title {
+  margin: 0 !important;
+  font-weight: 800 !important;
+  color: #111827;
+  font-size: 28px !important;
+  line-height: 1.2;
+}
+
+.header-subtitle {
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 6px;
+  display: block;
+}
+
+.btn-create-volunteer {
+  background-color: #eb5757 !important;
+  border-color: #eb5757 !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  padding: 0 24px !important;
+  box-shadow: 0 4px 14px rgba(235, 87, 87, 0.3);
+}
+
+/* 4 Thẻ KPI */
+.kpi-row {
+  margin-bottom: 28px;
+}
+
+.kpi-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  padding: 22px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f3f4f6;
+  text-align: left;
+}
+
+.kpi-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+
+.kpi-icon--red {
+  background-color: #fee2e2;
+  color: #eb5757;
+}
+
+.kpi-icon--green {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.kpi-icon--blue {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+.kpi-icon--yellow {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.kpi-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1;
+}
+
+.kpi-label {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.kpi-subtext {
+  font-size: 12px;
+  color: #16a34a;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* Thanh bộ lọc & Tabs */
+.filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.pill-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.pill-tab {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  background-color: transparent;
+  color: #6b7280;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.pill-tab.active {
+  background-color: #fee2e2;
+  color: #eb5757;
+  font-weight: 700;
+}
+
+.search-input {
+  width: 320px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Bảng dữ liệu */
+.table-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f3f4f6;
+}
+
+.status-badge {
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status--approved {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.status--pending {
+  background-color: #fef9c3;
+  color: #d97706;
+}
+
+.status--suspended {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.avail--available {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.avail--busy {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.avail--offline {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.btn-view {
+  border-radius: 999px !important;
+  padding: 0 18px !important;
+  font-weight: 600 !important;
+  border-color: #e5e7eb !important;
+  font-size: 13px !important;
+}
