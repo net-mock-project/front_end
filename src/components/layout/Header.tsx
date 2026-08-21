@@ -102,11 +102,6 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
- 
-      {
-        key: '/dashboard',
-        label: <Link to="/dashboard">Dashboard</Link>,
-      },
       {
         key: '/admin/users',
         label: (
