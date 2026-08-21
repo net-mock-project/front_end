@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import type { ReliefRequest } from "../../../types/ReliefRequest";
-import type { Volunteer } from "../../../types/Volunteer";
+
 import type { Warehouse } from "../../../types/Warehouse";
 import { useGeoLocation } from "../../location/hooks/useGeoLocation";
 import { MapContainer } from "./MapContainer"
 import { MyLocationMarker } from "./MyLocationMarker";
 import { ReliefRequestMarker } from "./ReliefRequestMarker";
-import { VolunteerMarker } from "./VolunteerMarker";
+
 import { WarehouseMarker } from "./WarehouseMarker";
 import { useMap } from "@vis.gl/react-google-maps";
 import { useLocationHub } from "../../location/hooks/useLocationHub";

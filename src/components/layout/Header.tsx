@@ -54,21 +54,14 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
-      {
-        key: '/map',
-        label: <Link to="/map">Bản đồ</Link>,
-      },
+    
       {
         key: '/relief-report',
-        label: <Link to="/relief-report">Báo cáo cứu trợ</Link>,
+        label: <Link to="/me/relief-requests">Yêu cầu cứu trợ của tôi</Link>,
       },
       {
         key: '/donation',
         label: <Link to="/donation">Quyên góp</Link>,
-      },
-      {
-        key: '/guide',
-        label: <Link to="/guide">Hướng dẫn</Link>,
       },
     ],
 
@@ -77,14 +70,7 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
-      {
-        key: '/map',
-        label: <Link to="/map">Bản đồ</Link>,
-      },
-      {
-        key: '/relief-report',
-        label: <Link to="/relief-report">Báo cáo cứu trợ</Link>,
-      },
+  
       {
         key: '/donation',
         label: <Link to="/donation">Quyên góp</Link>,
@@ -93,10 +79,6 @@ function Header() {
         key: '/my-tasks',
         label: <Link to="/my-tasks">Nhiệm vụ của tôi</Link>,
       },
-      {
-        key: '/guide',
-        label: <Link to="/guide">Hướng dẫn</Link>,
-      },
     ],
 
     Coordinator: [
@@ -104,10 +86,7 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
-      {
-        key: '/map',
-        label: <Link to="/map">Bản đồ</Link>,
-      },
+ 
       {
         key: '/volunteer-management',
         label: <Link to="/volunteer-management">Quản lý volunteer</Link>,
@@ -116,10 +95,6 @@ function Header() {
         key: '/regional-relief-request',
         label: <Link to="/regional-relief-request">Yêu cầu cứu trợ khu vực</Link>,
       },
-      {
-        key: '/warehouse-management',
-        label: <Link to="/warehouse-management">Quản lý khu vật tư</Link>,
-      },
     ],
 
     Admin: [
@@ -127,10 +102,7 @@ function Header() {
         key: '/',
         label: <Link to="/">Trang chủ</Link>,
       },
-      {
-        key: '/map',
-        label: <Link to="/map">Bản đồ</Link>,
-      },
+ 
       {
         key: '/dashboard',
         label: <Link to="/dashboard">Dashboard</Link>,

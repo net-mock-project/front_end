@@ -1,0 +1,202 @@
+.relief-requests-page {
+  width: 100%;
+  min-height: calc(100vh - 68px);
+  padding: 28px 24px 48px;
+  background: #f5f7fa;
+}
+
+.relief-requests-page__header,
+.relief-requests-page__content {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.relief-requests-page__header { margin-bottom: 24px; }
+.relief-requests-page__breadcrumb { margin-bottom: 6px; color: #98a2b3; font-size: 13px; }
+.relief-requests-page__header-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+.relief-requests-page__header h1 { margin: 0 0 6px; color: #101828; font-size: 28px; font-weight: 700; }
+.relief-requests-page__header p { margin: 0; color: #667085; font-size: 14px; }
+.relief-requests-page__eyebrow { display: block; margin-bottom: 4px; color: #1677a8; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; }
+.relief-requests-page__content { text-align: left; }
+.relief-requests-page__state { padding: 60px 0; color: #667085; text-align: center; }
+.relief-requests-page__state p { margin-top: 12px; }
+
+.relief-requests-list .ant-list-items {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.relief-requests-list .ant-list-item {
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.relief-request-card {
+  width: 100%;
+  min-height: 232px;
+  border: 1px solid #e4ebef;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(31, 61, 77, 0.06);
+}
+
+.relief-request-card .ant-card-body {
+  display: flex;
+  min-height: 352px;
+  flex-direction: column;
+  padding: 0 22px 14px;
+}
+
+.relief-request-card__image {
+  display: block;
+  width: calc(100% + 44px);
+  height: 132px;
+  margin: 0 -22px 18px;
+  object-fit: cover;
+}
+
+.relief-request-card__image--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #98a2b3;
+  background: #f2f4f7;
+  font-size: 12px;
+}
+
+.relief-request-card__top,
+.relief-request-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.relief-request-card__top {
+  margin-bottom: 14px;
+}
+
+.relief-request-card h4 {
+  margin: 12px 0 6px;
+  color: #101828;
+  font-size: 18px;
+}
+
+.relief-request-card .ant-typography-paragraph {
+  min-height: 42px;
+  margin-bottom: 12px;
+  color: #475467;
+  font-size: 14px;
+}
+
+.relief-request-card__meta {
+  min-height: 32px;
+  color: #52606d;
+  font-size: 13px;
+}
+
+.relief-request-card > .ant-card-body > .ant-btn-link {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-inline: 0;
+}
+
+.relief-request-detail__tasks-title {
+  margin-top: 24px !important;
+}
+
+.relief-request-detail__tasks-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 24px 0 12px;
+}
+
+.relief-request-detail__tasks-heading h4 {
+  margin: 0 !important;
+}
+
+.relief-task-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+}
+
+.relief-task-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.relief-task-list__title {
+  padding-inline: 0;
+  font-weight: 600;
+}
+
+.relief-request-form__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+.relief-request-form__actions { display: flex; justify-content: flex-end; padding-top: 4px; }
+
+.ant-modal .relief-request-form__grid .ant-form-item,
+.ant-modal .relief-request-form > .ant-form-item {
+  margin-bottom: 18px;
+}
+
+.ant-modal .ant-modal-header {
+  margin-bottom: 18px;
+}
+
+.ant-modal .ant-modal-title {
+  color: #101828;
+  font-size: 18px;
+}
+
+@media (max-width: 640px) {
+  .relief-requests-page {
+    padding: 24px 16px;
+  }
+
+  .relief-requests-page__header-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .relief-request-form__grid { grid-template-columns: 1fr; }
+  .relief-task-form__grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .relief-requests-list .ant-list-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .relief-requests-list .ant-list-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+.relief-task-form__map {
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  border: 1px solid #d9e2e7;
+  border-radius: 6px;
+}
+
+.relief-task-form__map .map-container,
+.relief-task-form__map > div {
+  width: 100%;
+  height: 100%;
+}
+
+.relief-task-form__map-help {
+  display: block;
+  margin-top: 6px;
+  color: #667085;
+  font-size: 12px;
+}
