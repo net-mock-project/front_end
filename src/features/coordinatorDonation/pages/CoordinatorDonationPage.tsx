@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Button, Typography, Input, Space, Row, Col } from 'antd';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Typography, Input, Space, Row, Col } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 
-import { getMyDonations } from '../api/myDonationApi';
-import MyDonationTable from '../components/MyDonationTable';
+import { getCoordinatorDonations } from '../api/coordinatorDonationApi';
+import  CoordinatorDonationTable  from '../componets/CoordinatorDonationTable';
 
 const { Title, Text } = Typography;
 
@@ -17,15 +16,13 @@ const STATUS_TABS = [
   { key: 'CANCELLED', label: 'Đã hủy' },
 ];
 
-export function MyDonationPage() {
-  const navigate = useNavigate();
+export function CoordinatorDonationPage() {
   const [activeTab, setActiveTab] = useState('ALL');
   const [searchText, setSearchText] = useState('');
 
-  // Fetch dữ liệu bằng React Query và lấy thêm hàm refetch
   const { data: donations = [], isLoading, refetch } = useQuery({
-    queryKey: ['me/donations', activeTab, searchText],
-    queryFn: () => getMyDonations({ 
+    queryKey: ['coordinator/donations', activeTab, searchText],
+    queryFn: () => getCoordinatorDonations({ 
       status: activeTab === 'ALL' ? undefined : activeTab, 
       search: searchText 
     }),
@@ -38,39 +35,12 @@ export function MyDonationPage() {
         {/* Header */}
         <Row justify="space-between" align="middle" style={{ marginBottom: 24, gap: 16 }}>
           <Col xs={24} md={16}>
-            <Breadcrumb
-              items={[
-                { title: <Link to="/me/donations/create">Quyên góp cứu trợ</Link> },
-                { title: 'Quyên góp của tôi' },
-              ]}
-              style={{ marginBottom: 8 }}
-            />
             <Title level={2} style={{ margin: 0, color: '#172033', fontWeight: 700 }}>
-              Quyên góp của tôi
+              Phê duyệt đơn quyên góp
             </Title>
             <Text type="secondary" style={{ fontSize: 16 }}>
-              Quản lý danh sách vật tư, trạng thái tiếp nhận và lịch sử quyên góp.
+              Quản lý, tiếp nhận hoặc từ chối các đơn quyên góp gửi về kho của bạn.
             </Text>
-          </Col>
-
-          <Col xs={24} md={6} style={{ textAlign: 'right' }}>
-            <Button
-              type="primary"
-              size="large"
-              icon={<PlusOutlined />}
-              onClick={() => navigate('/me/donations/create')}
-              style={{
-                background: 'linear-gradient(166deg, #E5484D 0%, #EF5F63 100%)',
-                border: 'none',
-                borderRadius: 12,
-                fontWeight: 800,
-                boxShadow: '0px 10px 22px rgba(229, 72, 77, 0.25)',
-                width: '100%',
-                maxWidth: 200,
-              }}
-            >
-              Tạo quyên góp mới
-            </Button>
           </Col>
         </Row>
 
@@ -81,19 +51,21 @@ export function MyDonationPage() {
               {STATUS_TABS.map((tab) => {
                 const isActive = activeTab === tab.key;
                 return (
-                  <Button
+                  <button
                     key={tab.key}
-                    type="text"
                     onClick={() => setActiveTab(tab.key)}
                     style={{
                       background: isActive ? '#FFF1F1' : 'transparent',
                       color: isActive ? '#C9383E' : '#667085',
                       fontWeight: 800,
                       borderRadius: 10,
+                      border: 'none',
+                      padding: '8px 16px',
+                      cursor: 'pointer',
                     }}
                   >
                     {tab.label}
-                  </Button>
+                  </button>
                 );
               })}
             </Space>
@@ -102,7 +74,7 @@ export function MyDonationPage() {
           <Col xs={24} lg={8}>
             <Input
               size="large"
-              placeholder="Tìm theo mã đơn hoặc kho tiếp nhận..."
+              placeholder="Tìm theo mã đơn hoặc tên người ủng hộ..."
               prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
@@ -111,12 +83,12 @@ export function MyDonationPage() {
           </Col>
         </Row>
 
-        {/* Bảng dữ liệu - Truyền hàm onRefresh để cập nhật lại dữ liệu */}
-        <MyDonationTable data={donations} loading={isLoading} onRefresh={refetch} />
+        {/* Bảng dữ liệu Coordinator */}
+        <CoordinatorDonationTable data={donations} loading={isLoading} onRefresh={refetch} />
         
       </div>
     </div>
   );
 }
 
-export default MyDonationPage;
+export default CoordinatorDonationPage;

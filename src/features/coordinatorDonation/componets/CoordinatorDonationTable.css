@@ -1,0 +1,88 @@
+.donation-table-wrapper {
+  background: white;
+  border-radius: 18px;
+  padding: 4px;
+  box-shadow: 0px 10px 28px rgba(31, 41, 55, 0.05);
+  border: 1px solid #E6EAF0;
+}
+
+.ant-table-custom {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.table-text-dark {
+  color: #172033 !important;
+}
+
+/* Status Tag Styling */
+.status-tag {
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-tag-pending {
+  color: #9A6700;
+  background: #FFF7E8;
+}
+.status-tag-pending .status-dot { background: #9A6700; }
+
+.status-tag-completed {
+  color: #176B34;
+  background: #ECFDF3;
+}
+.status-tag-completed .status-dot { background: #176B34; }
+
+.status-tag-rejected {
+  color: #DF1C41;
+  background: #FDF2F2;
+}
+.status-tag-rejected .status-dot { background: #DF1C41; }
+
+.status-tag-cancelled {
+  color: #667085;
+  background: #F2F4F7;
+}
+.status-tag-cancelled .status-dot { background: #667085; }
+
+.detail-btn {
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  color: #344054 !important;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 24px;
+}
+
+.modal-action-btn {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+}
+
+.modal-footer-btn {
+  border-radius: 8px !important;
+}
+
+.modal-save-btn {
+  border-radius: 8px !important;
+  background: #E5484D !important;
+}
+
+.modal-descriptions {
+  margin-top: 16px;
+}

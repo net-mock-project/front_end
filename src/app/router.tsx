@@ -12,6 +12,7 @@ import VolunteerTaskDetailPage from "../features/volunteer/pages/VolunteerTaskDe
 import { Spin } from "antd";
 import { MyDonationPage } from "../features/myDonation/pages/MyDonationPage";
 import { CreateDonationPage } from "../features/createDonaton/pages/CreateDonationPage";
+import { CoordinatorDonationPage } from "../features/coordinatorDonation/pages/CoordinatorDonationPage";
 
 function PrivateRoute() {
     const { data: user, isLoading, isError } = useCurrentUser();
@@ -75,6 +76,10 @@ export const router = createBrowserRouter([
                         path: "/me/donations/create",
                         Component: CreateDonationPage,
                     },
+                    {
+                        path: "/me/donations/coordinator",
+                        Component: CoordinatorDonationPage,
+                    }
                 ],
             },
             {
