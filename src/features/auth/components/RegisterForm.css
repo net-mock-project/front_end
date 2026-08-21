@@ -99,3 +99,46 @@
   color: #667085 !important;
   font-size: 13px !important;
 }
+
+/* Căn sát lề trái tuyệt đối cho Select (bao gồm placeholder, text đã chọn và ô search) */
+.register-form-select {
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.register-form-select .ant-select-selector {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  padding: 0 16px !important;
+}
+
+.register-form-select .ant-select-selection-wrap {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+.register-form-select .ant-select-selection-item,
+.register-form-select .ant-select-selection-placeholder {
+  text-align: left !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  left: 16px !important;
+  inset-inline-start: 16px !important;
+  right: auto !important;
+  position: absolute !important;
+  display: block !important;
+  width: calc(100% - 45px) !important;
+}
+
+.register-form-select .ant-select-selection-search {
+  left: 16px !important;
+  inset-inline-start: 16px !important;
+  right: auto !important;
+}
+
+.register-form-select .ant-select-selection-search-input {
+  text-align: left !important;
+}

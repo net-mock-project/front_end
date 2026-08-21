@@ -13,7 +13,21 @@ import './RegisterForm.css';
 import Title from 'antd/es/typography/Title';
 import Text from 'antd/es/typography/Text';
 
-
+const PROVINCES = [
+  'Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ',
+  'An Giang', 'Bà Rịa - Vũng Tàu', 'Bắc Giang', 'Bắc Kạn', 'Bạc Liêu',
+  'Bắc Ninh', 'Bến Tre', 'Bình Định', 'Bình Dương', 'Bình Phước',
+  'Bình Thuận', 'Cà Mau', 'Cao Bằng', 'Đắk Lắk', 'Đắk Nông',
+  'Điện Biên', 'Đồng Nai', 'Đồng Tháp', 'Gia Lai', 'Hà Giang',
+  'Hà Nam', 'Hà Tĩnh', 'Hải Dương', 'Hậu Giang', 'Hòa Bình',
+  'Hưng Yên', 'Khánh Hòa', 'Kiên Giang', 'Kon Tum', 'Lai Châu',
+  'Lâm Đồng', 'Lạng Sơn', 'Lào Cai', 'Long An', 'Nam Định',
+  'Nghệ An', 'Ninh Bình', 'Ninh Thuận', 'Phú Thọ', 'Phú Yên',
+  'Quảng Bình', 'Quảng Nam', 'Quảng Ngãi', 'Quảng Ninh', 'Quảng Trị',
+  'Sóc Trăng', 'Sơn La', 'Tây Ninh', 'Thái Bình', 'Thái Nguyên',
+  'Thanh Hóa', 'Thừa Thiên Huế', 'Tiền Giang', 'Trà Vinh', 'Tuyên Quang',
+  'Vĩnh Long', 'Vĩnh Phúc', 'Yên Bái'
+].map((item) => ({ value: item, label: item }));
 
 interface RegisterFormProps {
   onSubmit: (values: any) => void;
@@ -165,16 +179,22 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, loading })
             </Col>
           </Row>
 
-          {/* Row 5: Địa chỉ */}
+          {/* Row 5: Tỉnh / Thành phố (gán name="address" để khớp payload Backend) */}
           <Form.Item
             name="address"
-            label={<span className="register-form-label">Địa chỉ hiện tại</span>}
-            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
+            label={<span className="register-form-label">Tỉnh / Thành phố</span>}
+            rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố!' }]}
           >
-            <Input 
-              className="register-form-input"
-              placeholder="Nhập địa chỉ hiện tại"
-              prefix={<EnvironmentOutlined style={{ color: '#9ca3af', marginRight: '4px' }} />}
+            <Select
+              showSearch
+              className="register-form-select"
+              placeholder="Chọn tỉnh hoặc thành phố"
+              options={PROVINCES}
+              optionFilterProp="label"
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+              }
+              suffixIcon={<EnvironmentOutlined style={{ color: '#9ca3af' }} />}
             />
           </Form.Item>
 
