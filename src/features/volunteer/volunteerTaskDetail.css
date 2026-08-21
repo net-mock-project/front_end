@@ -1,0 +1,41 @@
+.volunteer-task-detail-page {
+  min-height: calc(100vh - 68px);
+  padding: 28px 24px 48px;
+  background: #f5f7fa;
+}
+
+.volunteer-task-detail-page__inner { width: 100%; max-width: 1180px; margin: 0 auto; }
+.volunteer-task-detail-page__inner > .ant-btn { height: auto; margin-bottom: 12px; padding: 0; color: #667085; }
+.volunteer-task-detail-page__header { margin: 0 0 22px; text-align: left; }
+.volunteer-task-detail-page__breadcrumb { margin-bottom: 6px; color: #98a2b3; font-size: 13px; }
+.volunteer-task-detail-page__header h1 { margin: 0 0 6px; color: #101828; font-size: 28px; font-weight: 700; }
+.volunteer-task-detail-page__header p { margin: 0; color: #667085; font-size: 14px; }
+.volunteer-task-detail__layout { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1.15fr); gap: 20px; align-items: stretch; }
+.volunteer-task-detail__content, .volunteer-task-detail__map-section { background: #fff; border: 1px solid #eaecf0; border-radius: 12px; }
+.volunteer-task-detail__content { padding: 28px 32px; }
+.volunteer-task-detail__section h2, .volunteer-task-detail__section-heading h2 { margin: 0; color: #101828; font-size: 20px; }
+.volunteer-task-detail__title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
+.volunteer-task-detail__title-row .ant-tag { margin-inline-end: 0; }
+.volunteer-task-detail__section p { margin: 0; color: #475467; line-height: 1.65; }
+.volunteer-task-detail__facts { margin-top: 28px; border-top: 1px solid #eaecf0; }
+.volunteer-task-detail__facts div { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid #eaecf0; }
+.volunteer-task-detail__facts span { color: #667085; font-size: 13px; }
+.volunteer-task-detail__facts strong { color: #344054; font-size: 14px; text-align: right; }
+.volunteer-task-detail__facts .anticon { margin-right: 4px; color: #e5484d; }
+.volunteer-task-detail__map-section { overflow: hidden; }
+.volunteer-task-detail__section-heading { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px 16px; }
+.volunteer-task-detail__section-heading h2 { margin: 3px 0 0; }
+.volunteer-task-detail__section-heading > .anticon { color: #e5484d; font-size: 20px; }
+.volunteer-task-detail__eyebrow { color: #98a2b3; font-size: 12px; }
+.volunteer-task-detail__map { height: 400px; }
+.volunteer-task-detail__state { max-width: 1180px; margin: 0 auto; padding: 48px 24px; color: #667085; text-align: center; background: #fff; border: 1px solid #eaecf0; border-radius: 12px; }
+.volunteer-task-detail__state--error { color: #b42318; }
+
+@media (max-width: 800px) {
+  .volunteer-task-detail__layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 500px) {
+  .volunteer-task-detail-page { padding: 18px 16px 40px; }
+  .volunteer-task-detail__map { height: 320px; }
+}

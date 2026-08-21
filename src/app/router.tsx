@@ -7,6 +7,8 @@ import { MapTest } from "../features/map/components/MapTest";
 import { RegisterPage } from "../features/auth/pages/RegisterPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
 import { useCurrentUser } from "../features/auth/hooks/useCurrentUser";
+import VolunteerTasksPage from "../features/volunteer/pages/VolunteerTasksPage";
+import VolunteerTaskDetailPage from "../features/volunteer/pages/VolunteerTaskDetailPage";
 import { Spin } from "antd";
 import { MyDonationPage } from "../features/myDonation/pages/MyDonationPage";
 import { CreateDonationPage } from "../features/createDonaton/pages/CreateDonationPage";
@@ -63,7 +65,23 @@ export const router= createBrowserRouter([
                         path: "/profile",
                         Component: ProfilePage
                     },
-<<<<<<< HEAD
+
+                    {
+                        path: "/my-tasks",
+                        Component: VolunteerTasksPage,
+                    },
+                    {
+                        path: "/my-tasks/:taskId",
+                        Component: VolunteerTaskDetailPage,
+                    },
+                    {
+                        path: "/donation",
+                        Component: MyDonationPage
+                    },
+                    {
+                        path: "/donation/create",
+                        Component: CreateDonationPage
+                    }    
                 ]
             },
 
@@ -77,17 +95,10 @@ export const router= createBrowserRouter([
                     {
                         path: "/admin/audit-logs",
                         Component: AuditLogsPage
-                    }
-=======
-                    {
-                        path: "/me/donations",
-                        Component: MyDonationPage
                     },
-                    {
-                        path: "/me/donations/create",
-                        Component: CreateDonationPage
-                    }       
->>>>>>> 5087724 (nhánh donation)
+
+                       
+
                 ]
             }
         ]

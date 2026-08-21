@@ -64,7 +64,7 @@ export function CreateDonationPage() {
           <div>
             <Breadcrumb
               items={[
-                { title: <Link to="/me/donations/create">Quyên góp cứu trợ</Link> },
+                { title: <Link to="/donation/create">Quyên góp cứu trợ</Link> },
                 { title: 'Tạo quyên góp' },
               ]}
               style={{ marginBottom: 8 }}
@@ -78,7 +78,7 @@ export function CreateDonationPage() {
           </div>
 
           <Button size="large" style={{ borderRadius: 12, fontWeight: 700 }}>
-            <Link to="/me/donations">Quyên góp của tôi</Link>
+            <Link to="/donation">Quyên góp của tôi</Link>
           </Button>
         </div>
 
