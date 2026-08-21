@@ -141,5 +141,3 @@ export const router = createBrowserRouter([
     Component: RegisterPage,
   },
 ]);
-
-

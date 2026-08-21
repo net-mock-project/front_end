@@ -1,16 +1,25 @@
 import {
   Button,
+  DatePicker,
   Input,
+  Select,
   Space,
   Table,
   Tag,
   type TableProps,
 } from 'antd'
 
+import {
+  useState,
+} from 'react'
+
 import dayjs from 'dayjs'
 
 import type {
   AuditLog,
+  AuditLogFilter,
+  AuditLogSortDirection,
+  AuditLogSortField,
 } from '../../../../types/AuditLog'
 
 
@@ -21,7 +30,23 @@ type AuditLogsTableProps = {
   pageSize: number
   loading: boolean
 
-  onSearch: (value: string) => void
+  sortBy: AuditLogSortField
+  sortDirection:
+    AuditLogSortDirection
+
+  onSearch: (
+    value: string,
+  ) => void
+
+  onFiltersChange: (
+    filters: AuditLogFilter[],
+  ) => void
+
+  onSortChange: (
+    field: AuditLogSortField,
+    direction:
+      AuditLogSortDirection,
+  ) => void
 
   onPageChange: (
     pageNumber: number,
@@ -34,18 +59,56 @@ type AuditLogsTableProps = {
 }
 
 
-// Rút gọn Guid trên Table
-function shortId(id: string) {
+type DateFilter = {
+  from: string
+  to: string
+}
+
+
+const actionOptions = [
+  'Create',
+  'Update',
+  'Approve',
+  'Assign',
+  'Accept',
+  'Lock',
+  'Unlock',
+].map((value) => ({
+  value,
+  label: value,
+}))
+
+
+const entityOptions = [
+  'User',
+  'ReliefRequest',
+  'ReliefTask',
+  'TaskAssignment',
+  'Donation',
+  'Warehouse',
+  'Transaction',
+  'VolunteerEngagement',
+].map((value) => ({
+  value,
+  label: value,
+}))
+
+
+function shortId(
+  id: string,
+) {
   return `${id.slice(0, 8)}...`
 }
 
 
-// Màu theo hành động
-function getActionColor(action: string) {
-  switch (action.toLowerCase()) {
+function getActionColor(
+  action: string,
+) {
+  switch (
+    action.toLowerCase()
+  ) {
     case 'create':
     case 'unlock':
-    case 'approve':
       return 'success'
 
     case 'lock':
@@ -53,6 +116,7 @@ function getActionColor(action: string) {
       return 'error'
 
     case 'update':
+    case 'approve':
       return 'processing'
 
     case 'assign':
@@ -71,10 +135,95 @@ function AuditLogsTable({
   pageNumber,
   pageSize,
   loading,
+  sortBy,
+  sortDirection,
   onSearch,
+  onFiltersChange,
+  onSortChange,
   onPageChange,
   onView,
 }: AuditLogsTableProps) {
+
+  const [
+    actionFilter,
+    setActionFilter,
+  ] = useState<string>()
+
+  const [
+    entityFilter,
+    setEntityFilter,
+  ] = useState<string>()
+
+  const [
+    dateFilter,
+    setDateFilter,
+  ] =
+    useState<DateFilter | null>(
+      null,
+    )
+
+
+  const applyFilters = (
+    action?: string,
+    entity?: string,
+    date?: DateFilter | null,
+  ) => {
+    const nextFilters:
+      AuditLogFilter[] = []
+
+
+    if (action) {
+      nextFilters.push({
+        field: 'action',
+        value: action,
+        operator: 'Equals',
+      })
+    }
+
+
+    if (entity) {
+      nextFilters.push({
+        field: 'entityName',
+        value: entity,
+        operator: 'Equals',
+      })
+    }
+
+
+    if (date) {
+      nextFilters.push({
+        field: 'createdAt',
+        value: date.from,
+        operator:
+          'GreaterThanOrEqual',
+      })
+
+      nextFilters.push({
+        field: 'createdAt',
+        value: date.to,
+        operator: 'LessThan',
+      })
+    }
+
+
+    onFiltersChange(
+      nextFilters,
+    )
+  }
+
+
+  const getSortOrder = (
+    field: AuditLogSortField,
+  ) => {
+    if (sortBy !== field) {
+      return null
+    }
+
+    return sortDirection === 'Asc'
+      ? 'ascend'
+      : 'descend'
+  }
+
 
   const columns:
     TableProps<AuditLog>['columns'] = [
@@ -85,8 +234,19 @@ function AuditLogsTable({
       key: 'createdAt',
       width: 170,
 
-      render: (createdAt: string) =>
-        dayjs(createdAt).format(
+      sorter: true,
+
+      sortOrder:
+        getSortOrder(
+          'createdAt',
+        ),
+
+      render: (
+        createdAt: string,
+      ) =>
+        dayjs(
+          createdAt,
+        ).format(
           'DD/MM/YYYY HH:mm',
         ),
     },
@@ -97,8 +257,23 @@ function AuditLogsTable({
       dataIndex: 'action',
       key: 'action',
 
-      render: (action: string) => (
-        <Tag color={getActionColor(action)}>
+      sorter: true,
+
+      sortOrder:
+        getSortOrder(
+          'action',
+        ),
+
+      render: (
+        action: string,
+      ) => (
+        <Tag
+          color={
+            getActionColor(
+              action,
+            )
+          }
+        >
           {action}
         </Tag>
       ),
@@ -110,7 +285,16 @@ function AuditLogsTable({
       dataIndex: 'entityName',
       key: 'entityName',
 
-      render: (entityName: string) => (
+      sorter: true,
+
+      sortOrder:
+        getSortOrder(
+          'entityName',
+        ),
+
+      render: (
+        entityName: string,
+      ) => (
         <Tag>
           {entityName}
         </Tag>
@@ -123,7 +307,16 @@ function AuditLogsTable({
       dataIndex: 'userId',
       key: 'userId',
 
-      render: (userId: string) => (
+      sorter: true,
+
+      sortOrder:
+        getSortOrder(
+          'userId',
+        ),
+
+      render: (
+        userId: string,
+      ) => (
         <span title={userId}>
           {shortId(userId)}
         </span>
@@ -136,7 +329,16 @@ function AuditLogsTable({
       dataIndex: 'entityId',
       key: 'entityId',
 
-      render: (entityId: string) => (
+      sorter: true,
+
+      sortOrder:
+        getSortOrder(
+          'entityId',
+        ),
+
+      render: (
+        entityId: string,
+      ) => (
         <span title={entityId}>
           {shortId(entityId)}
         </span>
@@ -147,13 +349,20 @@ function AuditLogsTable({
     {
       title: 'Thao tác',
       key: 'actions',
+      width: 100,
 
-      render: (_, auditLog) => (
+      render: (
+        _,
+        auditLog,
+      ) => (
         <Space>
           <Button
             type="link"
+
             onClick={() =>
-              onView(auditLog.id)
+              onView(
+                auditLog.id,
+              )
             }
           >
             Xem
@@ -164,6 +373,64 @@ function AuditLogsTable({
   ]
 
 
+  const handleTableChange:
+    TableProps<AuditLog>['onChange'] =
+    (
+      _,
+      __,
+      sorter,
+      extra,
+    ) => {
+
+      if (
+        extra.action !==
+        'sort'
+      ) {
+        return
+      }
+
+
+      const currentSorter =
+        Array.isArray(sorter)
+          ? sorter[0]
+          : sorter
+
+
+      if (
+        !currentSorter.field ||
+        !currentSorter.order
+      ) {
+        onSortChange(
+          'createdAt',
+          'Desc',
+        )
+
+        return
+      }
+
+
+      const field =
+        String(
+          currentSorter.columnKey ??
+          currentSorter.field,
+        ) as AuditLogSortField
+
+
+      const direction:
+        AuditLogSortDirection =
+        currentSorter.order ===
+        'ascend'
+          ? 'Asc'
+          : 'Desc'
+
+
+      onSortChange(
+        field,
+        direction,
+      )
+    }
+
+
   return (
     <section className="audit-logs-card">
 
@@ -171,9 +438,15 @@ function AuditLogsTable({
 
         <Input.Search
           allowClear
+
           placeholder="Tìm theo hành động, đối tượng hoặc nội dung thay đổi"
-          onSearch={(value) =>
-            onSearch(value.trim())
+
+          onSearch={(
+            value,
+          ) =>
+            onSearch(
+              value.trim(),
+            )
           }
         />
 
@@ -189,22 +462,192 @@ function AuditLogsTable({
       </div>
 
 
+      <div className="audit-logs-filters">
+
+        <DatePicker.RangePicker
+          placeholder={[
+            'Từ ngày',
+            'Đến ngày',
+          ]}
+
+          onChange={(
+            dates,
+          ) => {
+
+            if (
+              !dates?.[0] ||
+              !dates?.[1]
+            ) {
+              setDateFilter(
+                null,
+              )
+
+              applyFilters(
+                actionFilter,
+                entityFilter,
+                null,
+              )
+
+              return
+            }
+
+
+            const nextDate:
+              DateFilter = {
+
+              from:
+                dates[0]
+                  .startOf(
+                    'day',
+                  )
+                  .format(
+                    'YYYY-MM-DDTHH:mm:ss',
+                  ),
+
+              to:
+                dates[1]
+                  .add(
+                    1,
+                    'day',
+                  )
+                  .startOf(
+                    'day',
+                  )
+                  .format(
+                    'YYYY-MM-DDTHH:mm:ss',
+                  ),
+            }
+
+
+            setDateFilter(
+              nextDate,
+            )
+
+
+            applyFilters(
+              actionFilter,
+              entityFilter,
+              nextDate,
+            )
+          }}
+        />
+
+
+        <Select
+          allowClear
+          showSearch
+
+          placeholder="Hành động"
+
+          value={
+            actionFilter
+          }
+
+          options={
+            actionOptions
+          }
+
+          optionFilterProp="label"
+
+          style={{
+            width: 160,
+          }}
+
+          onChange={(
+            value,
+          ) => {
+
+            setActionFilter(
+              value,
+            )
+
+            applyFilters(
+              value,
+              entityFilter,
+              dateFilter,
+            )
+          }}
+        />
+
+
+        <Select
+          allowClear
+          showSearch
+
+          placeholder="Đối tượng"
+
+          value={
+            entityFilter
+          }
+
+          options={
+            entityOptions
+          }
+
+          optionFilterProp="label"
+
+          style={{
+            width: 190,
+          }}
+
+          onChange={(
+            value,
+          ) => {
+
+            setEntityFilter(
+              value,
+            )
+
+            applyFilters(
+              actionFilter,
+              value,
+              dateFilter,
+            )
+          }}
+        />
+
+      </div>
+
+
       <Table<AuditLog>
         rowKey="id"
-        columns={columns}
-        dataSource={auditLogs}
-        loading={loading}
+
+        columns={
+          columns
+        }
+
+        dataSource={
+          auditLogs
+        }
+
+        loading={
+          loading
+        }
+
+        onChange={
+          handleTableChange
+        }
+
+        sortDirections={[
+          'ascend',
+          'descend',
+        ]}
 
         scroll={{
           x: 900,
         }}
 
         pagination={{
-          current: pageNumber,
-          pageSize,
-          total: totalCount,
+          current:
+            pageNumber,
 
-          showSizeChanger: true,
+          pageSize,
+
+          total:
+            totalCount,
+
+          showSizeChanger:
+            true,
 
           pageSizeOptions: [
             10,
@@ -216,8 +659,10 @@ function AuditLogsTable({
             nextPage,
             nextPageSize,
           ) => {
+
             onPageChange(
-              nextPageSize !== pageSize
+              nextPageSize !==
+                pageSize
                 ? 1
                 : nextPage,
 

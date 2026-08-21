@@ -1,4 +1,5 @@
-import httpClient from '../../../../api/httpClient'
+import httpClient
+  from '../../../../api/httpClient'
 
 import type {
   AuditLog,
@@ -10,31 +11,60 @@ import type {
 } from '../../../../types/Pagination'
 
 
-const AUDIT_LOGS_ENDPOINT = '/api/audit-logs'
+const AUDIT_LOGS_ENDPOINT =
+  '/api/audit-logs'
 
 
-// Lấy danh sách Audit Log
 export async function getAuditLogs(
   params: GetAuditLogsParams,
-): Promise<PaginationResult<AuditLog>> {
-  const response = await httpClient.get(
-    AUDIT_LOGS_ENDPOINT,
-    {
-      params,
-    },
-  )
+): Promise<
+  PaginationResult<AuditLog>
+> {
+
+  const response =
+    await httpClient.get(
+      AUDIT_LOGS_ENDPOINT,
+      {
+        params: {
+          pageNumber:
+            params.pageNumber,
+
+          pageSize:
+            params.pageSize,
+
+          search:
+            params.search ||
+            undefined,
+
+          filters:
+            params.filters
+              ?.length
+              ? JSON.stringify(
+                  params.filters,
+                )
+              : undefined,
+
+          sortBy:
+            params.sortBy,
+
+          sortDirection:
+            params.sortDirection,
+        },
+      },
+    )
 
   return response.data.result
 }
 
 
-// Lấy chi tiết Audit Log
 export async function getAuditLogDetail(
   auditLogId: string,
 ): Promise<AuditLog> {
-  const response = await httpClient.get(
-    `${AUDIT_LOGS_ENDPOINT}/${auditLogId}`,
-  )
+
+  const response =
+    await httpClient.get(
+      `${AUDIT_LOGS_ENDPOINT}/${auditLogId}`,
+    )
 
   return response.data.result
 }
