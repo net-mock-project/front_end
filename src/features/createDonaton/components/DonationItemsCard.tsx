@@ -3,7 +3,7 @@ import { Button, Card, InputNumber, Select, Typography } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import type { DonationItem } from '../../../types/donation';
-import { getSupplies } from '../api/createDonationApi'; // Import hàm gọi api vừa tạo (đường dẫn tùy chỉnh theo project của bạn)
+import { getSupplies } from '../api/createDonationApi';
 
 const { Title, Text } = Typography;
 
@@ -13,17 +13,17 @@ type Props = {
 };
 
 export function DonationItemsCard({ items, onChange }: Props) {
-  // Gọi API lấy danh sách tên vật tư động từ backend
   const { data: supplyNames = [], isLoading: isSupplyLoading } = useQuery({
     queryKey: ['supplies-name-list'],
     queryFn: getSupplies,
   });
 
-  // Chuyển đổi mảng string từ API thành format option của Ant Design Select
   const supplyOptions = supplyNames.map((name) => ({
     value: name,
     label: name,
   }));
+  
+  // ... các đoạn code khác giữ nguyên
 
   const handleItemChange = (index: number, field: keyof DonationItem, value: any) => {
     const updated = [...items];
@@ -74,7 +74,7 @@ export function DonationItemsCard({ items, onChange }: Props) {
               onChange={(val) => handleItemChange(index, 'supplyName', val)}
               style={{ flex: '2 1 200px' }}
               options={supplyOptions}
-              loading={isSupplyLoading} // Hiệu ứng loading khi đang fetch API
+              loading={isSupplyLoading}
               notFoundContent={isSupplyLoading ? 'Đang tải...' : 'Không có vật tư nào'}
             />
             <InputNumber
@@ -94,6 +94,7 @@ export function DonationItemsCard({ items, onChange }: Props) {
                 { value: 'Cái', label: 'Cái' },
                 { value: 'Kg', label: 'Kg' },
                 { value: 'Gói', label: 'Gói' },
+                { value: 'Chai', label: 'Chai' },
               ]}
             />
             <Button

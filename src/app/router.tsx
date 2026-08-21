@@ -14,6 +14,7 @@ import VolunteerTasksPage from "../features/volunteer/pages/VolunteerTasksPage";
 import VolunteerTaskDetailPage from "../features/volunteer/pages/VolunteerTaskDetailPage";
 import { MyDonationPage } from "../features/myDonation/pages/MyDonationPage";
 import { CreateDonationPage } from "../features/createDonaton/pages/CreateDonationPage";
+import { CoordinatorDonationPage } from "../features/coordinatorDonation/pages/CoordinatorDonationPage";
 import ReliefRequestsPage from "../features/reliefRequest/pages/ReliefRequestsPage";
 import { ManageVolunteersPage, VolunteerProfilePage } from "../features/volunteers";
 
@@ -54,7 +55,6 @@ export const router = createBrowserRouter([
     path: "/",
     Component: App,
     children: [
-    
       {
         index: true,
         Component: HomePage,
@@ -63,7 +63,6 @@ export const router = createBrowserRouter([
         path: "map",
         Component: MapPage,
       },
-
       {
         Component: PrivateRoute,
         children: [
@@ -96,20 +95,16 @@ export const router = createBrowserRouter([
             Component: VolunteerTaskDetailPage,
           },
           {
-            path: "me/donations",
-            Component: MyDonationPage,
-          },
-          {
-            path: "me/donations/create",
-            Component: CreateDonationPage,
-          },
-          {
             path: "donation",
             Component: MyDonationPage,
           },
           {
             path: "donation/create",
             Component: CreateDonationPage,
+          },
+          {
+            path: "coordinator-donation",
+            Component: CoordinatorDonationPage,
           },
 
           // Admin routes
@@ -130,8 +125,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-
- 
   {
     path: "/login",
     Component: LoginPage,

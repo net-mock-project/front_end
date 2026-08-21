@@ -13,19 +13,17 @@ export function CreateDonationPage() {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState<DonationFormValues>({
-    // Khởi tạo một dòng vật tư mặc định trống hoặc gọi API xong tự điền sau
     items: [
       { supplyName: '', quantity: 1, unit: 'Thùng' },
     ],
     donationDate: '', 
   });
 
-  // Sử dụng useMutation để gọi API tạo đơn quyên góp
   const mutation = useMutation({
     mutationFn: createDonation,
     onSuccess: () => {
       message.success('Gửi đơn quyên góp thành công!');
-      navigate('/me/donations'); 
+      navigate('/donation'); 
     },
     onError: (error: any) => {
       message.error(error?.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại!');
@@ -41,7 +39,7 @@ export function CreateDonationPage() {
   };
 
   const handleSubmit = () => {
-    // Validate cơ bản trước khi gửi nếu cần
+    // Validate kiểm tra ngày ủng hộ trước khi gửi
     if (!formData.donationDate) {
       return message.warning('Vui lòng chọn ngày ủng hộ!');
     }
@@ -52,7 +50,6 @@ export function CreateDonationPage() {
     <div style={{ background: '#F6F8FB', minHeight: 'calc(100vh - 68px)', padding: '24px 42px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         
-        {/* Breadcrumb & Header */}
         <div style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -82,7 +79,6 @@ export function CreateDonationPage() {
           </Button>
         </div>
 
-        {/* Main Form Layout */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <DonationItemsCard
             items={formData.items}
@@ -94,7 +90,6 @@ export function CreateDonationPage() {
             onChange={handleFieldChange}
           />
 
-          {/* Action Card Bottom */}
           <Card bordered={false} style={{ borderRadius: 18, boxShadow: '0px 10px 28px rgba(31, 41, 55, 0.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
               <Button 

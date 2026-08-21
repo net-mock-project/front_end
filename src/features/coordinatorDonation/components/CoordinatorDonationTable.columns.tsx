@@ -5,20 +5,31 @@ import type { MyDonationRecord } from '../../../types/donation';
 
 const { Text } = Typography;
 
-interface GetColumnsProps {
+interface GetCoordinatorColumnsProps {
   onOpenDetail: (record: MyDonationRecord) => void;
 }
 
-export const getMyDonationColumns = ({ onOpenDetail }: GetColumnsProps): ColumnsType<MyDonationRecord> => [
+export const getCoordinatorDonationColumns = ({ onOpenDetail }: GetCoordinatorColumnsProps): ColumnsType<MyDonationRecord> => [
   {
     title: 'Mã đơn',
-    dataIndex: 'donationId', // Sửa từ 'code' thành 'donationId'
+    dataIndex: 'donationId',
     key: 'donationId',
     render: (text) => <Text strong className="table-text-dark">{text}</Text>,
   },
   {
+    title: 'Người ủng hộ',
+    dataIndex: 'donatorName',
+    key: 'donatorName',
+    render: (text, record) => (
+      <div>
+        <Text strong className="table-text-dark">{text || 'Ẩn danh'}</Text>
+        <div style={{ fontSize: 12, color: '#667085' }}>{record.donatorPhone}</div>
+      </div>
+    ),
+  },
+  {
     title: 'Kho tiếp nhận',
-    dataIndex: 'warehouseName', // Sửa thành chữ thường 'warehouseName'
+    dataIndex: 'warehouseName',
     key: 'warehouseName',
     render: (text) => <Text className="table-text-dark">{text || 'N/A'}</Text>,
   },
@@ -33,7 +44,6 @@ export const getMyDonationColumns = ({ onOpenDetail }: GetColumnsProps): Columns
     dataIndex: 'status',
     key: 'status',
     render: (status: string) => {
-      // Chuẩn hóa trạng thái về chữ hoa để so khớp chính xác
       const upperStatus = status?.toUpperCase();
       const statusConfig: Record<string, { className: string; label: string }> = {
         PENDING: { className: 'status-tag-pending', label: 'Chờ tiếp nhận' },
@@ -58,7 +68,7 @@ export const getMyDonationColumns = ({ onOpenDetail }: GetColumnsProps): Columns
     align: 'center',
     render: (_, record) => (
       <Button onClick={() => onOpenDetail(record)} className="detail-btn">
-        Chi tiết
+        Xem xét duyệt
       </Button>
     ),
   },

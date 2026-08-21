@@ -8,5 +8,5 @@ export async function createDonation(data: DonationFormValues) {
 
 export async function getSupplies(): Promise<string[]> {
   const response = await httpClient.get('/api/me/supplies');
-  return response.data.result;
+  return response.data.result; 
 }
