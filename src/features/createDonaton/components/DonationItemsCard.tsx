@@ -22,6 +22,8 @@ export function DonationItemsCard({ items, onChange }: Props) {
     value: name,
     label: name,
   }));
+  
+  // ... các đoạn code khác giữ nguyên
 
   const handleItemChange = (index: number, field: keyof DonationItem, value: any) => {
     const updated = [...items];
@@ -92,6 +94,7 @@ export function DonationItemsCard({ items, onChange }: Props) {
                 { value: 'Cái', label: 'Cái' },
                 { value: 'Kg', label: 'Kg' },
                 { value: 'Gói', label: 'Gói' },
+                { value: 'Chai', label: 'Chai' },
               ]}
             />
             <Button

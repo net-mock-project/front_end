@@ -13,18 +13,20 @@ import { Spin } from "antd";
 import { MyDonationPage } from "../features/myDonation/pages/MyDonationPage";
 import { CreateDonationPage } from "../features/createDonaton/pages/CreateDonationPage";
 
-function privateRoute(){
-    const {data: user, isLoading, isError} = useCurrentUser();
-    if(isLoading){
-        return <Spin fullscreen/>
+// Đổi thành chữ hoa: PrivateRoute
+function PrivateRoute() {
+    const { data: user, isLoading, isError } = useCurrentUser();
+    if (isLoading) {
+        return <Spin fullscreen />;
     }
-    if(!user|| isError){
-        return <Navigate to="/login"/>
+    if (!user || isError) {
+        return <Navigate to="/login" />;
     }
 
-    return <Outlet/>
+    return <Outlet />;
 }
 
+<<<<<<< HEAD
 function adminRoute() {
     const {
         data: user,
@@ -34,20 +36,28 @@ function adminRoute() {
 
     if(isLoading){
         return <Spin fullscreen/>
+=======
+// Đổi thành chữ hoa: AdminRoute
+function AdminRoute() {
+    const { data: user, isLoading, isError } = useCurrentUser();
+
+    if (isLoading) {
+        return <Spin fullscreen />;
+>>>>>>> f5136ae (đã sửa hai folder myDonation và createDonation)
     }
 
-    if(!user || isError){
-        return <Navigate to="/login"/>
+    if (!user || isError) {
+        return <Navigate to="/login" />;
     }
 
-    if(user.roleName !== "Admin"){
-        return <Navigate to="/"/>
+    if (user.roleName !== "Admin") {
+        return <Navigate to="/" />;
     }
 
-    return <Outlet/>
+    return <Outlet />;
 }
 
-export const router= createBrowserRouter([
+export const router = createBrowserRouter([
     {
         path: "/",
         Component: App,
@@ -57,13 +67,14 @@ export const router= createBrowserRouter([
                 Component: MapTest,
             },
             {
-                Component: privateRoute,
+                Component: PrivateRoute, // Cập nhật tên mới
                 children: [
                     {
                         path: "/profile",
-                        Component: ProfilePage
+                        Component: ProfilePage,
                     },
                     {
+<<<<<<< HEAD
                         path: "/my-tasks",
                         Component: VolunteerTasksPage,
                     },
@@ -95,13 +106,42 @@ export const router= createBrowserRouter([
                 ]
             }
         ]
+=======
+                        path: "/me/donations",
+                        Component: MyDonationPage,
+                    },
+                    {
+                        path: "/me/donations/create",
+                        Component: CreateDonationPage,
+                    },
+                ],
+            },
+            {
+                Component: AdminRoute, // Cập nhật tên mới
+                children: [
+                    {
+                        path: "/admin/users",
+                        Component: AdminUsersPage,
+                    },
+                    {
+                        path: "/admin/audit-logs",
+                        Component: AuditLogsPage,
+                    },
+                ],
+            },
+        ],
+>>>>>>> f5136ae (đã sửa hai folder myDonation và createDonation)
     },
     {
         path: "/login",
-        Component: LoginPage
+        Component: LoginPage,
     },
     {
         path: "/register",
         Component: RegisterPage,
+<<<<<<< HEAD
     }
+=======
+    },
+>>>>>>> f5136ae (đã sửa hai folder myDonation và createDonation)
 ]);

@@ -2,13 +2,13 @@ import httpClient from '../../../api/httpClient';
 import type { MyDonationRecord } from '../../../types/donation';
 
 export async function getMyDonations(filters: { status?: string; search?: string }) {
-  const response = await httpClient.get<MyDonationRecord[]>('/api/me/donations', {
+  const response = await httpClient.get<any>('/api/me/donations', {
     params: {
       status: filters.status === 'ALL' ? undefined : filters.status,
       search: filters.search,
     },
   });
-  return response.data;
+  return response.data.result; // Trả về mảng bên trong result
 }
 
 // Cập nhật đơn quyên góp

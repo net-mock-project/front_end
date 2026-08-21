@@ -12,27 +12,29 @@ interface GetColumnsProps {
 export const getMyDonationColumns = ({ onOpenDetail }: GetColumnsProps): ColumnsType<MyDonationRecord> => [
   {
     title: 'Mã đơn',
-    dataIndex: 'code',
-    key: 'code',
+    dataIndex: 'donationId', // Sửa từ 'code' thành 'donationId'
+    key: 'donationId',
     render: (text) => <Text strong className="table-text-dark">{text}</Text>,
   },
   {
     title: 'Kho tiếp nhận',
-    dataIndex: 'WarehouseName',
-    key: 'WarehouseName',
+    dataIndex: 'warehouseName', // Sửa thành chữ thường 'warehouseName'
+    key: 'warehouseName',
     render: (text) => <Text className="table-text-dark">{text || 'N/A'}</Text>,
   },
   {
     title: 'Ngày ủng hộ',
     dataIndex: 'donationDate',
     key: 'donationDate',
-    render: (text) => <Text className="table-text-dark">{text}</Text>,
+    render: (text) => <Text className="table-text-dark">{text ? new Date(text).toLocaleDateString('vi-VN') : ''}</Text>,
   },
   {
     title: 'Trạng thái',
     dataIndex: 'status',
     key: 'status',
-    render: (status: MyDonationRecord['status']) => {
+    render: (status: string) => {
+      // Chuẩn hóa trạng thái về chữ hoa để so khớp chính xác
+      const upperStatus = status?.toUpperCase();
       const statusConfig: Record<string, { className: string; label: string }> = {
         PENDING: { className: 'status-tag-pending', label: 'Chờ tiếp nhận' },
         COMPLETED: { className: 'status-tag-completed', label: 'Hoàn thành' },
@@ -40,7 +42,7 @@ export const getMyDonationColumns = ({ onOpenDetail }: GetColumnsProps): Columns
         CANCELLED: { className: 'status-tag-cancelled', label: 'Đã hủy' },
       };
 
-      const current = statusConfig[status] || { className: 'status-tag-default', label: 'Không xác định' };
+      const current = statusConfig[upperStatus] || { className: 'status-tag-default', label: status || 'Không xác định' };
 
       return (
         <Tag className={`status-tag ${current.className}`}>

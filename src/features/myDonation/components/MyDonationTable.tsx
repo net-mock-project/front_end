@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Typography, Modal, Descriptions, Input, DatePicker, message, Space } from 'antd';
+import { Table, Button, Typography, Modal, Descriptions, Input, message, Space } from 'antd';
 import dayjs from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
 import type { MyDonationRecord } from '../../../types/donation';
@@ -25,12 +25,13 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
     isEditing: boolean;
   }>({ visible: false, record: null, isEditing: false });
 
-  const [editForm, setEditForm] = useState({ items: '', donationDate: '' });
+  // State chỉ để chỉnh sửa danh sách vật tư
+  const [editItemsText, setEditItemsText] = useState('');
 
   const updateMutation = useMutation({
     mutationFn: updateMyDonation,
     onSuccess: () => {
-      message.success('Cập nhật đơn quyên góp thành công!');
+      message.success('Cập nhật danh sách vật tư thành công!');
       setModalState(prev => ({ ...prev, isEditing: false, visible: false }));
       onRefresh?.();
     },
@@ -53,27 +54,48 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
 
   const handleOpenDetail = (record: MyDonationRecord) => {
     setModalState({ visible: true, record, isEditing: false });
-    setEditForm({ 
-      items: typeof record.items === 'string' ? record.items : JSON.stringify(record.items || ''), 
-      donationDate: record.donationDate || '' 
-    });
+  };
+
+  // Bắt đầu chỉnh sửa: Gán dữ liệu vật tư cũ vào state
+  const handleStartEdit = () => {
+    if (!modalState.record) return;
+    const currentRecord = modalState.record;
+
+    const itemsString = Array.isArray(currentRecord.items) 
+      ? currentRecord.items.map(i => `${i.supplyName}, ${i.quantity}, ${i.unit}`).join('\n')
+      : '';
+
+    setEditItemsText(itemsString);
+    setModalState(prev => ({ ...prev, isEditing: true }));
   };
 
   const handleSaveEdit = () => {
-    const donationId = modalState.record?.donationId;
-    if (!donationId) {
-      return message.error('Không tìm thấy định danh đơn quyên góp!');
-    }
-    
+    if (!modalState.record?.donationId) return message.error('Không tìm thấy định danh đơn quyên góp!');
+
+    const parsedItems = editItemsText
+      .split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        const parts = line.split(',').map(p => p.trim());
+        return {
+          supplyName: parts[0] || '',
+          quantity: Number(parts[1]) || 1,
+          unit: parts[2] || ''
+        };
+      });
+
     updateMutation.mutate({ 
-      donationId, 
-      data: editForm as any 
+      donationId: modalState.record.donationId, 
+      data: { 
+        // Giữ nguyên ngày cũ từ record gốc, chỉ cập nhật items mới
+        donationDate: modalState.record.donationDate,
+        items: parsedItems 
+      } as any 
     });
   };
 
   const handleCancelDonation = () => {
-    const donationId = modalState.record?.donationId;
-    if (!donationId) return;
+    if (!modalState.record?.donationId) return;
     
     Modal.confirm({
       title: 'Xác nhận hủy đơn',
@@ -81,7 +103,7 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
       okText: 'Xác nhận hủy',
       okType: 'danger',
       cancelText: 'Đóng',
-      onOk: () => cancelMutation.mutate(donationId),
+      onOk: () => cancelMutation.mutate(modalState.record!.donationId),
     });
   };
 
@@ -93,7 +115,7 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
       <Table
         columns={columns}
         dataSource={dataSource}
-        rowKey={(row) => row.donationId}
+        rowKey="donationId"
         loading={loading}
         pagination={{ pageSize: 10, hideOnSinglePage: true }}
         scroll={{ x: 800 }} 
@@ -104,7 +126,7 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
         title={
           <div className="modal-header">
             <Title level={4} style={{ margin: 0 }}>
-              {isEditing ? 'Chỉnh sửa đơn ủng hộ' : 'Chi tiết đơn ủng hộ'}
+              {isEditing ? 'Chỉnh sửa danh sách vật tư' : 'Chi tiết đơn ủng hộ'}
             </Title>
             
             {record?.status?.toUpperCase() === 'PENDING' && !isEditing && (
@@ -112,8 +134,8 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
                 <Button danger onClick={handleCancelDonation} loading={cancelMutation.isPending} className="modal-action-btn">
                   Hủy đơn
                 </Button>
-                <Button type="dashed" onClick={() => setModalState(prev => ({ ...prev, isEditing: true }))} className="modal-action-btn">
-                  Chỉnh sửa thông tin
+                <Button type="dashed" onClick={handleStartEdit} className="modal-action-btn">
+                  Chỉnh sửa vật tư
                 </Button>
               </Space>
             )}
@@ -140,32 +162,32 @@ export default function MyDonationTable({ data, loading, onRefresh }: Props) {
             <Descriptions.Item label="Số điện thoại">{record.donatorPhone}</Descriptions.Item>
             
             <Descriptions.Item label="Ngày ủng hộ">
-              {isEditing ? (
-                <DatePicker 
-                  value={editForm.donationDate ? dayjs(editForm.donationDate) : null}
-                  onChange={(_, dateString) => {
-                    const val = Array.isArray(dateString) ? dateString[0] : (dateString || '');
-                    setEditForm({ ...editForm, donationDate: val });
-                  }}
-                  format="YYYY-MM-DD"
-                  style={{ width: '100%' }}
-                />
-              ) : (
-                record.donationDate ? dayjs(record.donationDate).format('YYYY-MM-DD HH:mm') : ''
-              )}
+              {record.donationDate ? dayjs(record.donationDate).format('YYYY-MM-DD HH:mm') : ''}
             </Descriptions.Item>
 
             <Descriptions.Item label="Danh sách vật tư">
               {isEditing ? (
-                <Input.TextArea 
-                  rows={4}
-                  value={editForm.items} 
-                  onChange={(e) => setEditForm({ ...editForm, items: e.target.value })} 
-                />
-              ) : (
-                <div style={{ whiteSpace: 'pre-line' }}>
-                  {typeof record.items === 'string' ? record.items : JSON.stringify(record.items)}
+                <div>
+                  <Input.TextArea 
+                    rows={4}
+                    value={editItemsText} 
+                    onChange={(e) => setEditItemsText(e.target.value)} 
+                    placeholder="Tên vật tư, số lượng, đơn vị (mỗi dòng 1 vật tư)"
+                  />
+                  <div style={{ fontSize: 11, color: '#8c8c8c', marginTop: 4 }}>
+                    Ví dụ: Gạo, 10, kg (phân tách nhau bằng dấu phẩy)
+                  </div>
                 </div>
+              ) : (
+                Array.isArray(record.items) ? (
+                  record.items.map((item, index) => (
+                    <div key={index}>
+                      - {item.supplyName}: {item.quantity} {item.unit}
+                    </div>
+                  ))
+                ) : (
+                  <div>Không có vật tư</div>
+                )
               )}
             </Descriptions.Item>
           </Descriptions>
