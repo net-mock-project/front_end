@@ -4,7 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { getCoordinatorDonations } from '../api/coordinatorDonationApi';
-import  CoordinatorDonationTable  from '../componets/CoordinatorDonationTable';
+import CoordinatorDonationTable from '../components/CoordinatorDonationTable'; // Kiểm tra lại đường dẫn import này cho đúng
 
 const { Title, Text } = Typography;
 

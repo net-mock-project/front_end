@@ -9,7 +9,16 @@ interface GetCoordinatorDonationsParams {
 // Lấy danh sách đơn quyên góp dành cho coordinator
 export const getCoordinatorDonations = async (params?: GetCoordinatorDonationsParams) => {
   const response = await httpClient.get('/api/donations', { params });
-  return response.data as MyDonationRecord[];
+  
+  const resData = response.data;
+  
+  // Nếu backend trả về mảng trực tiếp
+  if (Array.isArray(resData)) {
+    return resData as MyDonationRecord[];
+  }
+  
+  // Nếu backend bọc mảng trong các thuộc tính phổ biến (data, content, items, result)
+  return (resData?.data || resData?.content || resData?.items || resData?.result || []) as MyDonationRecord[];
 };
 
 // Chấp nhận đơn quyên góp

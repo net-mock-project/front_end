@@ -23,7 +23,6 @@ export default function CoordinatorDonationTable({ data, loading, onRefresh }: P
     record: MyDonationRecord | null;
   }>({ visible: false, record: null });
 
-  // Mutation Accept
   const acceptMutation = useMutation({
     mutationFn: acceptCoordinatorDonation,
     onSuccess: () => {
@@ -36,7 +35,6 @@ export default function CoordinatorDonationTable({ data, loading, onRefresh }: P
     },
   });
 
-  // Mutation Reject
   const rejectMutation = useMutation({
     mutationFn: rejectCoordinatorDonation,
     onSuccess: () => {
