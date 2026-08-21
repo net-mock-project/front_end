@@ -1,10 +1,7 @@
 import {
-  BellOutlined,
   HeartFilled,
 } from '@ant-design/icons'
 import {
-  Badge,
-  Button,
   Menu,
   Spin,
   type MenuProps,
@@ -14,6 +11,7 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import type {User} from '../../types/User'
 
 import ProfileDropdown from './ProfileDropdown'
+import { NotificationPopover } from '../../features/notification/components/NotificationPopover'
 import './Header.css'
 import { useCurrentUser } from '../../features/auth/hooks/useCurrentUser'
 
@@ -142,14 +140,7 @@ function Header() {
       />
 
       <div className="app-header__actions">
-        <Badge dot>
-          <Button
-            className="app-header__notification"
-            shape="circle"
-            icon={<BellOutlined />}
-            aria-label="Thông báo"
-          />
-        </Badge>
+        <NotificationPopover />
 
         <ProfileDropdown user={user} />
       </div>
