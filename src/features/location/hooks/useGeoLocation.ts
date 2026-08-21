@@ -11,8 +11,10 @@ export interface UserLocation {
 export const useGeoLocation = () => {
     const [location, setLocation] = useState<UserLocation | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [requestId, setRequestId] = useState(0);
 
     useEffect(()=>{
+        setError(null);
         if(!navigator.geolocation){
             setError("Browser không support geolocation");
             return;
@@ -42,8 +44,8 @@ export const useGeoLocation = () => {
         return ()=>{
             navigator.geolocation.clearWatch(watchId);
         }
-    },[]);
+    },[requestId]);
 
-    return {location,error}
+    return { location, error, requestLocation: () => setRequestId((current) => current + 1) }
 
 }

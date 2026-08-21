@@ -84,8 +84,8 @@ export const ManageVolunteersPage: React.FC = () => {
 
   const totalCount = allVolunteers.length || 126;
   const approvedCount = approvedData?.totalCount || 98;
-  const availableCount = Math.round(approvedCount * 0.75) || 74;
-  const taskCompletedCount = 412;
+
+
 
   const handleApprove = async () => {
     if (!selectedVolunteer) return;
@@ -170,15 +170,6 @@ export const ManageVolunteersPage: React.FC = () => {
       },
     },
     {
-      title: "Task",
-      key: "task",
-      render: (_, __, index) => (
-        <span style={{ fontWeight: 600, color: "#111827" }}>
-          {[12, 24, 8, 19, 15][index % 5]}
-        </span>
-      ),
-    },
-    {
       title: "",
       key: "actions",
       align: "right",
@@ -221,7 +212,6 @@ export const ManageVolunteersPage: React.FC = () => {
               </div>
               <div className="kpi-value">{totalCount}</div>
               <div className="kpi-label">Tổng Volunteer</div>
-              <div className="kpi-subtext">+8 tháng này</div>
             </div>
           </Col>
 
@@ -232,31 +222,9 @@ export const ManageVolunteersPage: React.FC = () => {
               </div>
               <div className="kpi-value">{approvedCount}</div>
               <div className="kpi-label">Đã duyệt</div>
-              <div className="kpi-subtext">77,8%</div>
             </div>
           </Col>
 
-          <Col span={6}>
-            <div className="kpi-card">
-              <div className="kpi-icon kpi-icon--blue">
-                <CompassOutlined />
-              </div>
-              <div className="kpi-value">{availableCount}</div>
-              <div className="kpi-label">Available</div>
-              <div className="kpi-subtext">58,7%</div>
-            </div>
-          </Col>
-
-          <Col span={6}>
-            <div className="kpi-card">
-              <div className="kpi-icon kpi-icon--yellow">
-                <CalendarOutlined />
-              </div>
-              <div className="kpi-value">{taskCompletedCount}</div>
-              <div className="kpi-label">Task hoàn thành</div>
-              <div className="kpi-subtext">96% đúng hạn</div>
-            </div>
-          </Col>
         </Row>
 
         {/* Bộ lọc Tabs & Ô tìm kiếm */}

@@ -179,3 +179,24 @@
     grid-template-columns: 1fr;
   }
 }
+
+.relief-task-form__map {
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  border: 1px solid #d9e2e7;
+  border-radius: 6px;
+}
+
+.relief-task-form__map .map-container,
+.relief-task-form__map > div {
+  width: 100%;
+  height: 100%;
+}
+
+.relief-task-form__map-help {
+  display: block;
+  margin-top: 6px;
+  color: #667085;
+  font-size: 12px;
+}

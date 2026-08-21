@@ -2,8 +2,6 @@ import { EnvironmentOutlined, RightOutlined, TeamOutlined } from '@ant-design/ic
 import { Button, Tag } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import type { ReliefTask } from '../../../types/ReliefTask'
-import { useEffect, useState } from 'react'
-import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useDistrict } from '../../location/hooks/useDistrict'
 interface VolunteerTaskCardProps {
     task: ReliefTask

@@ -20,7 +20,7 @@ export interface VolunteerSkillDto {
   level: number;
 }
 
-export interface Volunteer extends Partial<User> {
+export interface Volunteer extends User {
   volunteerId: string;
   experienceYears: number;
   approvalStatus: VolunteerApprovalStatus | string;

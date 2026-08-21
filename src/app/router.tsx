@@ -3,10 +3,10 @@ import { Spin } from "antd";
 
 import App from "./App";
 import { HomePage } from "../features/home/pages/HomePage";
-import { MapTest } from "../features/map/components/MapTest";
 import ProfilePage from "../features/profile/pages/ProfilePage";
 import AdminUsersPage from "../features/admin/users/pages/AdminUsersPage";
 import AuditLogsPage from "../features/admin/audit-logs/pages/AuditLogsPage";
+import MapPage from "../features/map/pages/MapPage";
 import { RegisterPage } from "../features/auth/pages/RegisterPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
 import { useCurrentUser } from "../features/auth/hooks/useCurrentUser";
@@ -54,16 +54,16 @@ export const router = createBrowserRouter([
     path: "/",
     Component: App,
     children: [
+    
       {
         index: true,
         Component: HomePage,
       },
       {
         path: "map",
-        Component: MapTest,
+        Component: MapPage,
       },
 
-      // User & Volunteer & Coordinator Routes (Private)
       {
         Component: PrivateRoute,
         children: [
@@ -111,25 +111,27 @@ export const router = createBrowserRouter([
             path: "donation/create",
             Component: CreateDonationPage,
           },
-        ],
-      },
 
-      // Admin Routes
-      {
-        Component: AdminRoute,
-        children: [
+          // Admin routes
           {
-            path: "admin/users",
-            Component: AdminUsersPage,
-          },
-          {
-            path: "admin/audit-logs",
-            Component: AuditLogsPage,
+            Component: AdminRoute,
+            children: [
+              {
+                path: "admin/users",
+                Component: AdminUsersPage,
+              },
+              {
+                path: "admin/audit-logs",
+                Component: AuditLogsPage,
+              },
+            ],
           },
         ],
       },
     ],
   },
+
+ 
   {
     path: "/login",
     Component: LoginPage,
@@ -139,3 +141,5 @@ export const router = createBrowserRouter([
     Component: RegisterPage,
   },
 ]);
+
+
