@@ -44,3 +44,7 @@ export const loginApi = async (payload: { email: string; password: string }) => 
   return response.data
 }
 
+export const logoutApi = async () => {
+  const response = await httpClient.post('/api/auth/logout')
+  return response.data
+}
