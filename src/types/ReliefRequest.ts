@@ -21,12 +21,37 @@ export interface ReliefRequest {
 
 export interface ReliefTask {
     id: string;
-    title?: string;
-    description?: string;
-    status?: string;
-    volunteerId?: string | null;
-    startTime?: string | null;
-    endTime?: string | null;
+    requestId: string;
+    title: string;
+    description: string;
+    requiredVolunteers: number;
+    priority: number;
+    latitude: number;
+    longitude: number;
+    status: string;
+    taskSkills: string[];
+    createdAt: string;
+    updatedAt: string | null;
+}
+
+export interface ReliefTaskPayload {
+    title: string;
+    description: string;
+    requiredVolunteers: number;
+    priority: number;
+    latitude: number;
+    longitude: number;
+    taskSkills: string[];
+}
+
+export interface SuitableVolunteer {
+    id: string;
+    fullName?: string;
+    email?: string;
+    phone?: string;
+    profileUrl?: string | null;
+    experienceYears?: number;
+    skills?: string[];
 }
 
 export interface ReliefRequestPayload {

@@ -7,6 +7,7 @@ import axios from 'axios'
 import {
   cancelReliefRequest,
   createReliefRequest,
+  getAllReliefRequests,
   getMyReliefRequests,
   getReliefRequest,
   updateReliefRequest,
@@ -17,6 +18,7 @@ import ReliefRequestForm from '../components/ReliefRequestForm'
 import type { ReliefRequest, ReliefRequestPayload } from '../../../types/ReliefRequest'
 import { useGeoLocation } from '../../location/hooks/useGeoLocation'
 import { useLocationHub } from '../../location/hooks/useLocationHub'
+import { useCurrentUser } from '../../auth/hooks/useCurrentUser'
 
 import './reliefRequests.css'
 
@@ -35,6 +37,7 @@ function ReliefRequestsPage() {
   const [form] = Form.useForm<ReliefRequestPayload>()
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
+  const { data: currentUser } = useCurrentUser()
   const { location } = useGeoLocation()
   const { sendLocation } = useLocationHub()
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -57,8 +60,9 @@ function ReliefRequestsPage() {
   }, [form, formMode, location])
 
   const requestsQuery = useQuery({
-    queryKey: ['my-relief-requests'],
-    queryFn: getMyReliefRequests,
+    queryKey: ['relief-requests', currentUser?.roleName],
+    queryFn: currentUser?.roleName === 'Coordinator' ? getAllReliefRequests : getMyReliefRequests,
+    enabled: Boolean(currentUser),
   })
 
   const detailQuery = useQuery({
@@ -79,7 +83,7 @@ function ReliefRequestsPage() {
           ? 'Cập nhật yêu cầu cứu trợ thành công'
           : 'Tạo yêu cầu cứu trợ thành công',
       )
-      queryClient.invalidateQueries({ queryKey: ['my-relief-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['relief-requests'] })
       setFormMode(null)
       setEditingRequestId(null)
       form.resetFields()
@@ -93,7 +97,7 @@ function ReliefRequestsPage() {
     mutationFn: cancelReliefRequest,
     onSuccess: () => {
       messageApi.success('Hủy yêu cầu cứu trợ thành công')
-      queryClient.invalidateQueries({ queryKey: ['my-relief-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['relief-requests'] })
       setSelectedId(null)
     },
     onError: (error) => {
@@ -189,6 +193,7 @@ function ReliefRequestsPage() {
         loading={detailQuery.isPending}
         open={Boolean(selectedId)}
         cancelling={cancelMutation.isPending}
+        isCoordinator={currentUser?.roleName === 'Coordinator'}
         onClose={() => setSelectedId(null)}
         onEdit={handleOpenEdit}
         onCancel={(requestId) => Modal.confirm({

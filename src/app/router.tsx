@@ -69,6 +69,10 @@ export const router= createBrowserRouter([
                         Component: ReliefRequestsPage
                     },
                     {
+                        path: "/regional-relief-request",
+                        Component: ReliefRequestsPage
+                    },
+                    {
                         path: "/me/donations",
                         Component: MyDonationPage
                     },
