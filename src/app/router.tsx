@@ -3,7 +3,6 @@ import { Spin } from "antd";
 
 import App from "./App";
 import { HomePage } from "../features/home/pages/HomePage";
-import { MapTest } from "../features/map/components/MapTest";
 import ProfilePage from "../features/profile/pages/ProfilePage";
 import AdminUsersPage from "../features/admin/users/pages/AdminUsersPage";
 import AuditLogsPage from "../features/admin/audit-logs/pages/AuditLogsPage";
@@ -62,7 +61,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "map",
-        Component: MapTest,
+        Component: MapPage,
       },
 
       {

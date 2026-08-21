@@ -63,10 +63,6 @@ function Header() {
         key: '/donation',
         label: <Link to="/donation">Quyên góp</Link>,
       },
-      {
-        key: '/guide',
-        label: <Link to="/guide">Hướng dẫn</Link>,
-      },
     ],
 
     Volunteer: [
@@ -83,10 +79,6 @@ function Header() {
         key: '/my-tasks',
         label: <Link to="/my-tasks">Nhiệm vụ của tôi</Link>,
       },
-      {
-        key: '/guide',
-        label: <Link to="/guide">Hướng dẫn</Link>,
-      },
     ],
 
     Coordinator: [
@@ -102,10 +94,6 @@ function Header() {
       {
         key: '/regional-relief-request',
         label: <Link to="/regional-relief-request">Yêu cầu cứu trợ khu vực</Link>,
-      },
-      {
-        key: '/warehouse-management',
-        label: <Link to="/warehouse-management">Quản lý khu vật tư</Link>,
       },
     ],
 
