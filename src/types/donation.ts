@@ -13,8 +13,8 @@ export type MyDonationRecord = {
   code: string;
   donatorName: string;
   donatorPhone: string;
-  items: string;      
+  items: DonationItem[];      
   WarehouseName: string;    
   donationDate: string;  
-  status: 'PENDING' | 'REJECTED' | 'COMPLETED' | 'CANCELLED';
+  status: string;
 };
