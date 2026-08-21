@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import { Spin } from "antd";
 
 import App from "./App";
+import { HomePage } from "../features/home/pages/HomePage";
 import { MapTest } from "../features/map/components/MapTest";
 import ProfilePage from "../features/profile/pages/ProfilePage";
 import AdminUsersPage from "../features/admin/users/pages/AdminUsersPage";
@@ -54,11 +55,15 @@ export const router = createBrowserRouter([
     Component: App,
     children: [
       {
+        index: true,
+        Component: HomePage,
+      },
+      {
         path: "map",
         Component: MapTest,
       },
 
-      // User & Volunteer Routes (Private)
+      // User & Volunteer & Coordinator Routes (Private)
       {
         Component: PrivateRoute,
         children: [
