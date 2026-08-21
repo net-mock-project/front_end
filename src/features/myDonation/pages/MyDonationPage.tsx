@@ -74,43 +74,6 @@ export function MyDonationPage() {
           </Col>
         </Row>
 
-        {/* Filter & Search */}
-        <Row justify="space-between" align="middle" style={{ marginBottom: 20, gap: 16 }}>
-          <Col xs={24} lg={14}>
-            <Space size="small" style={{ flexWrap: 'wrap' }}>
-              {STATUS_TABS.map((tab) => {
-                const isActive = activeTab === tab.key;
-                return (
-                  <Button
-                    key={tab.key}
-                    type="text"
-                    onClick={() => setActiveTab(tab.key)}
-                    style={{
-                      background: isActive ? '#FFF1F1' : 'transparent',
-                      color: isActive ? '#C9383E' : '#667085',
-                      fontWeight: 800,
-                      borderRadius: 10,
-                    }}
-                  >
-                    {tab.label}
-                  </Button>
-                );
-              })}
-            </Space>
-          </Col>
-
-          <Col xs={24} lg={8}>
-            <Input
-              size="large"
-              placeholder="Tìm theo mã đơn hoặc kho tiếp nhận..."
-              prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              style={{ borderRadius: 11 }}
-            />
-          </Col>
-        </Row>
-
         {/* Bảng dữ liệu - Truyền hàm onRefresh để cập nhật lại dữ liệu */}
         <MyDonationTable data={donations} loading={isLoading} onRefresh={refetch} />
         

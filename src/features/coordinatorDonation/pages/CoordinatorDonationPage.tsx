@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Typography, Input, Space, Row, Col } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import React from 'react';
+import { Typography, Row, Col } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 
 import { getCoordinatorDonations } from '../api/coordinatorDonationApi';
@@ -8,24 +7,10 @@ import CoordinatorDonationTable from '../components/CoordinatorDonationTable'; /
 
 const { Title, Text } = Typography;
 
-const STATUS_TABS = [
-  { key: 'ALL', label: 'Tất cả' },
-  { key: 'PENDING', label: 'Chờ tiếp nhận' },
-  { key: 'COMPLETED', label: 'Hoàn thành' },
-  { key: 'REJECTED', label: 'Từ chối' },
-  { key: 'CANCELLED', label: 'Đã hủy' },
-];
-
 export function CoordinatorDonationPage() {
-  const [activeTab, setActiveTab] = useState('ALL');
-  const [searchText, setSearchText] = useState('');
-
   const { data: donations = [], isLoading, refetch } = useQuery({
-    queryKey: ['coordinator/donations', activeTab, searchText],
-    queryFn: () => getCoordinatorDonations({ 
-      status: activeTab === 'ALL' ? undefined : activeTab, 
-      search: searchText 
-    }),
+    queryKey: ['coordinator/donations'],
+    queryFn: () => getCoordinatorDonations(),
   });
 
   return (
@@ -41,45 +26,6 @@ export function CoordinatorDonationPage() {
             <Text type="secondary" style={{ fontSize: 16 }}>
               Quản lý, tiếp nhận hoặc từ chối các đơn quyên góp gửi về kho của bạn.
             </Text>
-          </Col>
-        </Row>
-
-        {/* Filter & Search */}
-        <Row justify="space-between" align="middle" style={{ marginBottom: 20, gap: 16 }}>
-          <Col xs={24} lg={14}>
-            <Space size="small" style={{ flexWrap: 'wrap' }}>
-              {STATUS_TABS.map((tab) => {
-                const isActive = activeTab === tab.key;
-                return (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveTab(tab.key)}
-                    style={{
-                      background: isActive ? '#FFF1F1' : 'transparent',
-                      color: isActive ? '#C9383E' : '#667085',
-                      fontWeight: 800,
-                      borderRadius: 10,
-                      border: 'none',
-                      padding: '8px 16px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </Space>
-          </Col>
-
-          <Col xs={24} lg={8}>
-            <Input
-              size="large"
-              placeholder="Tìm theo mã đơn hoặc tên người ủng hộ..."
-              prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              style={{ borderRadius: 11 }}
-            />
           </Col>
         </Row>
 
