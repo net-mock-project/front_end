@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Breadcrumb, Button, Typography, Input, Space, Row, Col } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ export function MyDonationPage() {
   const [searchText, setSearchText] = useState('');
 
   const { data: donations = [], isLoading } = useQuery({
-    queryKey: ['me/donations', activeTab, searchText],
+    queryKey: ['/donation', activeTab, searchText],
     queryFn: () => getMyDonations({ 
       status: activeTab === 'ALL' ? undefined : activeTab, 
       search: searchText 
@@ -39,7 +39,7 @@ export function MyDonationPage() {
           <Col xs={24} md={16}>
             <Breadcrumb
               items={[
-                { title: <Link to="/me/donations/create">Quyên góp cứu trợ</Link> },
+                { title: <Link to="/donation/create">Quyên góp cứu trợ</Link> },
                 { title: 'Quyên góp của tôi' },
               ]}
               style={{ marginBottom: 8 }}
@@ -57,7 +57,7 @@ export function MyDonationPage() {
               type="primary"
               size="large"
               icon={<PlusOutlined />}
-              onClick={() => navigate('/me/donations/create')}
+              onClick={() => navigate('/donation/create')}
               style={{
                 background: 'linear-gradient(166deg, #E5484D 0%, #EF5F63 100%)',
                 border: 'none',
