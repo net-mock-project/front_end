@@ -6,6 +6,8 @@ export const useCurrentUser= () =>{
     return useQuery({
         queryKey: ["me"],
         queryFn: getProfile,
-        retry: false
+        retry: false,
+        staleTime: 60_000,
+        refetchOnWindowFocus: false,
     })
 }
