@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { locationHub } from "../services/locationHub";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Volunteer } from "../../../types/Volunteer";
@@ -71,7 +71,7 @@ export const useLocationHub = () => {
         };
     }, [queryClient]);
 
-    const sendLocation = useCallback(async (latitude: number, longitude: number) => {
+    const sendLocation = async (latitude: number, longitude: number) => {
         try {
             if (locationHub.state === "Disconnected") {
                 await locationHub.start();
@@ -96,7 +96,7 @@ export const useLocationHub = () => {
         } catch (error) {
             console.error("Failed to send location:", error);
         }
-    }, []);
+    };
 
     return {
         sendLocation,
